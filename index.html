@@ -511,12 +511,132 @@
         </div>
       </div>
 
-      <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
-        <span class="download-btn-wrapper">
-          <a href="oxford_transcript.pdf" download class="download-btn">⟶ Download Oxford Transcript</a>
-          <span class="download-btn-subtitle">Available July 2026</span>
-        </span>
-        <a href="auckland_transcript.pdf" download="Michael Jones University of Auckland Transcript.pdf" class="download-btn">⟶ Download Auckland Transcript</a>
+      <!-- COLLAPSIBLE GRADES TABLE -->
+      <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border);">
+        <button onclick="this.nextElementSibling.style.display = this.nextElementSibling.style.display === 'none' ? 'block' : 'none'; this.querySelector('.chevron').style.transform = this.querySelector('.chevron').style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';"
+          style="background: transparent; border: 1px solid var(--accent); color: var(--accent); font-family: var(--sans); font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.7rem 1.4rem; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; transition: background 0.2s, color 0.2s;"
+          onmouseover="this.style.background='var(--accent)';this.style.color='var(--bg)'"
+          onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">
+          <span class="chevron" style="display:inline-block; transition: transform 0.3s;">▾</span>
+          View Key Statistics Courses & Grades
+        </button>
+        <div style="display: none; margin-top: 1rem; border: 1px solid var(--border); overflow: hidden;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+            <thead>
+              <tr style="background: var(--surface); border-bottom: 1px solid var(--border);">
+                <th style="padding: 0.7rem 1rem; text-align: left; color: var(--accent); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem;">University</th>
+                <th style="padding: 0.7rem 1rem; text-align: left; color: var(--accent); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem;">Year</th>
+                <th style="padding: 0.7rem 1rem; text-align: left; color: var(--accent); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem;">Stage</th>
+                <th style="padding: 0.7rem 1rem; text-align: left; color: var(--accent); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem;">Course</th>
+                <th style="padding: 0.7rem 1rem; text-align: left; color: var(--accent); font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem;">Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Research Project at very top -->
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2023</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 7 (Hons)</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Research Project (Stochastic Processes)</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A</td>
+              </tr>
+              <!-- 2023 S2 -->
+              <tr style="border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2023 S2</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 7 (Hons)</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Time Series</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A+</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2023 S2</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 7 (Hons)</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Bayesian Inference</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A+</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2023 S2</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 7 (Hons)</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Advanced Regression Methodology</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A</td>
+              </tr>
+              <!-- 2023 S1 -->
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2023 S1</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 7 (Hons)</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Stochastic Processes</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2023 S1</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 7 (Hons)</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Foundations of Statistical Inference</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A</td>
+              </tr>
+              <!-- 2022 -->
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2022 S2</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 3</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Advanced Topics in Probability</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A+</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2022 S2</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 3</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Stochastic Processes</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A+</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2022 S2</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 3</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Introduction to Bayesian Statistics</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.01);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2022 S1</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 3</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Applied Stochastic Modelling</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A+</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2022 S1</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 3</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Applied Time Series Analysis</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A</td>
+              </tr>
+              <tr style="background: rgba(255,255,255,0.01);">
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Auckland</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-dim);">2022 Summer</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text-muted);">Stage 3</td>
+                <td style="padding: 0.6rem 1rem; color: var(--text);">Statistical Modelling</td>
+                <td style="padding: 0.6rem 1rem; color: var(--accent); font-weight: 500;">A+</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding: 0.6rem 1rem; background: var(--surface); border-top: 1px solid var(--border); font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.05em;">
+            Statistics courses only — full transcripts available below
+          </div>
+        </div>
+        <!-- Both transcript downloads below the dropdown -->
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+          <span class="download-btn-wrapper">
+            <a href="oxford_transcript.pdf" download class="download-btn">⟶ Download Oxford Transcript</a>
+            <span class="download-btn-subtitle">Available July 2026</span>
+          </span>
+          <span class="download-btn-wrapper">
+            <a href="auckland_transcript.pdf" download="Michael Jones University of Auckland Transcript.pdf" class="download-btn">⟶ Download Auckland Transcript</a>
+            <span class="download-btn-subtitle">Statistics specialisation grades concentrated in 2022–2023</span>
+          </span>
+        </div>
       </div>
 
     </div>
@@ -597,14 +717,4 @@
 
       </div>
     </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="container">
-      &copy; 2026 Michael Jones
-    </div>
-  </footer>
-
-</body>
-</html>
+  </sec
