@@ -1,0 +1,36 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+
+# R session state and local libraries
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+renv/library/
+renv/staging/
+
+# Visual Studio local state and build outputs
+.vs/
+*.suo
+*.user
+[Bb]in/
+[Oo]bj/
+
+# JavaScript dependencies and generated builds
+node_modules/
+dist/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+Desktop.ini
