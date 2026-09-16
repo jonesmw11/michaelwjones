@@ -15,11 +15,13 @@
 #     8. Volatility    -- the implied volatility
 #     9. Validation    -- every model above refitted to Schoutens' S&P 500 chain
 
-# The only inputs are k200_implied_vol_by_maturity/k200_iv_per_contract.csv, the
-# pruned 212-contract chain, and Data.xlsx for the S&P 500 validation of Section 9.
+# The only inputs are KOSPI 200 option data.csv, the
+# pruned 212-contract chain, and S&P 2002 validation data.xlsx for Section 9.
 # Running the whole file takes several hours.
 
 # The libraries used throughout this dissertation
+import argparse
+from pathlib import Path
 import time
 
 import numpy as np
@@ -27,6 +29,59 @@ import pandas as pd
 from scipy.optimize import minimize, minimize_scalar
 from scipy.special import gamma as gamma_fn, gammaln, kv, loggamma
 from scipy.stats import norm
+
+# Resolve inputs next to this script, independently of the terminal's directory.
+CODE_DIR = Path(__file__).resolve().parent
+PRUNED_CHAIN = CODE_DIR / "KOSPI 200 option data.csv"
+SCHOUTENS_DATA = CODE_DIR / "S&P 2002 validation data.xlsx"
+
+
+def validate_chain(o, spot_column, source):
+    required = ["strike", "ttm", "rate", "div_yld", "mid", spot_column]
+    missing = set(required) - set(o.columns)
+    if missing:
+        raise ValueError(f"{source}: missing columns {sorted(missing)}")
+    if o.empty:
+        raise ValueError(f"{source}: no contracts found")
+    values = o[required].apply(pd.to_numeric, errors="raise")
+    if not np.isfinite(values.to_numpy(dtype=float)).all():
+        raise ValueError(f"{source}: required numeric data contains missing or infinite values")
+    if (values[["strike", "ttm", "mid", spot_column]] <= 0).any().any():
+        raise ValueError(f"{source}: strikes, maturities, prices and spot must be positive")
+    if values[spot_column].nunique() != 1:
+        raise ValueError(f"{source}: expected a single spot price")
+    o = o.copy()
+    o[required] = values
+    return o.reset_index(drop=True), float(values[spot_column].iloc[0])
+
+
+def load_chain():
+    o = pd.read_csv(PRUNED_CHAIN, parse_dates=["expiry_date", "snapshot_date"])
+    for column in ("expiry_date", "snapshot_date"):
+        o[column] = pd.to_datetime(o[column], errors="raise")
+        if o[column].isna().any():
+            raise ValueError(f"{PRUNED_CHAIN}: missing {column}")
+    return validate_chain(o, "spot_price", PRUNED_CHAIN)
+
+
+def load_sp500():
+    o = pd.read_excel(SCHOUTENS_DATA, sheet_name="Schoutens Data", skiprows=7)
+    return validate_chain(o, "spot", SCHOUTENS_DATA)
+
+
+parser = argparse.ArgumentParser(description="Dissertation option-pricing analysis")
+parser.add_argument("--check-inputs", action="store_true",
+                    help="Validate both bundled datasets and exit without calibration")
+args = parser.parse_args()
+
+# Check both inputs before starting hours of numerical work.
+opts, S0 = load_chain()
+sp, SP_S0 = load_sp500()
+print(f"KOSPI 200: {len(opts)} contracts; input: {PRUNED_CHAIN}")
+print(f"Schoutens S&P 500: {len(sp)} contracts; input: {SCHOUTENS_DATA}")
+if args.check_inputs:
+    print("Input checks passed. No calibrations were run.")
+    raise SystemExit(0)
 
 # %% =================================================================
 # 0. PRICING MACHINERY
@@ -546,19 +601,12 @@ def make_objective(levy_name, tc_name, strikes, ttms, rates, divs, mids, S0):
 
 ################# Data related activities - I've removed how I obtain the data cause its excessive
 #I load it here, its available upon request or convert the relevant appendix to a csv
-PRUNED_CHAIN = "k200_implied_vol_by_maturity/k200_iv_per_contract.csv"
 
 # The Korean risk-free rate and KOSPI 200 dividend yield
 R, Q = 0.0291, 0.0079
 
-#Read the chain, ttm, mid, rate and div_yld are already on it
-def load_chain():
-    o = pd.read_csv(PRUNED_CHAIN, parse_dates=["expiry_date", "snapshot_date"])
-    return o, float(o["spot_price"].iloc[0])
-
-
 # We save all these results to use later
-opts, S0 = load_chain()
+# Both chains were loaded and validated before the analysis started.
 K = opts["strike"].to_numpy()
 T = opts["ttm"].to_numpy()
 RATE = opts["rate"].to_numpy()
@@ -1199,15 +1247,8 @@ for _, r in sv.iterrows():
 # 9. VALIDATION 
 #This was all about comparing to schoutens data
 
-#Load his SP500 chain - I have it saved
-def load_sp500():
-    o = pd.read_excel("Data.xlsx", sheet_name="Schoutens Data", skiprows=7)
-    return o.reset_index(drop=True), float(o["spot"].iloc[0])
-
-
 # The same columns as the KOSPI chain, so every routine below is called
 # unchanged - using the functions we already defined
-sp, SP_S0 = load_sp500()
 spK, spT = sp["strike"].to_numpy(), sp["ttm"].to_numpy()
 spR, spQ = sp["rate"].to_numpy(), sp["div_yld"].to_numpy()
 spMID = sp["mid"].to_numpy()
