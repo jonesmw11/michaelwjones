@@ -1,14 +1,13 @@
-"""AU SMOG fresh-estimation pipeline (companion to au.py).
+"""Generate the AU SMOG model using its saved historical fit.
 
-Rebuilds the AU SMOG model from the RAW data workbooks (not the workfile
-exports): transforms, boosted-HP initial values, OLS starting values, and a
-fresh statsmodels maximum-likelihood estimation. Use this as the template for
-building the other countries' raw-data pipelines.
+Builds the historical AU data and state-space model, then applies the fitted
+coefficients recorded in output/au_ss1_output.csv. Saves those coefficients for
+au_smog_model_update.py to reuse when new observations become available.
 
 Replicates "Model Estimation Code SMOG AU.prg":
-  - data transforms from "Estimation Data SMOG AU.xlsx" (Quarterly sheet)
-  - HP-filter initial values, OLS starting coefficients
-  - 7-state / 3-signal state-space model estimated by maximum likelihood
+  - data transforms from "results/AU SMOG Model Inputs.xlsx" (Generation sheet)
+  - HP-filter initial state and saved historical fitted coefficients
+  - 7-state / 3-signal state-space model
   - Kalman smoothed states -> output gap, y_star, u_star
 
 States:  [gap, gap_1, gap_2, y_star, y_star_1, u_star, u_star_1]
@@ -18,6 +17,8 @@ Signals: y  = y_star + phi3*covid_d + gap + e_y
 """
 #%%
 #Buidl Librariers
+import csv
+import json
 from pathlib import Path
 
 import numpy as np
@@ -27,7 +28,7 @@ from statsmodels.tsa.statespace.mlemodel import MLEModel
 
 # Resolve the copied files in this repository, including in interactive cells.
 try:
-    HERE = Path(__file__).resolve().parent
+    HERE = Path(__file__).resolve().parent.parent
 except NameError:
     REPO_ROOT = next(
         (folder for folder in (Path.cwd(), *Path.cwd().parents)
@@ -40,23 +41,28 @@ except NameError:
     if not HERE.is_dir():
         raise FileNotFoundError(f"AU SMOG files are missing from {HERE}")
 IR_DIR = HERE  # Interest Rates (this file now lives at the folder root)
-DATA_XLSX = IR_DIR / "Estimation Data.xlsx"        # combined workbook, sheet "SMOG AU|Quarterly"
-DATA_SHEET = "SMOG AU|Quarterly"
-MODEL_INPUTS_XLSX = IR_DIR / "Model Inputs.xlsx"
-STARTING_VALS_SHEET = "SMOG AU|starting_vals"
+INPUTS_XLSX = IR_DIR / "results" / "AU SMOG Model Inputs.xlsx"
+GENERATION_SHEET = "Generation"
+UPDATE_SHEET = "Update"
 OUT_DIR = HERE / "output"
+PARAMETERS_FILE = HERE / "au_smog_fitted_parameters.json"
+REFERENCE_COEFFICIENTS_FILE = OUT_DIR / "au_ss1_output.csv"
 
 
 #Estimatoin Sample we're interseted in
 ESMPL_FIRST = "1980Q1"
 ESMPL_LAST = "2023Q4"
 
-#This is cols of all my data
-COLS = [
-    "real_gdp_sa", "real_gdp_non_farm_sa", "labour", "cpi_all_nsa", "cpi_all_sa",
-    "cpi_cdm_sa", "cpi_trimmed_mean_sa", "nom_import_price", "real_import_price",
-    "cpi_trimmed_spliced", "import_price_deflator", "unemployment", "expectations_melb",
-    "hamilton_output_gap", "covid_d", "nab", "labour2",
+# The compact workbooks have one header row and contain only these fields.
+# Historical unemployment here is the corrected series, copied from the
+# maintained inputs when the generation workbook was assembled.
+HISTORICAL_COLUMNS = [
+    "date", "real_gdp_non_farm_sa", "cpi_trimmed_spliced",
+    "import_price_deflator", "covid_d", "labour2", "unemployment",
+]
+MODEL_INPUT_COLUMNS = [
+    "date", "real_gdp_non_farm_sa", "import_price_deflator",
+    "cpi_trimmed_spliced", "unemployment", "covid_d", "labour",
 ]
 
 
@@ -72,31 +78,15 @@ PARAM_NAMES = [
 
 #Create a function that performs percentage change
 def pcy(x):
-    """EViews @pcy: year-on-year percent change."""
     return 100.0 * (x / x.shift(4) - 1.0)
 
 #This loads the data - doesnt necessarily need to be in a functoin
 def load_data():
-    df = pd.read_excel(DATA_XLSX, sheet_name=DATA_SHEET, skiprows=2, header=None,
-                       usecols="B:S", names=["date"] + COLS)
+    df = pd.read_excel(INPUTS_XLSX, sheet_name=GENERATION_SHEET,
+                       usecols=HISTORICAL_COLUMNS)
     df["date"] = pd.PeriodIndex(pd.to_datetime(df["date"]), freq="Q")
-    df = df.set_index("date").astype(float)
+    df = df.set_index("date").loc[:ESMPL_LAST].astype(float)
 
-    # The estimation workbook's unemployment column is date-shifted (a broken
-    # data refresh): it starts 1986Q1 with ~2022 values. Model Inputs.xlsx
-    # carries the correct series, so use it outright.
-    mi_names = ["real_gdp_sa", "real_gdp_non_farm_sa", "import_price_deflator", "cpi_all_nsa",
-                "cpi_all_sa", "cpi_trimmed_spliced", "core_cpi_index", "cpi_core_inflation",
-                "cpi_core_inflation_avg", "unemployment", "covid_d", "labour", "expectations_melb",
-                "expectations_union", "expectations_comb", "policy_rate", "ssr",
-                "cpi_core_inflation_forecast", "real_gni"]
-    mi = pd.read_excel(MODEL_INPUTS_XLSX, sheet_name="AU - Q", skiprows=2, header=None,
-                       usecols="B:U", names=["date"] + mi_names)
-    mi = mi[mi["date"].notna()]
-    mi["date"] = pd.PeriodIndex(pd.to_datetime(mi["date"]), freq="Q")
-    mi = mi.set_index("date")
-    mi = mi[~mi.index.duplicated(keep="first")]
-    df["unemployment"] = mi["unemployment"].reindex(df.index)
     return df
 #%%
 #Do the hp trend - eahc functions is just a section  - this is for initial values
@@ -336,7 +326,9 @@ class SmogAU(MLEModel):
         self["obs_cov"] = np.diag([p["eps1"] ** 2, p["eps2"] ** 2, p["eps3"] ** 2])
         self["state_cov"] = np.diag([p["eps5"] ** 2, p["eps6"] ** 2, p["eps7"] ** 2])
 
-        d_obs = np.zeros((3, self.nobs))
+        # Keep complex-step derivatives during optimisation instead of
+        # discarding their imaginary perturbations.
+        d_obs = np.zeros((3, self.nobs), dtype=np.result_type(params, float))
         d_obs[0] = p["phi3"] * self._col("covid_d")
         d_obs[1] = p["rho"] * self._col("u1")
         nd = 1.0 - self._col("d_it")
@@ -363,93 +355,12 @@ class SmogAU(MLEModel):
         return params
 
 #%%
-# ---------------------------------------------------------------- OLS starting values
-
-def ols_start_params(d, first=ESMPL_FIRST, last=ESMPL_LAST):
-    """Replicates the EViews OLS initialisation regressions."""
-    sl = slice(pd.Period(first, freq="Q"), pd.Period(last, freq="Q"))
-    w = d.loc[sl].copy()
-    w["ham_gap1"] = d["ham_gap"].shift(1).loc[sl]
-    w["ham_gap2"] = d["ham_gap"].shift(2).loc[sl]
-    w["ham_u_star1"] = d["ham_u_star"].shift(1).loc[sl]
-    w["u1"] = d["u"].shift(1).loc[sl]
-    w["pi1"] = d["pi"].shift(1).loc[sl]
-    w["pi2"] = d["pi"].shift(2).loc[sl]
-    w["pi3"] = d["pi"].shift(3).loc[sl]
-    w["nulc1"] = d["delta_nulc"].shift(1).loc[sl]
-    w["pm1"] = d["delta_4_pm"].shift(1).loc[sl]
-    w["du1_rel"] = (d["u"].diff(1) / d["u"]).shift(1).loc[sl]
-
-    p = {}
-
-    # ols_y: y = y_star + phi3*covid_d + gap  ->  y - ham_y_star - ham_gap = phi3*covid_d
-    yy = (w["y"] - w["ham_y_star"] - w["ham_gap"])
-    X = w[["covid_d"]]
-    m = sm.OLS(yy, X, missing="drop").fit()
-    p["phi3"] = m.params.iloc[0]
-    p["eps1"] = 0.1  # EViews leaves epsilon(1) at its default
-
-    # ols_u: u - ham_u_star = lambda3*ham_gap + rho*(u(-1) - ham_u_star(-1))
-    yy = w["u"] - w["ham_u_star"]
-    X = pd.DataFrame({"gap": w["ham_gap"], "ulag": w["u1"] - w["ham_u_star1"]})
-    m = sm.OLS(yy, X, missing="drop").fit()
-    p["lambda3"], p["rho"] = m.params.iloc[0], m.params.iloc[1]
-    p["eps2"] = np.sqrt(m.mse_resid)
-
-    # ols_pi (nonlinear in coefficients) - fit by NLS
-    from scipy.optimize import least_squares
-
-    nd = 1.0 - w["d_it"]
-    pi_dat = pd.DataFrame({
-        "pi": w["pi"], "pie_d": w["pi_e"] * w["d_it"], "pie_nd": w["pi_e"] * nd,
-        "pi1": w["pi1"], "pi2": w["pi2"],
-        "pi3_nd": np.where(nd == 0, 0.0, w["pi3"] * nd),
-        "nulc1_nd": np.where(nd == 0, 0.0, w["nulc1"] * nd),
-        "gap": w["ham_gap"], "pm1": w["pm1"],
-    }).dropna()
-
-    #Store the residuals of the fits
-    def resid(th):
-        b1, b2, b3, g, l1, ps = th
-        fit = ((1 - b1 - b2) * pi_dat["pie_d"]
-               + (1 - b1 - b2 - b3 - g) * pi_dat["pie_nd"]
-               + b1 * pi_dat["pi1"] + b2 * pi_dat["pi2"]
-               + b3 * pi_dat["pi3_nd"] + g * pi_dat["nulc1_nd"]
-               + l1 * pi_dat["gap"] + ps * pi_dat["pm1"])
-        return (pi_dat["pi"] - fit).to_numpy()
-
-
-    sol = least_squares(resid, x0=np.zeros(6))
-    p["beta1"], p["beta2"], p["beta3"], p["gamma"], p["lambda1"], p["psi"] = sol.x
-    dof = len(pi_dat) - 6
-    p["eps3"] = np.sqrt((sol.fun ** 2).sum() / dof)
-
-    # ols_gap: ham_gap = phi1*ham_gap(-1) + phi2*ham_gap(-2)
-    m = sm.OLS(w["ham_gap"], w[["ham_gap1", "ham_gap2"]], missing="drop").fit()
-    p["phi1"], p["phi2"] = m.params.iloc[0], m.params.iloc[1]
-    p["eps5"] = np.sqrt(m.mse_resid)
-
-    # ols_y_star: ham_y_star = ham_y_star(-1) + g_star
-    dy = (w["ham_y_star"] - d["ham_y_star"].shift(1).loc[sl]).dropna()
-    p["g_star"] = dy.mean()
-    p["eps6"] = dy.std(ddof=0)
-    p["eps7"] = 0.1  # EViews default
-
-    return np.array([p[k] for k in PARAM_NAMES])
-
-#%%
-# ---------------------------------------------------------------- driver
-
-def params_vector(dct):
-    return np.array([dct[k] for k in PARAM_NAMES])
-
-#%%
 # ---------------------------------------------------------------- output
 
 def smoothed_states(res, index):
     """Pull the Kalman-smoothed states out of a fitted model.
 
-    res   : the results object returned by mod.fit()
+    res   : the results object returned by the Kalman smoother
     index : the quarterly index to label the rows with
 
     Returns a DataFrame of all seven states plus the output gap expressed
@@ -464,7 +375,7 @@ def smoothed_states(res, index):
 
 #sSave results, we can use this later
 def save_results(out, out_dir=OUT_DIR, name="smog_au"):
-    """Write the reported series to CSV and draw the output-gap chart.
+    """Write the historical smoothed states to CSV.
 
     out     : the frame returned by smoothed_states()
     out_dir : folder to write into
@@ -477,26 +388,49 @@ def save_results(out, out_dir=OUT_DIR, name="smog_au"):
     out[["gap_smooth_final", "y_star", "u_star"]].to_csv(csv_path)
     print(f"Smoothed states: {csv_path}")
 
-    #Chart the output gap
-    try:
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
-    except ImportError:
-        print("matplotlib not available - skipped chart")
-        return
-
-    fig, ax = plt.subplots(figsize=(11, 5))
-    ax.plot(out.index.to_timestamp(), out["gap_smooth_final"], lw=1.2)
-    ax.axhline(0, color="grey", lw=0.6)
-    ax.set_title("AU SMOG output gap (smoothed, %)")
-    fig.tight_layout()
-
-    png_path = out_dir / f"{name}_gap.png"
-    fig.savefig(png_path, dpi=150)
-    print(f"Chart: {png_path}")
-
 #%%
+def load_reference_parameters():
+    """Read the final fitted coefficients from the bundled EViews table."""
+    labels = {
+        **{f"beta{i}": f"BETA({i})" for i in (1, 2, 3)},
+        **{f"eps{i}": f"EPSILON({i})" for i in (1, 2, 3, 5, 6, 7)},
+        "g_star": "G_STAR(1)", "gamma": "GAMMA(1)",
+        "lambda1": "LAMBDA(1)", "lambda3": "LAMBDA(3)",
+        "phi1": "PHI(1)", "phi2": "PHI(2)", "phi3": "PHI(3)",
+        "psi": "PSI(1)", "rho": "RHO(1)",
+    }
+    found = {}
+    with REFERENCE_COEFFICIENTS_FILE.open(newline="", encoding="utf-8-sig") as f:
+        for row in csv.reader(f):
+            if len(row) >= 2 and row[0].strip() in labels.values():
+                found[row[0].strip()] = float(row[1])
+    missing = [name for name in PARAM_NAMES if labels[name] not in found]
+    if missing:
+        raise ValueError(f"Reference coefficient table is missing {missing}")
+    params = np.array([found[labels[name]] for name in PARAM_NAMES])
+    if not np.isfinite(params).all():
+        raise ValueError("Reference coefficients must be finite")
+    return params
+
+
+def save_parameters(params, svec, log_likelihood):
+    """Persist coefficients and initial state for fixed-parameter updates."""
+    payload = {
+        "model": "AU SMOG",
+        "sample_first": ESMPL_FIRST,
+        "sample_last": ESMPL_LAST,
+        "parameter_names": PARAM_NAMES,
+        "parameters": [float(value) for value in params],
+        "initial_state": [float(value) for value in svec],
+        "log_likelihood": float(log_likelihood),
+        "source": "fitted coefficients in output/au_ss1_output.csv",
+    }
+    temporary = PARAMETERS_FILE.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    temporary.replace(PARAMETERS_FILE)
+    print(f"Fixed parameters: {PARAMETERS_FILE}")
+
+
 def main():
     OUT_DIR.mkdir(exist_ok=True)
 
@@ -521,25 +455,16 @@ def main():
     mod = SmogAU(endog, exog, svec)
 
 
-    # -- fresh ML estimation
-    starts = ols_start_params(d)
-
-    #Do the maxmum lileihood esitmatoin
-    print("\nEstimating by maximum likelihood ...")
-
-    #Fit smogAU model, to do three times to search for optimla fits
-    #1. Start at start_params - update - run kalman - get LL - adjust
-    fit = mod.fit(start_params=starts, method="bfgs", maxiter=5000, disp=False)
-    # refine
-    #Fit again
-    fit = mod.fit(start_params=fit.params, method="nm", maxiter=20000, disp=False)
-    fit = mod.fit(start_params=fit.params, method="bfgs", maxiter=5000, disp=False)
-
-    #Put res as fit lets
-    res = fit
+    # Reuse the historical model estimates; new observations will not
+    # change these coefficients.
+    params = load_reference_parameters()
+    res = mod.smooth(params, cov_type="none")
 
     #Pull the smoothed states out of the fitted model
     out = smoothed_states(res, endog.index)
+
+    save_parameters(params, svec, res.llf)
+    save_results(out)
 
     return out
 #%%

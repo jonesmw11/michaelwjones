@@ -1,60 +1,63 @@
 # AU SMOG Model
 
-Australian state-space model for estimating the output gap, potential output, and the non-accelerating inflation rate of unemployment (NAIRU). The model combines output, unemployment, and inflation signals with seven latent states.
+The Australian SMOG state-space model estimates the output gap, potential output, and the non-accelerating inflation rate of unemployment (NAIRU).
 
-[Model documentation](SMOG_AU_Model_Documentation.pdf)
+Its output-gap estimate is strongly informed by unemployment. It is one measure of spare capacity; a sound assessment of the output gap also needs other evidence and models.
 
-## Contents
+This folder has three Python scripts:
 
-| File | Purpose |
-| --- | --- |
-| `au_pipeline.py` | Raw-data preparation, starting values, and fresh maximum-likelihood estimation for AU SMOG |
-| `au.py` | Stored Australian model specifications and EViews coefficients; also contains the separate AU Laubach-Williams specification |
-| `statespace.py` | Shared state-space model implementation and replication functions |
-| `fitting.py` | Re-estimation using the exported estimation data and documented starting coefficients |
-| `smog_data.py` | Input transformations, including the Australian data through 2026Q1 |
-| `Estimation Data.xlsx` | Combined estimation workbook; the AU pipeline reads `SMOG AU\|Quarterly` |
-| `Model Inputs.xlsx` | Combined input workbook; the AU pipeline reads `AU - Q` |
-| `output/au_wf_export.xlsx` | AU EViews estimation data and reference states |
-| `output/au_ss1_output.csv` | EViews estimation table, including starting values |
-| `output/smog_au_smoothed_states.csv` | Saved raw-pipeline output: 1980Q1–2023Q4 |
-| `output/smog_au_gap_comparison.csv` | Saved output-gap comparison |
-| `results/smog_au_python.csv` | Saved extended results: 1980Q1–2026Q1 |
+1. [au_smog_model_generation.py](code/au_smog_model_generation.py) builds the historical 1980Q1–2023Q4 model from the `Generation` tab of the bundled workbook, applies the fitted coefficients in `output/au_ss1_output.csv`, and saves those coefficients plus the initial state to `au_smog_fitted_parameters.json`.
+2. [au_smog_model_update.py](code/au_smog_model_update.py) extends the series when the `Update` tab gains new quarters. It keeps the saved coefficients and initial state fixed and reruns the Kalman filter and smoother.
+3. [au_smog_figure_generation.py](code/au_smog_figure_generation.py) generates the six charts from the saved smoothed and filtered states. The update script calls it automatically; run it alone to refresh only the figures.
 
-The original source files were copied from `Macro Work/Interest Rates`, with the PDF copied from `Macro Work`. Their contents were verified against the originals. The combined workbooks and shared Python modules retain other-country/model content where it is part of those original files.
+## Run
 
-## Running AU SMOG
-
-From this folder, install dependencies:
+From the `AU Smog Model` folder:
 
 ```powershell
-python -m pip install -r requirements.txt
+py -3.14 -m pip install -r requirements.txt
+py -3.14 code/au_smog_model_generation.py
+py -3.14 code/au_smog_model_update.py
+# Optional: regenerate figures without updating model states
+py -3.14 code/au_smog_figure_generation.py
 ```
 
-To estimate from raw data and explicitly save the output:
+Run the generation script once, or when deliberately changing the historical specification or reference coefficients. After adding a new quarter to the `Update` tab of `results/AU SMOG Model Inputs.xlsx`, run only the update script; it also refreshes the figures. Run the figure script separately if only the chart styling changes. Use `py -3.14 code/au_smog_model_update.py --check-only` to calculate without replacing the result CSV or charts.
 
-```powershell
-python -c "import au_pipeline as p; out = p.main(); p.save_results(out)"
-```
+The generation script writes `output/smog_au_smoothed_states.csv` for the historical sample. The update script writes smoothed states to `results/smog_au_python.csv` and filtered states to `results/smog_au_filtered_states.csv`. Both have columns `date`, `output_gap`, `y_star`, and `u_star`. It also refreshes the PNGs in [results/figures](results/figures/README.md). Both scripts read files from this folder; neither needs the original Stats Research directory.
 
-This runs the full BFGS / Nelder-Mead / BFGS sequence and writes the smoothed-state CSV and, when matplotlib is installed, an output-gap chart into `output/`. It overwrites the corresponding saved output files.
+## Figures
 
-To replicate AU SMOG at the stored EViews coefficients:
+The charts follow the style used in `Macro Work/Interest Rates/charts`: the model estimate is dark green, observed unemployment is grey, series labels appear in the top-right legend, and a grey line marks zero. Smoothed states use the full available sample at each date; filtered states use observations available only through that date, with coefficients held fixed.
 
-```powershell
-python -c "import au, statespace; statespace.run_smog('AU', au.SMOG_SPEC)"
-```
+![Australian SMOG output gap, smoothed states](results/figures/au_smog_output_gap_smoothed.png)
 
-This writes `results/smog_au_python.csv` using the bundled workfile export. It does not update the input data to the latest quarter and can overwrite the longer saved series. Running `au.py` directly also invokes the separate LW model, whose inputs are outside this AU SMOG package; use the targeted command above.
+![Australian SMOG output gap, filtered states](results/figures/au_smog_output_gap_filtered.png)
 
-## Initial examination
+![Australian unemployment and SMOG NAIRU, smoothed states](results/figures/au_smog_unemployment_and_nairu_smoothed.png)
 
-- The raw-data estimation window contains 176 quarters, from 1980Q1 to 2023Q4. Data loading, transformations, starting-value estimation, and initial likelihood evaluation passed.
-- Kalman smoothing at stored coefficients passed. The reproduced likelihood was **517.659443**, against the stored EViews value **517.6595**, within the code's tolerance of 0.0005.
-- The input builder can load Australian observations through 2026Q1. The saved extended results contain 185 quarters.
-- `au_pipeline.main()` returns the result but does not call `save_results()` itself; the command above makes that save step explicit.
-- The source handles a documented unemployment-series problem in `Estimation Data.xlsx` by taking unemployment from `Model Inputs.xlsx`.
-- Script execution and interactive cells resolve the copied workbooks inside this repository. Open the repository or its AU SMOG folder before running the code as cells.
-- A fresh full maximum-likelihood fit and regeneration of the extended results have not been run for this copy.
+![Australian unemployment and SMOG NAIRU, filtered states](results/figures/au_smog_unemployment_and_nairu_filtered.png)
+
+[Unemployment gap — smoothed](results/figures/au_smog_unemployment_gap_smoothed.png) · [Unemployment gap — filtered](results/figures/au_smog_unemployment_gap_filtered.png). The plotted gap is the model's NAIRU minus observed unemployment, in percentage points; negative values indicate labour-market slack.
+
+## Data and model files
+
+- [results/AU SMOG Model Inputs.xlsx](results/AU%20SMOG%20Model%20Inputs.xlsx), `Generation` tab: historical non-farm GDP, trimmed CPI, import prices, COVID, unit labour costs, and corrected unemployment. Generation uses rows only through 2023Q4. The six later rows retained for reference are highlighted red and excluded from generation and the update history.
+- The same workbook, `Update` tab: the six series used for quarters after 2023Q4, plus the date. The update script reads new observations here; the figure script reads its unemployment series for the charts. Add new quarters to this tab.
+- `output/au_ss1_output.csv`: the original fitted coefficient table used by the generation script.
+- `au_smog_fitted_parameters.json`: the fixed coefficients and initial state passed from generation to update.
+
+## Documentation
+
+- [Assessing Potential Output and the Output Gap in Australia — selected pages](Assessing%20Potential%20Output%20and%20the%20Output%20Gap%20in%20Australia%20-%20selected%20pages.pdf) is an excerpt from the Reserve Bank of Australia's July 2024 *Bulletin* article by Bishop et al. It contains the introduction, the assessment and model discussion, and Appendix A's SMOG specification (original pages 1, 5–10, and 12–13).
+- [SMOG AU model documentation](SMOG_AU_Model_Documentation.pdf) is retained alongside the article excerpt.
+
+## Data notes
+
+The old estimation workbook had a date-shifted unemployment column. The `Generation` tab contains corrected historical unemployment. Update combines its historical data with new quarters from the `Update` tab. The figures use estimated states and observed unemployment from `Update`. The update script preserves historical model inputs through 2023Q4 and appends the new quarters, so changes to newer input data do not silently re-estimate or replace the historical coefficients.
+
+## Verification
+
+The generated historical series has 176 quarters (1980Q1–2023Q4). The fixed-parameter update produced 185 quarters through 2026Q1. The saved parameter file was unchanged by the update. A separate fresh maximum-likelihood run did not converge, so this package uses the fitted coefficients from the bundled EViews output table rather than that run.
 
 [Back to macro work](../README.md)
