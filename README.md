@@ -6,10 +6,9 @@ This repository brings together my research, code, and supporting materials. Pro
 
 ## Portfolio contents
 
-- [Research and coding projects](projects/README.md)
-- [Dissertation](projects/dissertation/README.md) — code and supporting materials to be added.
-- [University of Auckland research paper](auckland_research_paper.pdf)
-- [CV](download_cv.pdf)
-- [Portfolio website source](index.html)
+* [Research and coding projects](projects/README.md)
+* [Dissertation](projects/dissertation/README.md) — code and supporting materials to be added.
+* [University of Auckland research paper](auckland_research_paper.pdf)
 
 Each code project will include an explanation of the research question, methods, results, limitations, and instructions for reproducing the analysis.
+
