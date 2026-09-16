@@ -11,4 +11,4 @@ Project code will be added here. The research paper and CV are available from th
 
 ## Project index
 
-No code projects have been added yet.
+- [Dissertation](dissertation/README.md) — folder prepared; code and supporting materials to be added.
