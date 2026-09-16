@@ -2,13 +2,12 @@
 
 ## Research and code portfolio
 
-This repository brings together my research, code, and supporting materials. Project code and reproducible analyses will be added as the portfolio develops.
+This repository brings together my master's dissertation, undergraduate research, and macroeconomic projects.
 
 ## Portfolio contents
 
-* [Research and coding projects](projects/README.md)
-* [Dissertation](projects/dissertation/README.md) — code and supporting materials to be added.
-* [University of Auckland research paper](auckland_research_paper.pdf)
+* [Master's dissertation](masters-dissertation/README.md) — complete analysis code, input data, and final PDF.
+* [Undergraduate research](undergrad-research/README.md) — University of Auckland research paper.
+* [Macro work](macro-work/README.md) — macroeconomic projects to be added.
 
 Each code project will include an explanation of the research question, methods, results, limitations, and instructions for reproducing the analysis.
-
