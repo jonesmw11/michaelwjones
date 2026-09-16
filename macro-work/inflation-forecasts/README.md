@@ -1,6 +1,6 @@
 # Inflation forecasts
 
-Python vector autoregression (VAR) forecasts for [Australia](Australia/README.md), [Japan](Japan/README.md), and [Korea](Korea/README.md). Each country folder contains its model code, a small workbook of the actual inputs used, saved forecast CSVs, and charts. The models run from this repository without the original `Stats Research` folder or EViews.
+Python vector autoregression (VAR) forecasts for [Australia](Australia/README.md), [Japan](Japan/README.md), and [Korea](Korea/README.md). Each country folder contains its model code, a small workbook of the actual inputs used, saved forecast CSVs, charts, and a results-first analysis in PDF and LaTeX. The models run from this repository without the original `Stats Research` folder or EViews.
 
 The input workbooks are selected values from `Macro Work/Data Inputs.xlsx` in the original research folder. Australia includes the `AU` and `AU-M` sheets; Japan includes `JN`; Korea includes `KR`. Each sheet contains only its model's price measures, drivers, and date columns. The values are a snapshot through 2026Q2 for Australia and June 2026 for Japan and Korea. Later dated but empty rows in the Japanese source were excluded.
 

@@ -4,6 +4,8 @@ Monthly VARs forecast four national CPI measures and three Tokyo CPI measures fo
 
 [Model code](jp.py) · [Input workbook](Data%20Inputs.xlsx) · [National CPI CSV](results/jp_cpi_inflation_forecast.csv) · [Tokyo CPI CSV](results/jp_tokyo_inflation_forecast.csv)
 
+[Results and methodology analysis](Analysis/README.md)
+
 ![Japan national CPI inflation and forecast](results/figures/jp_cpi_inflation_forecast.png)
 
 ![Tokyo CPI inflation and forecast](results/figures/jp_tokyo_inflation_forecast.png)

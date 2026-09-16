@@ -1,0 +1,82 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+\title{Japanese Inflation Forecasts\\Results and Method}
+\author{Model output review}
+\date{16 September 2026\\Input snapshot through June 2026}
+
+\begin{document}
+\maketitle
+
+\section{Results}
+The saved monthly vector autoregressions (VARs) project four national CPI measures and three Tokyo CPI measures through June 2029. National headline year-ended inflation is 1.70\% in the last observed month and 1.46\% at the forecast horizon. The national measure excluding food and energy settles lower, at 0.67\%. Tokyo headline moves from 1.71\% to 1.41\%. These are point forecasts from separate models for each price index.
+
+\subsection{National CPI}
+\begin{center}
+\begin{tabular}{lrrrr}
+\toprule
+Period & Headline & Ex fresh food & Ex fresh food & Ex food \\
+& & & and energy & and energy \\
+\midrule
+June 2026 (observed) & 1.70 & 1.53 & 1.72 & 1.21 \\
+June 2027 & 1.38 & 1.32 & 1.41 & 0.68 \\
+June 2028 & 1.44 & 1.34 & 1.32 & 0.66 \\
+June 2029 & 1.46 & 1.36 & 1.34 & 0.67 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{\detokenize{../results/figures/jp_cpi_inflation_forecast.png}}
+\caption{National CPI year-ended inflation and 36-month forecast.}
+\end{figure}
+
+\clearpage
+\subsection{Tokyo CPI}
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Period & Headline & Ex fresh food & Ex fresh food and energy \\
+\midrule
+June 2026 (observed) & 1.71 & 1.63 & 1.92 \\
+June 2027 & 1.37 & 1.38 & 1.44 \\
+June 2028 & 1.39 & 1.30 & 1.30 \\
+June 2029 & 1.41 & 1.32 & 1.32 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\noindent All table entries are year-ended percentage changes, rounded from the two saved Japanese forecast CSVs. Solid chart lines are observed rates; dashed lines are projections, with the final observed month marked by a dotted rule.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{\detokenize{../results/figures/jp_tokyo_inflation_forecast.png}}
+\caption{Tokyo CPI year-ended inflation and 36-month forecast.}
+\end{figure}
+
+\clearpage
+\section{Methodology}
+\subsection{Data and specification}
+The country workbook contains only the seven CPI indices and four drivers used from the original \texttt{JN} sheet. The drivers are unemployment, WTI oil, the Japanese import-price index, and the Stage 2 pipeline-price index. Each CPI measure has its own monthly VAR, with its CPI inflation and the four drivers treated as endogenous. CPI and the three price drivers enter as 100 times their month-on-month percentage changes; unemployment enters in levels. A zero in a price-index column is treated as missing before fitting. The transformed samples run from February 2000 to June 2026.
+
+Each fitted system has the form
+\[
+  x_t=c+A_1x_{t-1}+\cdots+A_px_{t-p}+u_t.
+\]
+\texttt{statsmodels} selects $p$ by the Akaike information criterion from at most 12 lags; all seven saved Japanese models select two lags. The fitted system recursively projects CPI inflation and its drivers together for 36 months. Forecast monthly changes are chained to the last observed price index. The reported year-ended rate is $100(P_t/P_{t-12}-1)$.
+
+Run \texttt{py -3.14 run\_all.py} from the parent \texttt{inflation-forecasts} folder to regenerate the CSVs and charts from the bundled inputs. The two CSVs store the full historical and forecast index and year-ended rate for each measure.
+
+\section{Interpretation and limits}
+The national and Tokyo forecasts are estimated independently, so their near-term paths need not move together. The 2029 values describe the long end of each fitted VAR path, not a policy objective or an externally imposed inflation assumption. The charts show point forecasts only. Although the Japanese helper computes VAR forecast intervals for transformed monthly changes, the saved year-ended charts and CSVs do not contain propagated uncertainty bands. There is no rolling backtest in this portfolio output, and new data or a changed estimation window may alter the selected lag order and forecasts.
+
+\end{document}

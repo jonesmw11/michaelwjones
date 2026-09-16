@@ -4,6 +4,8 @@ Monthly VARs forecast headline CPI, core CPI excluding food and energy, and PPI 
 
 [Model code](kr.py) · [Input workbook](Data%20Inputs.xlsx) · [CPI CSV](results/kr_cpi_inflation_forecast.csv) · [PPI CSV](results/kr_ppi_inflation_forecast.csv)
 
+[Results and methodology analysis](Analysis/README.md)
+
 ![Korean CPI inflation and forecast](results/figures/kr_cpi_inflation_forecast.png)
 
 ![Korean PPI inflation and forecast](results/figures/kr_ppi_inflation_forecast.png)
