@@ -17,18 +17,16 @@ so the VAR projects them jointly.
             Stage 2 pipeline-price inflation (% q/q) ]
 """
 
-# ============================================================
-# 1. LOAD PACKAGES
-# ============================================================
+# %% Imports and data access
+# Load pandas, the VAR estimator, and the local workbook reader.
 import pandas as pd
 from statsmodels.tsa.api import VAR        # the VAR model itself
 
 from data import load_sheet, RESULTS       # workbook reader (see data.py)
 
 
-# ============================================================
-# 2. SETTINGS
-# ============================================================
+# %% Forecast settings
+# Set the starting quarter, horizon, maximum lag order, and CPI measures.
 START = pd.Period("2001Q1", freq="Q")      # first quarter with a full driver set
 STEPS = 12                                 # forecast 12 quarters (3 years) ahead
 MAXLAGS = 6                                # most lags the AIC search may choose
@@ -41,12 +39,8 @@ MEASURES = {
 }
 
 
-# ============================================================
-# 3. LOAD DATA
-#    Quarterly series come from the "AU" sheet; oil and the Stage 2
-#    pipeline-price index are monthly on "AU-M", so we average them to
-#    quarters.
-# ============================================================
+# %% Input data and quarterly drivers
+# Read AU quarterly series and average monthly oil and Stage 2 by quarter.
 au_q = load_sheet("AU", "Q")               # quarterly sheet
 au_m = load_sheet("AU-M", "M")             # monthly sheet
 
@@ -70,12 +64,8 @@ print(f"  rows {len(drivers)}, complete rows {len(drivers.dropna())}")
 print(f"  span {drivers.dropna().index[0]} -> {drivers.dropna().index[-1]}\n")
 
 
-# ============================================================
-# 4. FIT A VAR FOR EACH CPI MEASURE
-#    Price indices are turned into inflation rates (% change) so the data is
-#    stationary; unemployment and expectations are already rates.
-#    statsmodels picks the lag order by AIC.
-# ============================================================
+# %% Fit the three CPI models
+# Convert price indices to quarterly changes and select each VAR lag by AIC.
 fits = {}          # fitted VAR results, one per measure
 frames = {}        # the data each VAR was fitted on
 levels = {}        # the raw CPI index for each measure
@@ -102,13 +92,8 @@ for label, column in MEASURES.items():
           f"({fit.nobs} obs)")
 
 
-# ============================================================
-# 5. CHECK THE FIT
-#    Three standard diagnostics:
-#      - lag-order table (what AIC/BIC/HQIC each preferred)
-#      - stability (all roots inside the unit circle -> forecasts converge)
-#      - residual autocorrelation (Durbin-Watson near 2 is clean)
-# ============================================================
+# %% Fit diagnostics
+# Print lag-order criteria, stability, and a CPI-equation fit summary.
 print("\n--- Lag order selection (headline) ---")
 print(VAR(frames["headline"].to_numpy()).select_order(MAXLAGS).summary())
 
@@ -124,11 +109,8 @@ for label, fit in fits.items():
 # print(fits["headline"].summary())
 
 
-# ============================================================
-# 6. FORECAST
-#    statsmodels' own recursion: each period's prediction feeds back in as
-#    the next period's lag, and all variables move together.
-# ============================================================
+# %% Dynamic forecasts and year-ended rates
+# Project each VAR, chain CPI changes onto the last index, and calculate YoY rates.
 forecasts = {}     # forecast of the % change in each CPI measure
 results = {}       # index level + year-on-year rate, history and forecast
 
@@ -162,9 +144,8 @@ for label, fit in fits.items():
           f"{out.index[-1]} ({out['yoy'].iloc[-1]:.2f}% y/y)")
 
 
-# ============================================================
-# 7. SAVE RESULTS
-# ============================================================
+# %% Save forecast results
+# Write the combined historical and projected index levels and YoY rates.
 combined = pd.DataFrame({f"{label}_{col}": results[label][col]
                          for label in results for col in ["index", "yoy"]})
 combined.to_csv(RESULTS / "au_inflation_forecast.csv")

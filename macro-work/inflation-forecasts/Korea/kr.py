@@ -18,11 +18,15 @@ Monthly VARs, all variables endogenous:
 statsmodels VAR, lag order by AIC, dynamic multi-step forecasts.
 Headline CPI, core CPI (ex food & energy) and PPI each get their own VAR.
 """
+# %% Imports and data access
+# Load pandas and the local workbook and VAR helpers.
 import pandas as pd
 
 from data import build_frame, pct_change, series, RESULTS
 from varmodel import fit_var, forecast, report
 
+# %% Model configuration
+# Define CPI and PPI targets, shared drivers, sample, and horizon.
 CPI_MEASURES = {
     "headline": "KR CPI",
     "core": "KR Core CPI (Excl Food & Energy)",
@@ -40,6 +44,8 @@ START = "2002-01"     # inflation expectations begin in the early 2000s
 STEPS = 36
 
 
+# %% Forecast one measure group
+# Fit a VAR for each target, project its drivers, and save combined results.
 def _run_group(measures, filename, verbose):
     drivers = build_frame(DRIVERS, freq="M", start=START)
     results = {}
@@ -67,6 +73,8 @@ def _run_group(measures, filename, verbose):
     return combined
 
 
+# %% Country forecast entry points
+# Expose the CPI and PPI forecast runs separately.
 def run_cpi(verbose=True):
     return _run_group(CPI_MEASURES, "kr_cpi_inflation_forecast.csv", verbose)
 
@@ -75,6 +83,8 @@ def run_ppi(verbose=True):
     return _run_group(PPI_MEASURES, "kr_ppi_inflation_forecast.csv", verbose)
 
 
+# %% Direct script execution
+# Run both forecast groups when this file is executed on its own.
 if __name__ == "__main__":
     print("== KR CPI ==")
     run_cpi()

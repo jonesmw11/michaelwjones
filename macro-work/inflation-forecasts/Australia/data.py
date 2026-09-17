@@ -2,6 +2,8 @@
 # Row 1 contains series names, row 2 is skipped, and data begins on row 3.
 # Date is in column B for AU, AU-M, and KR; column A for JN.
 
+# %% Imports and local paths
+# Locate this country's workbook and results folder.
 from pathlib import Path
 
 import numpy as np
@@ -16,6 +18,8 @@ RESULTS.mkdir(exist_ok=True)
 _DATE_IN_COL_A = {"JN", "JN-M", "NZ-M"}
 
 
+# %% Worksheet loading
+# Parse the country sheet into a period-indexed numeric table.
 def load_sheet(sheet, freq):
     """Read one country sheet into a DataFrame indexed by period.
 
@@ -53,6 +57,8 @@ def load_sheet(sheet, freq):
     return df.groupby(level=0).first()                # collapse any dupe rows
 
 
+# %% Individual series selection
+# Select one input series and exclude missing or stray zero index values.
 def series(sheet, freq, column, name=None, zero_is_missing=True):
     """Pull one named series out of a sheet, dropping empty observations.
 
@@ -74,6 +80,8 @@ def series(sheet, freq, column, name=None, zero_is_missing=True):
     return s
 
 
+# %% Quarterly aggregation
+# Reduce a monthly series to quarterly means or end-of-quarter levels.
 def to_quarterly(s, how="mean"):
     """Convert a monthly series to quarterly (mean of the months by default;
     'last' takes the final month, appropriate for index levels)."""
@@ -83,6 +91,8 @@ def to_quarterly(s, how="mean"):
     return out
 
 
+# %% Model frame assembly
+# Align the requested drivers on a common monthly or quarterly index.
 def build_frame(specs, freq, start=None):
     """Assemble a modelling frame from several (sheet, column) specs.
 
@@ -105,6 +115,8 @@ def build_frame(specs, freq, start=None):
     return df
 
 
+# %% Period-on-period inflation
+# Convert selected price-index columns into percentage changes.
 def pct_change(df, cols):
     """Percent change (x100) of the named columns - the standard transform
     that turns a price INDEX into an inflation RATE for the VAR."""
@@ -114,6 +126,8 @@ def pct_change(df, cols):
     return out
 
 
+# %% Year-ended inflation
+# Calculate a 12-month or four-quarter change from an index level.
 def yoy(level):
     """Year-on-year percent change of an index level."""
     n = 12 if level.index.freqstr.startswith("M") else 4

@@ -13,6 +13,8 @@ The only thing added on top is bookkeeping: turning inflation-rate forecasts
 back into index levels and year-on-year rates, which is how the results are
 reported.
 """
+# %% Imports and data transforms
+# Load numerical, tabular, and statsmodels VAR tools.
 import numpy as np
 import pandas as pd
 from statsmodels.tsa.api import VAR
@@ -20,6 +22,8 @@ from statsmodels.tsa.api import VAR
 from data import yoy
 
 
+# %% VAR estimation
+# Fit each stationary input frame and retain its labels and sample dates.
 def fit_var(data, maxlags=6, ic="aic", lags=None):
     """Estimate a VAR on a stationary frame (inflation rates, unemployment...).
 
@@ -46,6 +50,8 @@ def fit_var(data, maxlags=6, ic="aic", lags=None):
     return res
 
 
+# %% Dynamic VAR projection
+# Forecast all endogenous variables over the requested horizon.
 def forecast(res, steps, alpha=0.05):
     """Dynamic multi-step forecast from a fitted VAR.
 
@@ -64,6 +70,8 @@ def forecast(res, steps, alpha=0.05):
     return mk(mid), mk(lower), mk(upper)
 
 
+# %% Forecast index reconstruction
+# Chain projected period changes onto the last observed price index.
 def rates_to_index(last_level, rate_path):
     """Chain a forecast of period-on-period % changes onto the last observed
     index level, producing a continuous index into the future."""
@@ -75,6 +83,8 @@ def rates_to_index(last_level, rate_path):
     return pd.Series(out)
 
 
+# %% Historical and forecast reporting
+# Combine index levels and year-ended rates with an actual/forecast flag.
 def report(history_level, rate_forecast, label):
     """Combine history and forecast into one index, then report YoY inflation.
 
@@ -93,6 +103,8 @@ def report(history_level, rate_forecast, label):
     return out
 
 
+# %% Lag-order diagnostics
+# Summarize information criteria for candidate VAR lag orders.
 def lag_order_table(data, maxlags=8):
     """Lag-order selection summary (AIC/BIC/FPE/HQIC) for the write-up."""
     clean = data.dropna()

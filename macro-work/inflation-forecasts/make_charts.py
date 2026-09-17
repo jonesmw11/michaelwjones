@@ -1,4 +1,6 @@
 # Regenerate the five country forecast charts from the saved CSV results.
+# %% Imports and chart style
+# Load saved forecasts and the shared SMOG-style plotting helpers.
 from pathlib import Path
 
 import matplotlib
@@ -9,6 +11,8 @@ import pandas as pd
 import chartstyle as style
 
 
+# %% Chart specifications
+# Map each country and price measure to its result CSV, horizon, and labels.
 ROOT = Path(__file__).resolve().parent
 CHARTS = {
     "Australia": [
@@ -39,6 +43,8 @@ CHARTS = {
 }
 
 
+# %% Render a country chart
+# Draw observed and projected inflation, then save the styled PNG.
 def chart(country, spec):
     csv_name, image_name, frequency, steps, title, start, series = spec
     folder = ROOT / country / "results"
@@ -80,6 +86,8 @@ def chart(country, spec):
     print(output)
 
 
+# %% Generate all forecast charts
+# Rebuild each chart from the country CSV files.
 if __name__ == "__main__":
     for country, specs in CHARTS.items():
         for spec in specs:

@@ -23,6 +23,8 @@ Typical use
     fig.savefig("chart.png", dpi=200)
 """
 
+# %% Imports
+# Load date formatting, plotting, and tick-location helpers.
 from __future__ import annotations
 
 import matplotlib.dates as mdates
@@ -32,6 +34,8 @@ from matplotlib.ticker import MultipleLocator
 
 # The model estimate carries the accent colour; everything actual is grey, so
 # the estimate is what the eye lands on first.
+# %% Colour and typography palette
+# Define the consistent colours and font used by the inflation charts.
 ACCENT = "#0B6E4F"     # dark green - the model estimate
 GREY = "#9A9A9A"       # actual data
 BLACK = "#1A1A1A"      # titles and rules
@@ -49,6 +53,8 @@ FONT = "Gill Sans MT"          # falls back automatically if unavailable
 
 #: Line styles in the order they should be used, most prominent first.
 #: Slot 0 is the model estimate; slot 1 the actual series it is compared with.
+# %% Series line styles
+# Associate each plotted series with a reusable colour and line width.
 STYLES = [
     dict(color=ACCENT, lw=2.6, ls="-"),    # 0 model estimate
     dict(color=GREY,   lw=2.0, ls="-"),    # 1 actual data
@@ -58,6 +64,8 @@ STYLES = [
 ]
 
 
+# %% Series styling helpers
+# Return line properties and colours for plots and endpoint labels.
 def line(i: int = 0, **overrides):
     """Keyword arguments for the i-th line style.
 
@@ -74,6 +82,8 @@ def colour(i: int = 0):
     return STYLES[i % len(STYLES)]["color"]
 
 
+# %% On-chart annotations
+# Name each line directly and provide a helper for concise notes.
 def label(ax, x, y, text, i=0, dx=-10, dy=14, ha="right", bold=None):
     """Name a series where it runs, in its own colour, instead of in a legend.
 
@@ -101,6 +111,8 @@ def note(ax, x, y, text, dy=55, ha="center", tick=True):
     ax.annotate(text, xy=(x, y), xytext=(0, dy), textcoords="offset points", **kw)
 
 
+# %% Figure setup
+# Create a canvas with the shared type, title, and axis defaults.
 def figure(title: str = "", ylabel: str = "", figsize=(11, 6.6)):
     """Create a figure and axes carrying the house style.
 
@@ -126,6 +138,8 @@ def figure(title: str = "", ylabel: str = "", figsize=(11, 6.6)):
     return fig, ax
 
 
+# %% Axes finishing
+# Apply ticks, grid, zero rule, frame, and optional legend.
 def finish(fig, ax, *, ylabel: str = "", ylim=None, ystep=None,
            yfmt="{x:,.0f}", legend=False, legend_loc="upper right",
            year_step: int = 5, rotate_years: int = 0, zero_line: bool = False,
