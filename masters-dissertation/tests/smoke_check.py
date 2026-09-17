@@ -1,9 +1,10 @@
-"""Exercise real model functions without the full multi-start calibration.
-
-Load the script through the inexpensive Black-Scholes section, then load only
-later function definitions and model configuration. Long calibration loops and
-density tables are deliberately not executed. This is not a convergence test.
-"""
+# Exercise real model functions without the full multi-start calibration.
+#
+# Load the script through the inexpensive Black-Scholes section, then load only
+# later function definitions and model configuration. Long calibration loops and
+# density tables are deliberately not executed. This is not a convergence test.
+# %% Imports and dissertation source
+# Load the source script and prepare to run only inexpensive model definitions.
 import ast
 from pathlib import Path
 import sys
@@ -39,6 +40,8 @@ finally:
 assert calibration_started, "Could not locate the full calibration boundary"
 
 
+# %% Price validation helper
+# Confirm each pricing function returns finite, nonnegative values of the expected shape.
 def check_prices(prices, expected):
     prices = np.asarray(prices)
     assert prices.shape == (expected,), prices.shape
@@ -46,6 +49,8 @@ def check_prices(prices, expected):
     assert (prices >= 0).all(), "Negative prices"
 
 
+# %% Model smoke checks
+# Exercise each pricing path on a small contract sample without full calibration.
 checks = 0
 for label, chain, spot in (("KOSPI 200", namespace["opts"], namespace["S0"]),
                            ("S&P 500", namespace["sp"], namespace["SP_S0"])):

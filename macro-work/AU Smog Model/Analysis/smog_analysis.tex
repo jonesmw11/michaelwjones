@@ -1,0 +1,215 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,longtable,array}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\newcommand{\starred}[1]{#1^{*}}
+\newcommand{\NAIRU}{u^{*}}
+\newcommand{\gap}{g}
+\newcommand{\eps}{\varepsilon}
+
+\title{Australian SMOG Model\\Coefficient and Fit Analysis}
+\author{Model output review}
+\date{16 September 2026\\Saved model results through 2026Q1}
+
+\begin{document}
+\maketitle
+
+\section{Scope and interpretation}
+This report analyzes the standalone Australian Python SMOG model.
+Estimates come from its saved
+parameter JSON and accepted-iteration likelihood history. The generation
+sample is 1980Q1--2023Q4 (176 quarters). The update applies those fixed
+coefficients to later data; the latest complete saved result is 2026Q1.
+The latent potential output and NAIRU are model estimates, not directly
+observed quantities.
+
+\section{Results and charts}
+The fixed-parameter update runs through 2026Q1. Its saved smoothed output
+gap is $-0.371\%$ of potential output and its NAIRU is $4.089\%$.
+Observed unemployment is $4.286\%$, or 0.197 percentage points above the
+fitted NAIRU. Smoothed states use the full updated sample; filtered states
+use observations available through each plotted quarter, with the same
+historical coefficients. The charts are model estimates, not direct
+measurements of potential output or the NAIRU.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/au_smog_output_gap.png}}
+\caption{Output gap: smoothed and filtered estimates.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/au_smog_unemployment_and_nairu.png}}
+\caption{Observed unemployment and smoothed and filtered NAIRU.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/au_smog_unemployment_gap.png}}
+\caption{NAIRU minus observed unemployment: smoothed and filtered estimates.}
+\end{figure}
+
+\clearpage
+
+\section{Reading the current output gap}
+The negative gap and unemployment above the NAIRU are consistent with the
+negative unemployment-gap loading in this model. Yet the latest local inputs
+also show trimmed inflation of $3.466\%$ and the model's constructed
+expectation measure of $3.126\%$ in 2026Q1. In the fitted inflation equation,
+the smoothed output gap contributes only $-0.014$ percentage points. The
+other fitted terms produce a conditional inflation value of $3.294\%$ in
+total; actual inflation is $0.173$ points higher. This is a decomposition
+using the smoothed state, not an out-of-sample forecast.
+
+It is reasonable to question whether the model's unemployment-driven gap
+captures every source of current price pressure. The observation does not,
+on its own, establish that the gap is too negative: lagged inflation,
+expectations, import prices, and the inflation residual also enter the
+measurement equation. The near-zero unemployment measurement-noise estimate
+and the NAIRU innovation floor make the latent gap sensitive to the imposed
+structure. Compare it with other capacity measures before treating its level
+as a definitive estimate.
+
+\section{State-space structure}
+The model uses seven states,
+$s_t=(\gap_t,\gap_{t-1},\gap_{t-2},y^*_t,y^*_{t-1},\NAIRU_t,\NAIRU_{t-1})'$, where
+$y_t$ is log output, $\gap_t=y_t-y_t^*$ is a log output gap, and $\NAIRU_t$
+is the latent structural unemployment rate. The reported output gap is
+$100\gap_t$, in percent of potential output. The transition equations
+are
+\begin{align}
+ \gap_t &= \phi_1\gap_{t-1}+\phi_2\gap_{t-2}+\eta^g_t,\\
+ y_t^* &= y_{t-1}^*+g^*+\eta^y_t,\\
+ \NAIRU_t &= \NAIRU_{t-1}+\eta^u_t.
+\end{align}
+The output gap follows an AR(2), potential log output is a random walk with
+quarterly drift $g^*$, and the NAIRU is a random walk. The three state shocks
+are independent in the implemented diagonal covariance matrix. The state
+vector also carries lags needed by the observation equations.
+
+At the beginning of each generation run, HP-based gap, potential output, and
+NAIRU values set a known initial state with zero prior covariance. The model recomputes these HP series from its historical workbook. The HP series initialize the
+filter and provide regression-based optimizer starting values; the saved
+maximum-likelihood coefficients are fitted by Python from the country's own
+signals. This fixed initialization can matter for early likelihood terms and
+the resulting parameter estimates.
+
+\section{Australia: equations and estimates}
+Australia has three observed signals: log non-farm GDP $y_t$, unemployment
+$u_t$, and trimmed inflation $\pi_t$. Let $\pi_t^e$ be the four-quarter moving
+average of year-on-year inflation, $p_{t-1}^m$ the lagged four-quarter change
+in the import price deflator, and $n_{t-1}$ lagged nominal unit labour cost
+growth. Let $D_t=1$ after 1993Q1 and zero otherwise, and $C_t$ denote the
+COVID dummy. The implemented observation equations are
+\begin{align}
+ y_t &= y_t^*+\gap_t+\phi_3 C_t+\eps^y_t,\\
+ u_t &= \NAIRU_t+\lambda_3\gap_t
+       +\rho(u_{t-1}-\NAIRU_{t-1})+\eps^u_t,\\
+ \pi_t &= D_t\{(1-\beta_1-\beta_2)\pi_t^e
+                  +\beta_1\pi_{t-1}+\beta_2\pi_{t-2}\}\notag\\
+ &\quad +(1-D_t)\{(1-\beta_1-\beta_2-\beta_3-\gamma)\pi_t^e
+              +\beta_1\pi_{t-1}+\beta_2\pi_{t-2}
+              +\beta_3\pi_{t-3}+\gamma n_{t-1}\}\notag\\
+ &\quad +\lambda_1\gap_t+\psi p_{t-1}^m+\eps^\pi_t.
+\end{align}
+The inflation expectation weight is therefore implied by the other
+coefficients, separately in the two regimes. It is not an independent
+parameter. Unit labour cost growth is a regressor in the pre-targeting
+Australian Phillips curve, not an additional observed signal.
+
+\begin{longtable}{@{}>{$}l<{$}r p{0.65\linewidth}@{}}
+\caption{Australian maximum-likelihood coefficients. Values are rounded.}\\
+\toprule
+\text{Parameter} & \multicolumn{1}{c}{\text{Estimate}} & Meaning in the implemented model\\
+\midrule
+\endfirsthead
+\toprule
+\text{Parameter} & \multicolumn{1}{c}{\text{Estimate}} & Meaning\\
+\midrule
+\endhead
+\beta_1 & -0.380964 & Weight on one-quarter lagged inflation in both regimes.\\
+\beta_2 & -1.201930 & Weight on two-quarter lagged inflation in both regimes.\\
+\beta_3 & -0.652679 & Weight on three-quarter lagged inflation before targeting.\\
+\gamma & 0.004812 & Weight on lagged unit labour cost growth before targeting.\\
+\lambda_1 & 3.739261 & Inflation response to a one-unit log output gap; a one percentage point gap gives about 0.0374 percentage points of inflation through this term.\\
+\lambda_3 & -29.930362 & Unemployment response to the log output gap; a one percentage point gap corresponds to about $-0.2993$ percentage points of unemployment, holding other terms fixed.\\
+\rho & 0.626289 & Persistence of lagged unemployment relative to the previous NAIRU in the unemployment equation.\\
+\phi_1 & 1.295685 & First autoregressive coefficient of the latent output gap.\\
+\phi_2 & -0.364960 & Second autoregressive coefficient of the latent output gap.\\
+\phi_3 & -0.000494 & COVID dummy effect on observed log GDP, conditional on latent output.\\
+\psi & 0.025443 & Loading of lagged four-quarter import-price change in inflation.\\
+g^* & 0.007482 & Quarterly drift of potential log output, about 3.0\% at an annualized log-growth rate.\\
+\eps_1 & 0.004307 & Standard deviation of log GDP measurement noise; about 0.431\% in log-output terms.\\
+\eps_2 & 0.000010 & Standard deviation of unemployment measurement noise, in percentage points; at the imposed lower bound.\\
+\eps_3 & 0.334839 & Standard deviation of inflation measurement noise, in percentage points.\\
+\eps_5 & 0.005644 & Standard deviation of the log output-gap state shock; about 0.564\% of potential output.\\
+\eps_6 & 0.004184 & Standard deviation of the potential-log-output state shock.\\
+\eps_7 & 0.159770 & Standard deviation of the quarterly NAIRU state shock, in unemployment percentage points.\\
+\bottomrule
+\end{longtable}
+
+The implied expectation weights are $2.5829$ after 1993Q1 and $3.2308$
+before targeting. The large positive implied weights and negative lag weights
+are features of this fitted equation, not general statements about inflation
+dynamics. In particular, the near-zero fitted $\eps_2$ makes the unemployment
+equation almost exact conditional on the latent states. The code constrains
+$\eps_7$ to be at least half the historical standard deviation of quarterly
+unemployment changes because the unrestricted likelihood allowed the NAIRU
+innovation scale to collapse. This bound and the $\eps_2$ boundary solution
+mean the NAIRU and output-gap decomposition should be treated as sensitive to
+the model's restrictions.
+
+\section{Likelihood fit and convergence}
+The script uses SciPy's bounded L-BFGS-B optimizer on the Kalman-filter log
+likelihood. Starting guesses come from Australian historical data. The
+accepted-iteration history stores all 18 parameters, the full-sample log
+likelihood, and quarter-level contributions.
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Fit statistic & Australia\\
+\midrule
+Historical quarters & 176\\
+Accepted iterations & 109\\
+Initial log likelihood & 234.1271\\
+Iteration 25 & 549.1910\\
+Iteration 50 & 549.2789\\
+Final log likelihood & 549.2792\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Accepted steps increased the likelihood monotonically. The last history row
+agrees with the saved parameter JSON. Numerical convergence from these
+starting values and bounds does not establish a global optimum, tight
+identification, or forecast accuracy. The script does not export standard
+errors or out-of-sample forecast scores. The quarter-level likelihood file
+can identify observations that were hardest to predict: each contribution is
+a Kalman one-step-ahead predictive density term, not a squared-error metric.
+Early missing regressors cause the affected signals to be masked.
+
+\section{Reproduction and source files}
+From this model folder, run the generation script to re-estimate historical
+coefficients and overwrite the history CSVs. Then run the update script to
+apply the fixed fit to later quarters. Source files used for this report:
+\begin{itemize}
+\item Generation and update scripts in the \texttt{code} folder.
+\item Fitted parameter JSON at the model-folder root.
+\item The fit-history and likelihood-by-quarter CSVs in \texttt{output}.
+\item The updated state CSV in \texttt{results} and the \texttt{Update}
+      tab of the local model-input workbook.
+\end{itemize}
+Numeric tables are a snapshot and do not update automatically when Python is
+rerun.
+
+\end{document}

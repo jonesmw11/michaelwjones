@@ -1,0 +1,225 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,longtable,array}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\newcommand{\starred}[1]{#1^{*}}
+\newcommand{\NAIRU}{u^{*}}
+\newcommand{\gap}{g}
+\newcommand{\eps}{\varepsilon}
+
+\title{Korean SMOG Model\\Coefficient and Fit Analysis}
+\author{Model output review}
+\date{16 September 2026\\Saved model results through 2026Q1}
+
+\begin{document}
+\maketitle
+
+\section{Scope and interpretation}
+This report analyzes the standalone Korean Python SMOG model.
+Estimates come from its saved
+parameter JSON and accepted-iteration likelihood history. The generation
+sample is 2000Q1--2022Q4 (92 quarters). The update applies those fixed
+coefficients to later data; the latest complete saved result is 2026Q1.
+The latent potential output and NAIRU are model estimates, not directly
+observed quantities.
+
+\section{Results and charts}
+The fixed-parameter update runs through 2026Q1. Its saved smoothed output
+gap is $-0.052\%$ of potential output and its NAIRU is $2.761\%$.
+Observed unemployment is $2.867\%$, or 0.106 percentage points above the
+fitted NAIRU. Smoothed states use the full updated sample; filtered states
+use observations available through each plotted quarter, with the same
+historical coefficients. The charts are model estimates, not direct
+measurements of potential output or the NAIRU.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/kr_smog_output_gap_smoothed.png}}
+\caption{Smoothed output gap.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/kr_smog_output_gap_filtered.png}}
+\caption{Filtered output gap.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/kr_smog_unemployment_and_nairu_smoothed.png}}
+\caption{Observed unemployment and smoothed NAIRU.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/kr_smog_unemployment_and_nairu_filtered.png}}
+\caption{Observed unemployment and filtered NAIRU.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/kr_smog_unemployment_gap_smoothed.png}}
+\caption{Smoothed NAIRU minus observed unemployment.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/kr_smog_unemployment_gap_filtered.png}}
+\caption{Filtered NAIRU minus observed unemployment.}
+\end{figure}
+
+\clearpage
+
+\section{Reading the current output gap}
+The latest saved Korean gap is $-0.052\%$ in 2026Q1, quite close to zero;
+observed unemployment is 0.106 percentage points above the fitted NAIRU.
+The local core-inflation reading is $2.176\%$ and the expectation input is
+$2.633\%$. The smoothed gap contributes just $-0.006$ percentage points to
+the fitted inflation equation. Its full conditional fitted value is
+$2.153\%$, leaving an actual-minus-fitted difference of $0.022$ points.
+This uses the smoothed state and is not an out-of-sample forecast.
+
+The evidence here is weak for calling the output gap materially too negative:
+its estimated level and direct inflation contribution are both small. The
+unemployment equation helps locate the latent gap, but lagged inflation,
+expectations, import prices, the wage signal, and measurement noise also
+shape the joint fit. Current inflation alone cannot identify which latent
+state or coefficient should change.
+
+\section{State-space structure}
+The model uses seven states,
+$s_t=(\gap_t,\gap_{t-1},\gap_{t-2},y^*_t,y^*_{t-1},\NAIRU_t,\NAIRU_{t-1})'$, where
+$y_t$ is log output, $\gap_t=y_t-y_t^*$ is a log output gap, and $\NAIRU_t$
+is the latent structural unemployment rate. The reported output gap is
+$100\gap_t$, in percent of potential output. The transition equations
+are
+\begin{align}
+ \gap_t &= \phi_1\gap_{t-1}+\phi_2\gap_{t-2}+\eta^g_t,\\
+ y_t^* &= y_{t-1}^*+g^*+\eta^y_t,\\
+ \NAIRU_t &= \NAIRU_{t-1}+\eta^u_t.
+\end{align}
+The output gap follows an AR(2), potential log output is a random walk with
+quarterly drift $g^*$, and the NAIRU is a random walk. The three state shocks
+are independent in the implemented diagonal covariance matrix. The state
+vector also carries lags needed by the observation equations.
+
+At the beginning of each generation run, HP-based gap, potential output, and
+NAIRU values set a known initial state with zero prior covariance. The model reads its historical HP columns from the Generation tab. The HP series initialize the
+filter and provide regression-based optimizer starting values; the saved
+maximum-likelihood coefficients are fitted by Python from the country's own
+signals. This fixed initialization can matter for early likelihood terms and
+the resulting parameter estimates.
+
+\section{Korea: equations and estimates}
+Korea has four observed signals: log GDP $y_t$, unemployment $u_t$, core
+inflation $\pi_t$, and nominal unit labour cost growth $w_t$. Here
+$\pi_t^e$ is the Bank of Korea expectation input and $p_{t-1}^m$ is the
+lagged four-quarter import-price change. The implemented observation
+equations are
+\begin{align}
+ y_t &= y_t^*+\gap_t+\eps^y_t,\\
+ u_t &= \NAIRU_t+\lambda_3\gap_t
+       +\rho_1(u_{t-1}-\NAIRU_{t-1})+\eps^u_t,\\
+ \pi_t &= (1-\beta_1-\beta_2)\pi_t^e
+      +\beta_1\pi_{t-1}+\beta_2\pi_{t-2}
+      +\lambda_1\gap_t+\psi p_{t-1}^m+\eps^\pi_t,\\
+ w_t &= (1-\beta_4)\pi_t^e+\beta_4\pi_{t-1}
+      +\lambda_2(u_{t-1}-\NAIRU_{t-1})+\eps^w_t.
+\end{align}
+The wage equation connects labour-market slack to unit labour cost growth.
+Because the gap is in log units, a one percentage point change in the output
+gap multiplies $\lambda_1$ or $\lambda_3$ by $0.01$.
+
+\begin{longtable}{@{}>{$}l<{$}r p{0.65\linewidth}@{}}
+\caption{Korean maximum-likelihood coefficients. Values are rounded.}\\
+\toprule
+\text{Parameter} & \multicolumn{1}{c}{\text{Estimate}} & Meaning in the implemented model\\
+\midrule
+\endfirsthead
+\toprule
+\text{Parameter} & \multicolumn{1}{c}{\text{Estimate}} & Meaning\\
+\midrule
+\endhead
+\beta_1 & 1.311422 & Weight on one-quarter lagged core inflation in the inflation equation.\\
+\beta_2 & -0.330134 & Weight on two-quarter lagged core inflation.\\
+\beta_4 & 1.966103 & Weight on lagged inflation in the wage equation; the implied expectation weight is $-0.9661$.\\
+\lambda_1 & 11.745785 & Inflation loading on the log output gap; a one percentage point gap gives about 0.1175 percentage points through this term.\\
+\lambda_2 & -8.279811 & Wage loading on lagged unemployment minus lagged NAIRU; a one percentage point larger unemployment gap lowers predicted wage growth by about 8.28 percentage points, other terms fixed.\\
+\lambda_3 & -8.620103 & Unemployment loading on the log output gap; a one percentage point output gap gives about $-0.0862$ percentage points.\\
+\rho_1 & 0.889138 & Persistence of lagged unemployment relative to lagged NAIRU.\\
+\phi_1 & 1.290464 & First autoregressive coefficient of the latent output gap.\\
+\phi_2 & -0.596930 & Second autoregressive coefficient of the latent output gap.\\
+\psi & 0.002122 & Loading of lagged four-quarter import-price change in inflation.\\
+g^* & 0.009052 & Quarterly drift of potential log output, about 3.62\% at an annualized log-growth rate.\\
+\eps_1 & 0.005770 & Standard deviation of log GDP measurement noise; about 0.577\% in log-output terms.\\
+\eps_2 & 0.074402 & Standard deviation of unemployment measurement noise, in percentage points.\\
+\eps_3 & 0.285165 & Standard deviation of core-inflation measurement noise, in percentage points.\\
+\eps_4 & 4.895773 & Standard deviation of unit labour cost growth measurement noise, in percentage points.\\
+\eps_5 & 0.043368 & Code-scale parameter for the gap shock: actual shock standard deviation is $\eps_5/10=0.004337$ log units, or about 0.434\%.\\
+\eps_6 & 0.006277 & Standard deviation of the potential-log-output state shock.\\
+\eps_7 & 0.157126 & Standard deviation of the quarterly NAIRU state shock, in unemployment percentage points.\\
+\bottomrule
+\end{longtable}
+
+The Korean inflation expectation weight is $1-\beta_1-\beta_2=0.0187$.
+The large wage measurement standard deviation, $\eps_4$, means that the
+fourth signal is comparatively noisy in its own units. It contributes to the
+likelihood, but an individual wage observation need not be close to its
+conditional fitted value. The sizeable negative $\lambda_2$ is a partial
+effect on the wage equation, conditional on its lagged inflation and
+expectation terms; it should not be read as a standalone causal estimate.
+
+\section{Likelihood fit and convergence}
+The script uses SciPy's bounded L-BFGS-B optimizer on the Kalman-filter log
+likelihood. Starting guesses come from Korean historical data. The
+accepted-iteration history stores all 18 parameters, the full-sample log
+likelihood, and quarter-level contributions. Trial AR(2) coefficients
+outside the implemented stability inequalities are penalized.
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Fit statistic & Korea\\
+\midrule
+Historical quarters & 92\\
+Accepted iterations & 129\\
+Initial log likelihood & $-33{,}775.3474$\\
+Iteration 25 & 12.1332\\
+Iteration 50 & 12.3798\\
+Final log likelihood & 12.3840\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The initial likelihood is extremely poor, but accepted steps increased it
+monotonically. The last history row agrees with the saved parameter JSON.
+Numerical convergence from these starting values and bounds does not
+establish a global optimum, tight identification, or forecast accuracy. The
+script does not export standard errors or out-of-sample forecast scores.
+Quarter-level likelihood contributions are Kalman one-step-ahead predictive
+density terms, not squared-error metrics. Early missing regressors cause the
+affected signals to be masked.
+
+\section{Reproduction and source files}
+From this model folder, run the generation script to re-estimate historical
+coefficients and overwrite the history CSVs. Then run the update script to
+apply the fixed fit to later quarters. Source files used for this report:
+\begin{itemize}
+\item Generation and update scripts in the \texttt{code} folder.
+\item Fitted parameter JSON at the model-folder root.
+\item The fit-history and likelihood-by-quarter CSVs in \texttt{output}.
+\item The updated state CSV in \texttt{results} and the \texttt{Update}
+      tab of the local model-input workbook.
+\end{itemize}
+Numeric tables are a snapshot and do not update automatically when Python is
+rerun.
+
+\end{document}

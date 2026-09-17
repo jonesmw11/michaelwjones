@@ -6,9 +6,9 @@ Its output-gap estimate is strongly informed by unemployment. It is one measure 
 
 This folder has three Python scripts:
 
-1. [au_smog_model_generation.py](code/au_smog_model_generation.py) builds the historical 1980Q1–2023Q4 model from the `Generation` tab of the bundled workbook, applies the fitted coefficients in `output/au_ss1_output.csv`, and saves those coefficients plus the initial state to `au_smog_fitted_parameters.json`.
+1. [au_smog_model_generation.py](code/au_smog_model_generation.py) builds the historical 1980Q1–2023Q4 model from the `Generation` tab of the bundled workbook, estimates its coefficients by maximum likelihood in Python, and saves the converged coefficients plus the initial state to `au_smog_fitted_parameters.json`.
 2. [au_smog_model_update.py](code/au_smog_model_update.py) extends the series when the `Update` tab gains new quarters. It keeps the saved coefficients and initial state fixed and reruns the Kalman filter and smoother.
-3. [au_smog_figure_generation.py](code/au_smog_figure_generation.py) generates the six charts from the saved smoothed and filtered states. The update script calls it automatically; run it alone to refresh only the figures.
+3. [au_smog_figure_generation.py](code/au_smog_figure_generation.py) generates three charts that compare the saved smoothed and filtered states. The update script calls it automatically; run it alone to refresh only the figures.
 
 ## Run
 
@@ -22,30 +22,25 @@ py -3.14 code/au_smog_model_update.py
 py -3.14 code/au_smog_figure_generation.py
 ```
 
-Run the generation script once, or when deliberately changing the historical specification or reference coefficients. After adding a new quarter to the `Update` tab of `results/AU SMOG Model Inputs.xlsx`, run only the update script; it also refreshes the figures. Run the figure script separately if only the chart styling changes. Use `py -3.14 code/au_smog_model_update.py --check-only` to calculate without replacing the result CSV or charts.
+Run the generation script once, or when deliberately changing the historical specification or re-estimating the coefficients. After adding a new quarter to the `Update` tab of `code/AU SMOG Model Inputs.xlsx`, run only the update script; it also refreshes the figures. Run the figure script separately if only the chart styling changes. Use `py -3.14 code/au_smog_model_update.py --check-only` to calculate without replacing the result CSV or charts.
 
-The generation script writes `output/smog_au_smoothed_states.csv` for the historical sample. The update script writes smoothed states to `results/smog_au_python.csv` and filtered states to `results/smog_au_filtered_states.csv`. Both have columns `date`, `output_gap`, `y_star`, and `u_star`. It also refreshes the PNGs in [results/figures](results/figures/README.md). Both scripts read files from this folder; neither needs the original Stats Research directory.
+The generation script writes `output/smog_au_smoothed_states.csv` for the historical sample. It also writes [output/au_smog_fit_history.csv](output/au_smog_fit_history.csv), with the starting point (iteration 0) and every accepted optimizer iteration: all 18 coefficients, the full-sample log likelihood, and its change from the preceding iteration. [output/au_smog_fit_likelihood_by_quarter.csv](output/au_smog_fit_likelihood_by_quarter.csv) records each quarter's contribution to that likelihood at each iteration. These files are replaced on each generation run; line-search trial evaluations are not included. At the end, generation displays parameter and log-likelihood convergence figures with `plt.show()` in an interactive Python window; it does not save those figures as PNGs. The update script writes smoothed states to `results/smog_au_python.csv` and filtered states to `results/smog_au_filtered_states.csv`. Both have columns `date`, `output_gap`, `y_star`, and `u_star`. It also refreshes the state charts in [results/figures](results/figures/README.md). Both scripts read files from this folder; neither needs the original Stats Research directory.
 
 ## Figures
 
-The charts follow the style used in `Macro Work/Interest Rates/charts`: the model estimate is dark green, observed unemployment is grey, series labels appear in the top-right legend, and a grey line marks zero. Smoothed states use the full available sample at each date; filtered states use observations available only through that date, with coefficients held fixed.
+The charts follow the style used in `Macro Work/Interest Rates/charts`: smoothed estimates are dark green, filtered estimates are dashed light green, observed unemployment is grey, and a grey line marks zero. Smoothed states use the full available sample at each date; filtered states use observations available only through that date, with coefficients held fixed.
 
-![Australian SMOG output gap, smoothed states](results/figures/au_smog_output_gap_smoothed.png)
+![Australian SMOG output gap, smoothed and filtered](results/figures/au_smog_output_gap.png)
 
-![Australian SMOG output gap, filtered states](results/figures/au_smog_output_gap_filtered.png)
+![Australian unemployment with smoothed and filtered NAIRU](results/figures/au_smog_unemployment_and_nairu.png)
 
-![Australian unemployment and SMOG NAIRU, smoothed states](results/figures/au_smog_unemployment_and_nairu_smoothed.png)
-
-![Australian unemployment and SMOG NAIRU, filtered states](results/figures/au_smog_unemployment_and_nairu_filtered.png)
-
-[Unemployment gap — smoothed](results/figures/au_smog_unemployment_gap_smoothed.png) · [Unemployment gap — filtered](results/figures/au_smog_unemployment_gap_filtered.png). The plotted gap is the model's NAIRU minus observed unemployment, in percentage points; negative values indicate labour-market slack.
+[Unemployment gap — smoothed and filtered](results/figures/au_smog_unemployment_gap.png). The plotted gap is the model's NAIRU minus observed unemployment, in percentage points; negative values indicate labour-market slack.
 
 ## Data and model files
 
-- [results/AU SMOG Model Inputs.xlsx](results/AU%20SMOG%20Model%20Inputs.xlsx), `Generation` tab: historical non-farm GDP, trimmed CPI, import prices, COVID, unit labour costs, and corrected unemployment. Generation uses rows only through 2023Q4. The six later rows retained for reference are highlighted red and excluded from generation and the update history.
+- [code/AU SMOG Model Inputs.xlsx](code/AU%20SMOG%20Model%20Inputs.xlsx), `Generation` tab: historical non-farm GDP, trimmed CPI, import prices, COVID, unit labour costs, and corrected unemployment. Generation uses rows only through 2023Q4. The six later rows retained for reference are highlighted red and excluded from generation and the update history.
 - The same workbook, `Update` tab: the six series used for quarters after 2023Q4, plus the date. The update script reads new observations here; the figure script reads its unemployment series for the charts. Add new quarters to this tab.
-- `output/au_ss1_output.csv`: the original fitted coefficient table used by the generation script.
-- `au_smog_fitted_parameters.json`: the fixed coefficients and initial state passed from generation to update.
+- `au_smog_fitted_parameters.json`: the Python-estimated coefficients and initial state passed from generation to update. The update script requires this file; if it is removed, rerun generation to recreate it.
 
 ## Documentation
 
@@ -58,6 +53,6 @@ The old estimation workbook had a date-shifted unemployment column. The `Generat
 
 ## Verification
 
-The generated historical series has 176 quarters (1980Q1–2023Q4). The fixed-parameter update produced 185 quarters through 2026Q1. The saved parameter file was unchanged by the update. A separate fresh maximum-likelihood run did not converge, so this package uses the fitted coefficients from the bundled EViews output table rather than that run.
+The bounded Python maximum-likelihood fit converged on 176 historical quarters (1980Q1–2023Q4), with log likelihood 549.279168. The model weakly identifies how much the NAIRU can move: an unrestricted fit drove its innovation standard deviation almost to zero. The generator therefore sets a data-derived lower bound equal to half the historical standard deviation of quarterly unemployment changes; this modelling choice is recorded in the parameter JSON. The fixed-parameter update produces 185 quarters through 2026Q1 and does not re-estimate or alter the saved parameters. Estimates are sensitive to this constraint and should be interpreted as one model-based measure rather than a definitive output gap.
 
 [Back to macro work](../README.md)

@@ -1,55 +1,52 @@
-"""Generate the AU SMOG model using its saved historical fit.
-
-Builds the historical AU data and state-space model, then applies the fitted
-coefficients recorded in output/au_ss1_output.csv. Saves those coefficients for
-au_smog_model_update.py to reuse when new observations become available.
-
-Replicates "Model Estimation Code SMOG AU.prg":
-  - data transforms from "results/AU SMOG Model Inputs.xlsx" (Generation sheet)
-  - HP-filter initial state and saved historical fitted coefficients
-  - 7-state / 3-signal state-space model
-  - Kalman smoothed states -> output gap, y_star, u_star
-
-States:  [gap, gap_1, gap_2, y_star, y_star_1, u_star, u_star_1]
-Signals: y  = y_star + phi3*covid_d + gap + e_y
-         u  = u_star + lambda3*gap + rho*(u(-1) - u_star_1) + e_u
-         pi = Phillips curve (see obs_intercept) + lambda1*gap + e_pi
-"""
-#%%
-#Buidl Librariers
-import csv
+# Fit the AU SMOG state-space model on historical Australian data.
+#
+# Builds model inputs from the Generation sheet of AU SMOG Model Inputs.xlsx,
+# estimates coefficients by Python maximum likelihood, and saves those
+# coefficients and the initial state for fixed-parameter updates.
+#
+# States:  [gap, gap_1, gap_2, y_star, y_star_1, u_star, u_star_1]
+# Signals: y  = y_star + phi3*covid_d + gap + e_y
+# u  = u_star + lambda3*gap + rho*(u(-1) - u_star_1) + e_u
+# pi = Phillips curve (see obs_intercept) + lambda1*gap + e_pi
+# %% Imports and file paths
+# Load the modelling libraries and locate inputs and outputs in this repository.
 import json
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+from scipy.optimize import minimize
 from statsmodels.tsa.statespace.mlemodel import MLEModel
 
 # Resolve the copied files in this repository, including in interactive cells.
 try:
     HERE = Path(__file__).resolve().parent.parent
 except NameError:
-    REPO_ROOT = next(
-        (folder for folder in (Path.cwd(), *Path.cwd().parents)
-         if (folder / ".git").exists()),
+    HERE = next(
+        (candidate for parent in (Path.cwd(), *Path.cwd().parents)
+         for candidate in (
+             parent,
+             parent / "macro-work" / "AU Smog Model",
+             parent / "michaelwjones" / "macro-work" / "AU Smog Model",
+         ) if (candidate / "code" / "AU SMOG Model Inputs.xlsx").is_file()),
         None,
     )
-    if REPO_ROOT is None:
-        raise RuntimeError("Open the GitHub repository before running this code as cells")
-    HERE = REPO_ROOT / "macro-work" / "AU Smog Model"
-    if not HERE.is_dir():
-        raise FileNotFoundError(f"AU SMOG files are missing from {HERE}")
+    if HERE is None:
+        raise FileNotFoundError("Open the repository before running AU SMOG cells")
 IR_DIR = HERE  # Interest Rates (this file now lives at the folder root)
-INPUTS_XLSX = IR_DIR / "results" / "AU SMOG Model Inputs.xlsx"
+INPUTS_XLSX = IR_DIR / "code" / "AU SMOG Model Inputs.xlsx"
 GENERATION_SHEET = "Generation"
 UPDATE_SHEET = "Update"
 OUT_DIR = HERE / "output"
 PARAMETERS_FILE = HERE / "au_smog_fitted_parameters.json"
-REFERENCE_COEFFICIENTS_FILE = OUT_DIR / "au_ss1_output.csv"
+FIT_HISTORY_FILE = OUT_DIR / "au_smog_fit_history.csv"
+FIT_CONTRIBUTIONS_FILE = OUT_DIR / "au_smog_fit_likelihood_by_quarter.csv"
 
 
-#Estimatoin Sample we're interseted in
+# %% Model configuration
+# Define the estimation sample, workbook columns, and coefficient order.
 ESMPL_FIRST = "1980Q1"
 ESMPL_LAST = "2023Q4"
 
@@ -66,21 +63,19 @@ MODEL_INPUT_COLUMNS = [
 ]
 
 
-#Parameter names we use to form the models
 PARAM_NAMES = [
     "beta1", "beta2", "beta3",
     "eps1", "eps2", "eps3", "eps5", "eps6", "eps7",
     "g_star", "gamma", "lambda1", "lambda3",
     "phi1", "phi2", "phi3", "psi", "rho",
 ]
-#%%
-# # ---------------------------------------------------------------- data
-
-#Create a function that performs percentage change
+# %% Annual percentage change
+# Convert a quarterly series into its four-quarter percentage change.
 def pcy(x):
     return 100.0 * (x / x.shift(4) - 1.0)
 
-#This loads the data - doesnt necessarily need to be in a functoin
+# %% Historical data loading
+# Read the generation worksheet and index its observations by quarter.
 def load_data():
     df = pd.read_excel(INPUTS_XLSX, sheet_name=GENERATION_SHEET,
                        usecols=HISTORICAL_COLUMNS)
@@ -88,46 +83,34 @@ def load_data():
     df = df.set_index("date").loc[:ESMPL_LAST].astype(float)
 
     return df
-#%%
-#Do the hp trend - eahc functions is just a section  - this is for initial values
+# %% Historical trend estimate
+# Apply the HP filter to obtain starting estimates of unobserved trends.
 def hp_trend(series, lamb=1000.0, end=ESMPL_LAST, boost=0):
-    """HP trend on the available data through `end`.
-
-    boost > 0 applies the Phillips-Shi boosted HP filter (cycle re-filtered
-    `boost` extra times) - the EViews code uses hpf(lambda=1000, m=2, ic).
-    """
-    # Only use data up to the estimation end date, and drop missing quarters.
-    # Slicing here prevents the filter from "seeing" later data, which would
-    # otherwise leak future information into the starting values.
+    # Estimate starting HP trend.
+    # Exclude future observations.
     x = series.loc[:end].dropna()
 
-    # The Hodrick-Prescott filter splits a series into a smooth TREND and a
-    # cyclical REMAINDER. lamb controls smoothness: higher = smoother trend.
-    # (1600 is the usual quarterly default; 1000 here follows the EViews code.)
+    # Separate trend and cycle.
     cycle, trend = sm.tsa.filters.hpfilter(x, lamb=lamb)
 
-    # "Boosting" (Phillips-Shi): the plain HP filter leaves some genuine trend
-    # behind in the cycle, especially at the end of the sample where it has no
-    # future data to lean on. Re-filtering the cycle extracts that leftover
-    # trend and hands it back, reducing the well-known end-point bias.
+    # Reduce endpoint bias.
     for _ in range(boost):
         cycle2, _ = sm.tsa.filters.hpfilter(cycle, lamb=lamb)  # trend still hiding in the cycle
         cycle = cycle2                                          # what remains is the purer cycle
         trend = x - cycle                                       # so the trend absorbs the rest
 
-    # Put the result back on the FULL index: quarters after `end` (or dropped
-    # as missing) come back as NaN rather than silently disappearing.
+    # Preserve quarterly alignment.
     return trend.reindex(series.index)
-#%%%
-#Build the dataset as we have it to store all in d
+# %% Model dataset
+# Transform the raw series and create observed signals and trend-based inputs.
 def build_dataset(boost=1):
-    """Full-sample transforms exactly as in the EViews programme."""
+    # Build historical model inputs.
 
-    #Get the raw dataset we had before
+    # Read historical series.
     raw = load_data()
     d = pd.DataFrame(index=raw.index)
 
-    #Biulding the raw dataset
+    # Transform observed variables.
     d["gdp"] = np.log(raw["real_gdp_non_farm_sa"])
     cpi = raw["cpi_trimmed_spliced"]
     d["inflation"] = pcy(cpi)
@@ -137,40 +120,35 @@ def build_dataset(boost=1):
     d["unemployment"] = raw["unemployment"]
     d["covid_d"] = raw["covid_d"]
 
-    # HP-filter initial values (EViews: hpf(lambda=1000, m=2, ic))
-    #These are for the unobserved stasrting values
+    # Seed latent trends.
     d["ham_u_star"] = hp_trend(d["unemployment"], boost=boost)
     d["ham_y_star"] = hp_trend(d["gdp"], boost=boost)
     d["ham_g_star"] = 100.0 * (d["ham_y_star"] / d["ham_y_star"].shift(1) - 1.0)
     d["ham_gap"] = d["gdp"] - d["ham_y_star"]
 
-    # inflation-targeting dummy: 0 through 1993Q1, 1 after
+    # Mark targeting regime.
     d["d_it"] = (d.index > pd.Period("1993Q1", freq="Q")).astype(float)
 
-    #These are the observed endogenous variables
+    # Name observed signals.
     d["y"] = d["gdp"]
     d["pi"] = d["inflation"]
     d["pi_e"] = d["expectations"]
     d["u"] = d["unemployment"]
     return d
-#%%
-#This is about building the estimation frame, so the actual dataframes we use for estimatoin
+# %% Estimation frames
+# Assemble the observed series and regressors over the estimation window.
 def build_estimation_frames(d, first=ESMPL_FIRST, last=ESMPL_LAST):
-    """Endog + exogenous regressors on the estimation window.
+    # Select estimation observations.
 
-    """
-
-    #pd.period converts it into quarterly object
-    #Slice returns the two endpoints
+    # Select quarterly endpoints.
     sl = slice(pd.Period(first, freq="Q"), pd.Period(last, freq="Q"))
 
-    #seelct on thigns between those endpoints AND endpoints
     w = d.loc[sl]
 
-    #Dummy for philips curve (in write as D^{IT})
+    # Separate policy regimes.
     nd = 1.0 - w["d_it"]
 
-    #ex - builsd exogenous data frame
+    # Build lagged regressors.
     ex = pd.DataFrame(index=w.index)
     ex["covid_d"] = w["covid_d"]
     ex["u1"] = w["u"].shift(1)
@@ -178,104 +156,87 @@ def build_estimation_frames(d, first=ESMPL_FIRST, last=ESMPL_LAST):
     ex["pie_nd"] = w["pi_e"] * nd
     ex["pi1"] = w["pi"].shift(1)
     ex["pi2"] = w["pi"].shift(2)
-    # (1-D_it) at time t multiplies the lagged values (as in the EViews signal eq).
-    # Where D_it = 1 these terms are exactly zero, even if the lag is missing.
+    # Mask inactive regime lags.
     ex["pi3_nd"] = np.where(nd == 0.0, 0.0, w["pi"].shift(3) * nd)
     ex["nulc1_nd"] = np.where(nd == 0.0, 0.0, w["delta_nulc"].shift(1) * nd)
     ex["pm1"] = w["delta_4_pm"].shift(1)
     ex["d_it"] = w["d_it"]
 
-    #Build endogenous data frame
+    # Select measured signals.
     endog = w[["y", "u", "pi"]].copy()
     return endog, ex
-#%%
-#Make the starting values apparent
+# %% Initial state vector
+# Set the seven starting states from the historical trend estimates.
 def make_svec(d, first=ESMPL_FIRST):
+    # Locate starting quarter.
     p0 = pd.Period(first, freq="Q")
     g = d["ham_gap"]
     ys = d["ham_y_star"]
     us = d["ham_u_star"]
+    # Order seven initial states.
     return np.array([
         g[p0 + 2], g[p0 + 1], g[p0],
         ys[p0 + 1], ys[p0],
         us[p0 + 1], us[p0],
     ])
 
-#%%
-# ---------------------------------------------------------------- model
-#Import from Statsmodel MLE  - create an object from it  - so thsis i
-#is creating the model like LM does in R , lm()
-#CREATING THE MODEL
+# %% State-space model
+# Define the AU SMOG observation, transition, and variance equations.
 class SmogAU(MLEModel):
-    """7-state / 3-signal SMOG state-space model (AU)."""
+    # Define AU model equations.
 
-    # NOTE: the EViews programme *looks* like it sets the prior variance to 0.8
-    # via a chained assignment, but EViews evaluates that as comparisons - the
-    # model actually ran with a ZERO prior covariance and mprior as the t=1
-    # state. Verified: P=0 + "direct" reproduces EViews' loglike to 4dp and the
-    # smoothed paths to ~5e-4 (rounding of the published coefficients).
+    # Start from HP estimates.
 
-    #Function 1
-    #Role is to set the object up
-    #Store data and build matrices
-    #
+    # Initialize Kalman system.
     def __init__(self, endog, exog, svec, prior_var=0.0, init_mode="direct"):
 
-        #Store inputs on object that we will want to examien in the objectc
-        #Storing all the settings
-        #Store exogenous variables
+        # Keep model inputs.
         self.exog_df = exog
 
-        #Store starting values
+        # Seed latent states.
         self.svec = np.asarray(svec, dtype=float)
 
-        #Store starting value prior variances
+        # Set prior uncertainty.
         self.prior_var = float(prior_var)
-        #Store string about how the filter starts direct or propergate
-        self.init_mode = init_mode  # "direct": a1|0 = svec; "propagate": a1|0 = T svec + c
+        # Choose initialization mode.
+        self.init_mode = init_mode
 
-        #Copy endogenous variables
+        # Protect source observations.
         endog = endog.copy()
-        # A signal is unusable when its exogenous regressors are missing
-        # (EViews "partial observations").
+        # Mask incomplete signals.
 
-        #T/F about where missing values are
         miss_y = exog["covid_d"].isna()
-        #T/F about missing values
         miss_u = exog["u1"].isna()
 
-        #Set inflation columns
+        # Check Phillips regressors.
         pi_cols = ["pie_d", "pie_nd", "pi1", "pi2", "pi3_nd", "nulc1_nd", "pm1"]
-        #Are any of them missing for each row
         miss_pi = exog[pi_cols].isna().any(axis=1)
 
-        #Put missing values as NAN
         endog.loc[miss_y, "y"] = np.nan
         endog.loc[miss_u, "u"] = np.nan
         endog.loc[miss_pi, "pi"] = np.nan
 
-        #Validation check
+        # Count partial quarters.
         self.n_partial = int(((miss_y | miss_u | miss_pi) & endog.notna().any(axis=1)).sum())
 
 
-        #Fill na's
+        # Fill masked regressors.
         self.ex = exog.fillna(0.0).to_numpy().T  # (k_exog, nobs)
         self.ex_cols = list(exog.columns)
 
-        #No idea what this did
+        # Initialize Kalman model.
         super().__init__(endog, k_states=7, k_posdef=3,
                          initialization="known", constant=self.svec,
                          stationary_cov=self.prior_var * np.eye(7))
 
-        # fixed structure - from equations of variables
-        #Z matix in measuremetn equatoin
+        # Map states to signals.
         Z = np.zeros((3, 7))
         Z[0, 0] = 1.0   # y: gap
         Z[0, 3] = 1.0   # y: y_star
         Z[1, 5] = 1.0   # u: u_star
         self["design"] = Z
 
-        #T Matrix in transition qeuation 
+        # Advance latent states.
         T = np.zeros((7, 7))
         T[1, 0] = 1.0   # gap_1 = gap(-1)
         T[2, 1] = 1.0   # gap_2 = gap_1(-1)
@@ -285,7 +246,7 @@ class SmogAU(MLEModel):
         T[6, 5] = 1.0   # u_star_1 = u_star(-1)
         self["transition"] = T
 
-        #R matrix in transitoin qeuation that refelcts covariance structure
+        # Route state shocks.
         R = np.zeros((7, 3))
         R[0, 0] = 1.0   # e_gap
         R[3, 1] = 1.0   # e_y_star
@@ -296,7 +257,6 @@ class SmogAU(MLEModel):
         self["state_intercept"] = np.zeros((7, 1))
 
 
-    #Need to chekc tehse functoins
     @property
     def param_names(self):
         return PARAM_NAMES
@@ -309,12 +269,13 @@ class SmogAU(MLEModel):
         return self.ex[self.ex_cols.index(name)]
 
 
-    #Builds new matrices from candiatet vector
+    # Apply trial coefficients.
     def update(self, params, **kwargs):
+        # Decode candidate parameters.
         params = super().update(params, **kwargs)
         p = dict(zip(PARAM_NAMES, params))
 
-        #Design matrices
+        # Set observation loadings.
         self["design", 1, 0] = p["lambda3"]
         self["design", 1, 6] = -p["rho"]
         self["design", 2, 0] = p["lambda1"]
@@ -323,11 +284,12 @@ class SmogAU(MLEModel):
         self["transition", 0, 1] = p["phi2"]
         self["state_intercept", 3, 0] = p["g_star"]
 
+        # Set signal noise.
         self["obs_cov"] = np.diag([p["eps1"] ** 2, p["eps2"] ** 2, p["eps3"] ** 2])
         self["state_cov"] = np.diag([p["eps5"] ** 2, p["eps6"] ** 2, p["eps7"] ** 2])
 
-        # Keep complex-step derivatives during optimisation instead of
-        # discarding their imaginary perturbations.
+        # Preserve derivative precision.
+        # Build signal intercepts.
         d_obs = np.zeros((3, self.nobs), dtype=np.result_type(params, float))
         d_obs[0] = p["phi3"] * self._col("covid_d")
         d_obs[1] = p["rho"] * self._col("u1")
@@ -341,7 +303,7 @@ class SmogAU(MLEModel):
                     + p["psi"] * self._col("pm1"))
         self["obs_intercept"] = d_obs
 
-        # prior on the initial state
+        # Initialize state uncertainty.
         P0 = self.prior_var * np.eye(7)
         if self.init_mode == "direct":
             a1, P1 = self.svec, P0
@@ -354,67 +316,238 @@ class SmogAU(MLEModel):
         self.ssm.initialize_known(a1, P1)
         return params
 
-#%%
-# ---------------------------------------------------------------- output
-
+# %% Smoothed state extraction
+# Label the fitted latent states and express the output gap in percent.
 def smoothed_states(res, index):
-    """Pull the Kalman-smoothed states out of a fitted model.
-
-    res   : the results object returned by the Kalman smoother
-    index : the quarterly index to label the rows with
-
-    Returns a DataFrame of all seven states plus the output gap expressed
-    in per cent (the gap is in log units, so x100 makes it a percentage
-    deviation from potential).
-    """
+    # Extract smoothed model states.
     out = pd.DataFrame(res.smoothed_state.T, index=index,
                        columns=["gap", "gap_1", "gap_2", "y_star", "y_star_1",
                                 "u_star", "u_star_1"])
     out["gap_smooth_final"] = out["gap"] * 100.0
     return out
 
-#sSave results, we can use this later
+# %% Historical result export
+# Write the reported smoothed states to a CSV file.
 def save_results(out, out_dir=OUT_DIR, name="smog_au"):
-    """Write the historical smoothed states to CSV.
-
-    out     : the frame returned by smoothed_states()
-    out_dir : folder to write into
-    name    : filename stem, so other countries can reuse this
-    """
+    # Save reported state estimates.
     out_dir.mkdir(exist_ok=True)
 
-    #Only the three reported series go to the CSV
+    # Export reported states.
     csv_path = out_dir / f"{name}_smoothed_states.csv"
     out[["gap_smooth_final", "y_star", "u_star"]].to_csv(csv_path)
     print(f"Smoothed states: {csv_path}")
 
-#%%
-def load_reference_parameters():
-    """Read the final fitted coefficients from the bundled EViews table."""
-    labels = {
-        **{f"beta{i}": f"BETA({i})" for i in (1, 2, 3)},
-        **{f"eps{i}": f"EPSILON({i})" for i in (1, 2, 3, 5, 6, 7)},
-        "g_star": "G_STAR(1)", "gamma": "GAMMA(1)",
-        "lambda1": "LAMBDA(1)", "lambda3": "LAMBDA(3)",
-        "phi1": "PHI(1)", "phi2": "PHI(2)", "phi3": "PHI(3)",
-        "psi": "PSI(1)", "rho": "RHO(1)",
-    }
-    found = {}
-    with REFERENCE_COEFFICIENTS_FILE.open(newline="", encoding="utf-8-sig") as f:
-        for row in csv.reader(f):
-            if len(row) >= 2 and row[0].strip() in labels.values():
-                found[row[0].strip()] = float(row[1])
-    missing = [name for name in PARAM_NAMES if labels[name] not in found]
-    if missing:
-        raise ValueError(f"Reference coefficient table is missing {missing}")
-    params = np.array([found[labels[name]] for name in PARAM_NAMES])
-    if not np.isfinite(params).all():
-        raise ValueError("Reference coefficients must be finite")
-    return params
+# %% Optimizer starting values
+# Estimate data-based initial guesses for the model coefficients.
+def initial_parameters(d):
+    # Choose data-based starting values.
+    # Limit historical sample.
+    w = d.loc[ESMPL_FIRST:ESMPL_LAST]
+    gap = w["ham_gap"]
+    unemployment_gap = w["u"] - w["ham_u_star"]
+
+    # Fit starting regressions.
+    def regression(columns):
+        frame = pd.concat(columns, axis=1).dropna()
+        y = frame.iloc[:, 0].to_numpy()
+        x = frame.iloc[:, 1:].to_numpy()
+        coefficients = np.linalg.lstsq(x, y, rcond=None)[0]
+        return coefficients, float(np.std(y - x @ coefficients))
+
+    (phi1, phi2), gap_noise = regression([gap, gap.shift(1), gap.shift(2)])
+    (rho, lambda3), unemployment_noise = regression(
+        [unemployment_gap, unemployment_gap.shift(1), gap]
+    )
+    post = w.loc["1993Q2":]
+    (beta1, beta2, lambda1, psi), inflation_noise = regression([
+        post["pi"] - post["pi_e"],
+        post["pi"].shift(1) - post["pi_e"],
+        post["pi"].shift(2) - post["pi_e"],
+        post["ham_gap"], post["delta_4_pm"].shift(1),
+    ])
+    # Assemble coefficient guesses.
+    start = np.array([
+        beta1, beta2, -0.5,
+        max(w["gdp"].diff().std() / 2, 0.001),
+        max(unemployment_noise, 0.01),
+        max(inflation_noise, 0.05),
+        max(gap_noise, 0.001),
+        max(w["ham_y_star"].diff().std(), 0.001),
+        max(w["ham_u_star"].diff().std(), 0.01),
+        w["gdp"].diff().median(), 0.005,
+        lambda1, lambda3, phi1, phi2, 0.0, psi, rho,
+    ], dtype=float)
+    # Reject invalid guesses.
+    if start.shape != (len(PARAM_NAMES),) or not np.isfinite(start).all():
+        raise ValueError("Could not derive finite optimizer starting values")
+    return start
+# %% Maximum-likelihood estimation
+# Optimize the bounded likelihood and check that the fit converged.
+def fit_parameters(mod, d):
+    # Fit bounded model likelihood.
+    # Prevent NAIRU collapse.
+    unemployment_change_sd = float(
+        d["u"].loc[ESMPL_FIRST:ESMPL_LAST].diff().std()
+    )
+    nairu_noise_floor = unemployment_change_sd / 2
+    if not np.isfinite(nairu_noise_floor) or nairu_noise_floor <= 0:
+        raise ValueError("Cannot derive the NAIRU innovation floor from the data")
+    # Balance optimizer coordinates.
+    scale = np.array([1, 1, 1, .01, .1, .3, .01, .005, .1,
+                      .01, .01, 5, 20, 1, 1, .01, .02, 1])
+    # Set parameter bounds.
+    lower = np.array([-3, -3, -3, .00001, .00001, .00001,
+                      .00001, .00001, nairu_noise_floor, -.02, -2, -100,
+                      -100, -1.8, -1, -1, -1, -.99])
+    upper = np.array([3, 3, 3, .5, 2, 5, .1, .1, 2, .03,
+                      2, 100, -.01, 1.8, 1, 1, 1, .99])
+    # Clip feasible starting point.
+    start = np.clip(initial_parameters(d), lower + 1e-8, upper - 1e-8)
+    # Track optimizer path.
+    history = []
+    contributions = []
+
+    def record_iteration(scaled):
+        # Track accepted optimizer steps.
+        params = np.asarray(scaled) * scale
+        # Measure each quarter.
+        quarterly = np.asarray(mod.loglikeobs(params), dtype=float)
+        if quarterly.shape != (mod.nobs,) or not np.isfinite(quarterly).all():
+            raise RuntimeError("Cannot record a finite AU likelihood trajectory")
+        iteration = len(history)
+        # Store accepted parameters.
+        history.append({"iteration": iteration,
+                        "log_likelihood": float(quarterly.sum()),
+                        **dict(zip(PARAM_NAMES, params.astype(float)))})
+        contributions.append(quarterly.copy())
+
+    def negative_log_likelihood(scaled):
+        try:
+            value = -float(mod.loglike(scaled * scale))
+        except (ValueError, np.linalg.LinAlgError):
+            return 1e12
+        return value if np.isfinite(value) else 1e12
+
+    # Record initial likelihood.
+    record_iteration(start / scale)
+    # Maximize Kalman likelihood.
+    result = minimize(
+        negative_log_likelihood, start / scale, method="L-BFGS-B",
+        bounds=list(zip(lower / scale, upper / scale)),
+        callback=record_iteration,
+        options={"maxiter": 700, "maxfun": 16000, "ftol": 1e-10},
+    )
+    # Reject failed fit.
+    if not result.success or not np.isfinite(result.fun):
+        raise RuntimeError(
+            f"Python maximum-likelihood fit did not converge: {result.message}"
+        )
+    params = result.x * scale
+    if not np.allclose(params, np.array([history[-1][name] for name in PARAM_NAMES]),
+                       rtol=0, atol=1e-12):
+        record_iteration(result.x)
+    if not np.isclose(history[-1]["log_likelihood"], -result.fun, atol=1e-6):
+        raise RuntimeError("Recorded AU likelihood differs from the optimizer result")
+    print(f"Python fit converged in {result.nit} iterations; "
+          f"log likelihood {-result.fun:.6f}")
+    return params, result, nairu_noise_floor, history, contributions
 
 
-def save_parameters(params, svec, log_likelihood):
-    """Persist coefficients and initial state for fixed-parameter updates."""
+# %% Optimizer diagnostics
+# Save accepted likelihood values and quarterly contributions.
+def save_fit_history(history, contributions, index):
+    # Save optimizer progress.
+    # Summarize accepted steps.
+    trajectory = pd.DataFrame(history)
+    trajectory["change_in_log_likelihood"] = trajectory["log_likelihood"].diff()
+    columns = ["iteration", "log_likelihood", "change_in_log_likelihood", *PARAM_NAMES]
+    trajectory = trajectory[columns]
+    # Expand quarterly contributions.
+    quarterly = pd.DataFrame(np.vstack(contributions),
+                             index=trajectory["iteration"], columns=index)
+    quarterly.index.name = "iteration"
+    quarterly = quarterly.stack().rename("log_likelihood_contribution").reset_index()
+    quarterly.columns = ["iteration", "date", "log_likelihood_contribution"]
+    quarterly["date"] = quarterly["date"].astype(str)
+    for frame, path in ((trajectory, FIT_HISTORY_FILE),
+                        (quarterly, FIT_CONTRIBUTIONS_FILE)):
+        temporary = path.with_suffix(path.suffix + ".tmp")
+        frame.to_csv(temporary, index=False)
+        temporary.replace(path)
+        print(f"Fit history: {path}")
+
+
+# %% Fit convergence figures
+# Show parameter paths and likelihood gains across accepted optimizer steps.
+def show_fit_figures(history, nairu_noise_floor):
+    # Check recorded values.
+    trajectory = pd.DataFrame(history)
+    columns = ["iteration", "log_likelihood", *PARAM_NAMES]
+    if trajectory.empty or not set(columns).issubset(trajectory.columns):
+        raise ValueError("AU fit history is empty or missing parameters")
+    values = trajectory[columns].to_numpy(dtype=float)
+    if not np.isfinite(values).all():
+        raise ValueError("AU fit history contains non-finite values")
+    iterations = trajectory["iteration"].to_numpy(dtype=int)
+    likelihood = trajectory["log_likelihood"].to_numpy(dtype=float)
+    if not np.array_equal(iterations, np.arange(len(iterations))):
+        raise ValueError("AU fit iterations must start at zero and be consecutive")
+    # Compare every coefficient.
+    parameter_fig, axes = plt.subplots(6, 3, figsize=(15, 18), sharex=True,
+                                      layout="constrained")
+    for ax, name in zip(axes.flat, PARAM_NAMES):
+        series = trajectory[name].to_numpy(dtype=float)
+        ax.plot(iterations, series, color="#0B6E4F", linewidth=1.8)
+        ax.axhline(series[-1], color="#7A7A7A", linestyle="--", linewidth=1)
+        if name == "eps7":
+            ax.axhline(nairu_noise_floor, color="#BD6745", linestyle=":",
+                       linewidth=1.5)
+        ax.set_title(f"{name}  |  final {series[-1]:.4g}", loc="left", fontsize=11)
+        ax.grid(axis="y", color="#E9E9E9")
+        ax.spines[["top", "right"]].set_visible(False)
+        ax.tick_params(labelsize=9)
+        ax.margins(y=0.12)
+    for ax in axes[-1]:
+        ax.set_xlabel("Accepted iteration")
+    parameter_fig.suptitle("AU SMOG parameter convergence\n"
+                           "Dashed: final value    Dotted on eps7: NAIRU noise floor",
+                           fontsize=15)
+
+    # Show total fit improvement.
+    likelihood_fig, (ax_total, ax_gain) = plt.subplots(
+        2, 1, figsize=(11, 8), sharex=True, layout="constrained"
+    )
+    ax_total.plot(iterations, likelihood, color="#0B6E4F", linewidth=2)
+    ax_total.scatter([iterations[0], iterations[-1]],
+                     [likelihood[0], likelihood[-1]], color="#0B6E4F", s=30)
+    ax_total.set_ylabel("Total log likelihood")
+    ax_total.set_title("AU SMOG likelihood convergence", loc="left", fontsize=16)
+
+    # Expose late small gains.
+    gains = np.diff(likelihood)
+    ax_gain.plot(iterations[1:], gains, color="#3D8F73", linewidth=1.7)
+    if len(gains) and np.all(gains > 0):
+        ax_gain.set_yscale("log")
+        ax_gain.set_ylabel("Gain per iteration (log scale)")
+    else:
+        ax_gain.set_ylabel("Gain per iteration")
+        ax_gain.axhline(0, color="#7A7A7A", linewidth=1)
+    ax_gain.set_xlabel("Accepted iteration")
+    for ax in (ax_total, ax_gain):
+        ax.grid(axis="y", color="#E9E9E9")
+        ax.spines[["top", "right"]].set_visible(False)
+    # Display both figures.
+    plt.show()
+    plt.close(parameter_fig)
+    plt.close(likelihood_fig)
+
+
+# %% Fitted parameter export
+# Save coefficients and initial states for later fixed-parameter updates.
+def save_parameters(params, svec, log_likelihood, iterations,
+                    nairu_noise_floor):
+    # Save fitted model parameters.
+    # Record reproducible fit.
     payload = {
         "model": "AU SMOG",
         "sample_first": ESMPL_FIRST,
@@ -423,27 +556,33 @@ def save_parameters(params, svec, log_likelihood):
         "parameters": [float(value) for value in params],
         "initial_state": [float(value) for value in svec],
         "log_likelihood": float(log_likelihood),
-        "source": "fitted coefficients in output/au_ss1_output.csv",
+        "source": "Python maximum likelihood (L-BFGS-B)",
+        "converged": True,
+        "iterations": int(iterations),
+        "nairu_innovation_sd_floor": float(nairu_noise_floor),
     }
+    # Replace file atomically.
     temporary = PARAMETERS_FILE.with_suffix(".json.tmp")
     temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     temporary.replace(PARAMETERS_FILE)
     print(f"Fixed parameters: {PARAMETERS_FILE}")
 
 
+# %% Generation workflow
+# Prepare data, estimate the model, smooth states, and save its outputs.
 def main():
     OUT_DIR.mkdir(exist_ok=True)
 
-    #Build data set
+    # Prepare historical inputs.
     d = build_dataset(boost=1)
 
-    #Serpate out teh frames
+    # Split signals and regressors.
     endog, exog = build_estimation_frames(d)
 
-    #Cehck samples
+    # Confirm estimation window.
     print(f"Estimation sample: {endog.index[0]} - {endog.index[-1]}  ({len(endog)} obs)")
 
-    #Get starting values for the unobserved states
+    # Seed latent states.
     svec = make_svec(d)
 
     print("\nsvec (prior mean of the initial state):")
@@ -451,24 +590,28 @@ def main():
                     svec):
         print(f"  {n:8s} {a:12.6f}")
 
-    #Lets hold data and fixed matriaces in mod
+    # Build state-space model.
     mod = SmogAU(endog, exog, svec)
 
 
-    # Reuse the historical model estimates; new observations will not
-    # change these coefficients.
-    params = load_reference_parameters()
+    # Fit model coefficients.
+    params, fit_result, nairu_noise_floor, history, contributions = fit_parameters(mod, d)
+    # Smooth fitted states.
     res = mod.smooth(params, cov_type="none")
 
-    #Pull the smoothed states out of the fitted model
+    # Label smoothed states.
     out = smoothed_states(res, endog.index)
 
-    save_parameters(params, svec, res.llf)
+    # Persist fitted outputs.
+    save_parameters(params, svec, res.llf, fit_result.nit,
+                    nairu_noise_floor)
+    save_fit_history(history, contributions, endog.index)
     save_results(out)
+    # Show estimation progress.
+    show_fit_figures(history, nairu_noise_floor)
 
     return out
-#%%
+# %% Script entry point
+# Run the complete generation workflow when this file is executed directly.
 if __name__ == "__main__":
     main()
-
-# %%

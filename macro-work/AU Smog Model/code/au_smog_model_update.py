@@ -1,11 +1,13 @@
-"""Extend AU SMOG to new quarters while holding fitted parameters fixed.
+# Extend AU SMOG to new quarters while holding fitted parameters fixed.
+#
+# Update the Update sheet of code/AU SMOG Model Inputs.xlsx, then run this script. It retains
+# the original 1980Q1–2023Q4 estimation data and smooths the extended series
+# with the coefficients saved by au_smog_model_generation.py. It does not fit a
+# new parameter vector.
 
-Update the Update sheet of results/AU SMOG Model Inputs.xlsx, then run this script. It retains
-the original 1980Q1–2023Q4 estimation data and smooths the extended series
-with the coefficients saved by au_smog_model_generation.py. It does not fit a
-new parameter vector.
-"""
-
+# %% Imports and file paths
+# Load dependencies and locate AU SMOG inputs and outputs.
+import sys
 import argparse
 import json
 from pathlib import Path
@@ -13,25 +15,52 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+# Keep the import and paths usable when running cells without __file__.
+try:
+    CODE_DIR = Path(__file__).resolve().parent
+except NameError:
+    CODE_DIR = next(
+        (candidate for parent in (Path.cwd(), *Path.cwd().parents)
+         for candidate in (
+             parent / "code",
+             parent / "macro-work" / "AU Smog Model" / "code",
+             parent / "michaelwjones" / "macro-work" / "AU Smog Model" / "code",
+         ) if (candidate / "au_smog_model_generation.py").is_file()),
+        None,
+    )
+    if CODE_DIR is None:
+        raise FileNotFoundError("Open the AU Smog Model repository folder before running cells")
+if str(CODE_DIR) not in sys.path:
+    sys.path.insert(0, str(CODE_DIR))
 import au_smog_model_generation as model_code
 import au_smog_figure_generation as figure_code
 
-
-HERE = Path(__file__).resolve().parent.parent
+HERE = CODE_DIR.parent
 PARAMETERS_FILE = HERE / "au_smog_fitted_parameters.json"
 RESULTS_FILE = HERE / "results" / "smog_au_python.csv"
 FILTERED_RESULTS_FILE = HERE / "results" / "smog_au_filtered_states.csv"
 
+# %% Saved parameters
+# Read and validate the coefficients and initial state fitted by the generator.
 def load_fixed_parameters():
+    # Require saved fit.
     if not PARAMETERS_FILE.is_file():
         raise FileNotFoundError(
             f"Missing {PARAMETERS_FILE}. Run au_smog_model_generation.py once first."
         )
+    # Read fitted coefficients.
     payload = json.loads(PARAMETERS_FILE.read_text(encoding="utf-8"))
     if (payload.get("parameter_names") != model_code.PARAM_NAMES
             or payload.get("sample_first") != model_code.ESMPL_FIRST
             or payload.get("sample_last") != model_code.ESMPL_LAST):
         raise ValueError("Saved parameters do not match this AU SMOG specification")
+    if (payload.get("source") != "Python maximum likelihood (L-BFGS-B)"
+            or payload.get("converged") is not True):
+        raise ValueError(
+            "Saved parameters are not a converged Python fit; "
+            "run au_smog_model_generation.py first"
+        )
+    # Validate parameter shapes.
     params = np.asarray(payload["parameters"], dtype=float)
     initial_state = np.asarray(payload["initial_state"], dtype=float)
     if (params.shape != (len(model_code.PARAM_NAMES),)
@@ -42,13 +71,17 @@ def load_fixed_parameters():
     return params, initial_state
 
 
+# %% Latest observations
+# Read and transform new quarterly inputs from the update worksheet.
 def load_latest_inputs():
+    # Read latest worksheet.
     raw = pd.read_excel(
         model_code.INPUTS_XLSX, sheet_name=model_code.UPDATE_SHEET,
         usecols=model_code.MODEL_INPUT_COLUMNS,
     )
     raw = raw.loc[raw["date"].notna()].copy()
     raw["date"] = pd.PeriodIndex(pd.to_datetime(raw["date"]), freq="Q")
+    # Order quarterly observations.
     raw = raw.set_index("date").sort_index()
     raw = raw.loc[~raw.index.duplicated(keep="first")]
     numeric = [
@@ -56,6 +89,7 @@ def load_latest_inputs():
         "unemployment", "covid_d", "labour", "import_price_deflator",
     ]
     raw[numeric] = raw[numeric].apply(pd.to_numeric, errors="coerce")
+    # Build model signals.
     d = pd.DataFrame(index=raw.index)
     d["y"] = np.log(raw["real_gdp_non_farm_sa"])
     d["pi"] = model_code.pcy(raw["cpi_trimmed_spliced"])
@@ -68,12 +102,16 @@ def load_latest_inputs():
     return d
 
 
+# %% Update workflow
+# Extend the sample, smooth and filter states, and save the latest results.
 def main(check_only=False):
+    # Reuse fixed parameters.
     params, initial_state = load_fixed_parameters()
     historical = model_code.build_dataset().loc[:model_code.ESMPL_LAST]
     latest_data = load_latest_inputs()
     first_new = pd.Period(model_code.ESMPL_LAST, freq="Q") + 1
     required = ["y", "u", "pi", "pi_e", "delta_4_pm"]
+    # Find latest complete quarter.
     complete = latest_data.loc[first_new:, required].dropna()
     if complete.empty:
         raise ValueError("No complete AU quarter after the original estimation sample")
@@ -82,16 +120,19 @@ def main(check_only=False):
     expected = pd.period_range(first_new, latest, freq="Q")
     if not newer.index.equals(expected) or newer[required].isna().any().any():
         raise ValueError("The new quarterly AU inputs have a gap or missing model values")
+    # Append new observations.
     combined = pd.concat([historical, newer]).sort_index()
     endog, exog = model_code.build_estimation_frames(
         combined, last=str(latest)
     )
+    # Smooth extended sample.
     fitted = model_code.SmogAU(endog, exog, initial_state).smooth(
         params, cov_type="none"
     )
     out = model_code.smoothed_states(fitted, endog.index).rename(
         columns={"gap_smooth_final": "output_gap"}
     )[["output_gap", "y_star", "u_star"]]
+    # Extract real-time estimates.
     filtered = pd.DataFrame(
         fitted.filtered_state[[0, 3, 5]].T,
         index=endog.index,
@@ -102,6 +143,7 @@ def main(check_only=False):
             or not np.isfinite(filtered.to_numpy()).all()):
         raise ValueError("Updated state estimates contain missing or infinite values")
     print(f"AU SMOG: {len(out)} quarters through {latest}; fixed parameters unchanged")
+    # Write updated results.
     if not check_only:
         RESULTS_FILE.parent.mkdir(exist_ok=True)
         temporary = RESULTS_FILE.with_suffix(".csv.tmp")
@@ -112,13 +154,16 @@ def main(check_only=False):
         filtered.to_csv(temporary, index_label="date")
         temporary.replace(FILTERED_RESULTS_FILE)
         print(f"Saved {FILTERED_RESULTS_FILE}")
-        figure_code.save_figures(out, combined["u"], "smoothed")
-        figure_code.save_figures(filtered, combined["u"], "filtered")
+        figure_code.save_figures(out, filtered, combined["u"])
     return out
 
 
+# %% Script entry point
+# Parse command-line options and run the model update.
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description="Extend AU SMOG using fixed fitted parameters"
+    )
     parser.add_argument("--check-only", action="store_true",
                         help="calculate updated states without writing the result CSV")
     args = parser.parse_args()

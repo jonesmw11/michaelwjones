@@ -1,10 +1,12 @@
-"""Generate KR SMOG output-gap, unemployment-gap, and NAIRU figures.
+# Generate KR SMOG output-gap, unemployment-gap, and NAIRU figures.
+#
+# Run this file alone to refresh figures without rerunning the state-space model.
+# The model update script also calls save_figures after updating its CSVs.
 
-Run this file alone to refresh figures without rerunning the state-space model.
-The model update script also calls save_figures after updating its CSVs.
-"""
-
+# %% Imports and file paths
+# Load plotting dependencies and locate KR SMOG results.
 from pathlib import Path
+import sys
 from io import BytesIO
 import time
 
@@ -17,25 +19,45 @@ from matplotlib.ticker import MultipleLocator, StrMethodFormatter
 import numpy as np
 import pandas as pd
 
+# Keep the import and paths usable when running cells without __file__.
+try:
+    CODE_DIR = Path(__file__).resolve().parent
+except NameError:
+    CODE_DIR = next(
+        (candidate for parent in (Path.cwd(), *Path.cwd().parents)
+         for candidate in (
+             parent / "code",
+             parent / "macro-work" / "KR SMOG Model" / "code",
+             parent / "michaelwjones" / "macro-work" / "KR SMOG Model" / "code",
+         ) if (candidate / "kr_smog_model_generation.py").is_file()),
+        None,
+    )
+    if CODE_DIR is None:
+        raise FileNotFoundError("Open the KR SMOG Model repository folder before running cells")
+if str(CODE_DIR) not in sys.path:
+    sys.path.insert(0, str(CODE_DIR))
 import kr_smog_model_generation as model_code
 
-
-HERE = Path(__file__).resolve().parent.parent
+HERE = CODE_DIR.parent
 RESULTS_DIR = HERE / "results"
 FIGURES_DIR = RESULTS_DIR / "figures"
 SMOOTHED_FILE = RESULTS_DIR / "smog_kr_python.csv"
 FILTERED_FILE = RESULTS_DIR / "smog_kr_filtered_states.csv"
 
 
+# %% Chart styling
+# Set the shared typography, axes, colours, and figure size.
 def styled_chart(title, ylabel):
-    """Use the same line colours and open-frame style as the AU SMOG charts."""
+    # Set shared chart styling.
     plt.rcParams.update({"font.family": "Gill Sans MT", "font.size": 13,
                          "axes.unicode_minus": False})
+    # Create shared canvas.
     fig, ax = plt.subplots(figsize=(11, 6.6))
     ax.set_title(title, fontsize=17, loc="left", pad=18, color="#1A1A1A")
     ax.set_ylabel(ylabel, fontsize=12, color="#5A5A5A")
     ax.grid(axis="y", color="#EFEFEF", linewidth=1)
     ax.set_axisbelow(True)
+    # Remove crowded borders.
     for side in ("top", "right", "left"):
         ax.spines[side].set_visible(False)
     ax.spines["bottom"].set_color("#C8C8C8")
@@ -47,11 +69,15 @@ def styled_chart(title, ylabel):
     return fig, ax
 
 
+# %% Chart export
+# Render the figure to PNG and retry temporary file-sharing failures.
 def save_chart(fig, path):
-    """Write a rendered PNG, retrying transient Windows file-sharing errors."""
+    # Save chart as PNG.
+    # Render chart in memory.
     buffer = BytesIO()
     fig.savefig(buffer, format="png", dpi=200, facecolor="white")
     plt.close(fig)
+    # Retry locked output files.
     for attempt in range(10):
         try:
             path.write_bytes(buffer.getvalue())
@@ -63,14 +89,19 @@ def save_chart(fig, path):
             time.sleep(0.2)
 
 
+# %% Chart labels
+# Place the legend and sample-end label outside the data lines.
 def place_labels(fig, ax, sample_end):
     ax.legend(loc="upper right", frameon=False, fontsize=12)
     fig.text(0.94, 0.055, sample_end, ha="right", va="bottom",
              color="#6A6A6A", fontsize=10)
 
 
+# %% Figure generation
+# Draw the output-gap, unemployment, and unemployment-gap charts.
 def save_figures(out, observed_unemployment, estimate_type):
-    """Render three charts for smoothed or filtered states."""
+    # Plot reported model states.
+    # Check compatible inputs.
     if estimate_type not in {"smoothed", "filtered"}:
         raise ValueError(f"Unknown estimate type: {estimate_type}")
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
@@ -78,6 +109,7 @@ def save_figures(out, observed_unemployment, estimate_type):
     sample_end = f"Through {out.index[-1]}"
 
     gap = out["output_gap"]
+    # Plot output gap.
     fig, ax = styled_chart(
         f"South Korea: unemployment-implied output gap ({estimate_type})",
         "Per cent of potential",
@@ -99,6 +131,7 @@ def save_figures(out, observed_unemployment, estimate_type):
     nairu = out["u_star"]
     if actual.isna().any():
         raise ValueError("Cannot chart NAIRU: actual unemployment is missing")
+    # Plot unemployment and NAIRU.
     fig, ax = styled_chart(
         f"South Korea: unemployment and the NAIRU ({estimate_type})", "Per cent"
     )
@@ -115,8 +148,9 @@ def save_figures(out, observed_unemployment, estimate_type):
     path = FIGURES_DIR / f"kr_smog_unemployment_and_nairu_{estimate_type}.png"
     save_chart(fig, path)
 
-    # Use the output-gap-aligned sign: slack is negative, tightness positive.
+    # Match output-gap sign.
     unemployment_gap = nairu - actual
+    # Plot unemployment gap.
     fig, ax = styled_chart(
         f"South Korea: unemployment gap ({estimate_type})",
         "Percentage points",
@@ -135,9 +169,13 @@ def save_figures(out, observed_unemployment, estimate_type):
     save_chart(fig, path)
 
 
+# %% State loading
+# Read saved quarterly states and prepare them for plotting.
 def load_states(path):
+    # Read state estimates.
     out = pd.read_csv(path)
     required = {"date", "output_gap", "y_star", "u_star"}
+    # Check required columns.
     if not required.issubset(out.columns):
         raise ValueError(f"{path} is missing model-state columns")
     out["date"] = pd.PeriodIndex(out["date"], freq="Q")
@@ -147,21 +185,28 @@ def load_states(path):
     return out
 
 
+# %% Figure workflow
+# Load model results and observed unemployment, then create charts.
 def main():
+    # Read observed unemployment.
     raw = pd.read_excel(
         model_code.INPUTS_XLSX, sheet_name=model_code.UPDATE_SHEET,
         usecols=["date", "unemployment"],
     )
     raw = raw.loc[raw["date"].notna()].copy()
     raw["date"] = pd.PeriodIndex(pd.to_datetime(raw["date"]), freq="Q")
+    # Align observed unemployment.
     observed = pd.to_numeric(
         raw.drop_duplicates("date").set_index("date")["unemployment"],
         errors="coerce",
     )
+    # Render each estimate type.
     for estimate_type, path in (("smoothed", SMOOTHED_FILE),
                                 ("filtered", FILTERED_FILE)):
         save_figures(load_states(path), observed, estimate_type)
 
 
+# %% Script entry point
+# Regenerate figures when this file is executed directly.
 if __name__ == "__main__":
     main()

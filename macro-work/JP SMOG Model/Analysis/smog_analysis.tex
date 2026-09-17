@@ -1,0 +1,203 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,longtable,array}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\newcommand{\NAIRU}{u^{*}}
+\newcommand{\gap}{g}
+\newcommand{\eps}{\varepsilon}
+
+\title{Japanese SMOG Model\\Results and Coefficient Analysis}
+\author{Model output review}
+\date{16 September 2026\\Saved model results through 2026Q1}
+
+\begin{document}
+\maketitle
+
+\section{Results and charts}
+The historical maximum-likelihood sample is 1995Q1--2022Q4 (112 quarters).
+The fixed-parameter update extends the state estimates through 2026Q1. At
+that date the saved smoothed output gap is $-0.836\%$ of potential output and
+the fitted NAIRU is $2.706\%$. Observed unemployment is $2.673\%$, about
+0.033 percentage points \emph{below} the NAIRU. The negative output gap
+therefore does not align with a simple current-quarter unemployment-minus-
+NAIRU reading. The model also contains two lagged unemployment-gap terms, an
+inflation signal, and a labour-cost signal, so a one-variable interpretation
+would be misleading.
+
+Smoothed states use the full updated sample. Filtered states use observations
+available through each plotted quarter while holding the historical
+coefficients fixed. The plots are model estimates, not direct measurements
+of potential output or the NAIRU.
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/jp_smog_output_gap.png}}
+\caption{Output gap: smoothed and filtered estimates.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/jp_smog_unemployment_and_nairu.png}}
+\caption{Observed unemployment and smoothed and filtered NAIRU.}
+\end{figure}
+
+\begin{figure}[p]
+\centering
+\includegraphics[width=0.85\linewidth,height=0.28\textheight,keepaspectratio]{\detokenize{../results/figures/jp_smog_unemployment_gap.png}}
+\caption{NAIRU minus observed unemployment: smoothed and filtered estimates.}
+\end{figure}
+
+\clearpage
+\section{Reading the current output gap}
+The model reports a $-0.836\%$ output gap in 2026Q1 even though observed
+unemployment is slightly below its fitted NAIRU. Its two lagged
+unemployment-gap terms and other signals allow this combination. The latest
+local data show core inflation of $1.786\%$ and an expectation input of
+$2.600\%$. The smoothed gap contributes $-0.149$ percentage points to the
+fitted inflation equation. Its full conditional fitted value is $2.560\%$,
+so actual inflation is $0.774$ points lower. This is a decomposition using
+the smoothed state, not an out-of-sample forecast.
+
+The negative gap deserves scrutiny, particularly because unemployment is
+below the fitted NAIRU and the labour-cost equation imposes a large positive
+loading on unemployment slack. But the observed inflation below the
+expectation input does not, by itself, show that the gap is too negative or
+that inflation pressure is being missed. The inflation residual, the unusual
+labour-cost restriction, and the nearly exact unemployment observation
+equation all matter for this assessment.
+
+\section{State-space structure}
+Japan's eight states are the log output gap $\gap_t$ and its two lags,
+potential log output $y_t^*$ and its lag, and the NAIRU $\NAIRU_t$ and its
+two lags. The reported output gap is $100\gap_t$, approximately a percentage
+deviation from potential. The transition equations are
+\begin{align}
+ \gap_t &= \phi_1\gap_{t-1}+\phi_2\gap_{t-2}+\eta^g_t,\\
+ y_t^* &= y_{t-1}^*+g^*+\eta^y_t,\\
+ \NAIRU_t &= \NAIRU_{t-1}+\eta^u_t.
+\end{align}
+The gap is AR(2), potential output has a quarterly log drift $g^*$, and the
+NAIRU is a random walk. The code uses independent Gaussian observation and
+state shocks with diagonal covariance matrices. Boosted HP trends from the
+historical data set the known initial state, with zero initial covariance.
+They also help construct optimizer starting values; Python estimates the
+coefficients from the Japanese signals.
+
+\section{Observation equations}
+The four measured signals are log GDP $y_t$, unemployment $u_t$, core
+inflation $\pi_t$, and annual labour-cost growth $n_t$. Inflation
+expectations $\pi_t^e$ come from the Tankan-labelled input. The import-price
+term $m_{t-1}$ is a lagged four-quarter level change. Let $D_t=1$ from
+2013Q1 onward and zero before that. The implemented equations are
+\begin{align}
+ y_t &= y_t^*+\gap_t+\eps^y_t,\\
+ u_t &= \NAIRU_t+\lambda_3\gap_t
+       +\rho_1(u_{t-1}-\NAIRU_{t-1})
+       +\rho_2(u_{t-2}-\NAIRU_{t-2})+\eps^u_t,\\
+ \pi_t &= D_t\{(1-\beta_1-\beta_2)\pi_t^e
+                 +\beta_1\pi_{t-1}+\beta_2\pi_{t-2}\}\notag\\
+ &\quad +(1-D_t)\{(1-\beta_1-\beta_2-\beta_3-\gamma)\pi_t^e
+          +\beta_1\pi_{t-1}+\beta_2\pi_{t-2}
+          +\beta_3\pi_{t-3}+\gamma n_{t-1}\}\notag\\
+ &\quad +\lambda_1\gap_t+\psi m_{t-1}+\eps^\pi_t,\\
+ n_t &= (1-\beta_4)\pi_t^e+\beta_4\pi_{t-1}
+       +L(u_{t-1}-\NAIRU_{t-1})+\eps^n_t,\\
+ L &= 8+\frac{1}{1+\exp(-\lambda_2)}.
+\end{align}
+The labour-cost loading is constrained to lie strictly between 8 and 9.
+It is $L$, rather than the raw coefficient $\lambda_2$, that multiplies the
+unemployment gap. A one percentage point output gap corresponds to
+$\gap_t=0.01$ in the inflation and unemployment equations.
+
+\section{Fitted coefficients and interpretation}
+\begin{longtable}{@{}>{$}l<{$}r p{0.65\linewidth}@{}}
+\caption{Japanese maximum-likelihood coefficients. Values are rounded.}\\
+\toprule
+\text{Parameter} & \multicolumn{1}{c}{\text{Estimate}} & Meaning in the implemented model\\
+\midrule
+\endfirsthead
+\toprule
+\text{Parameter} & \multicolumn{1}{c}{\text{Estimate}} & Meaning\\
+\midrule
+\endhead
+\beta_1 & 0.770747 & Weight on one-quarter lagged inflation in both regimes.\\
+\beta_2 & -0.091067 & Weight on two-quarter lagged inflation in both regimes.\\
+\beta_3 & -0.044532 & Weight on three-quarter lagged inflation before 2013Q1.\\
+\beta_4 & 2.176609 & Weight on lagged inflation in labour-cost growth; the implied expectation weight is $-1.1766$.\\
+\gamma & -0.010815 & Loading of lagged labour-cost growth in pre-2013 inflation.\\
+\lambda_1 & 17.859318 & Inflation loading on the log output gap; a one percentage point output gap adds about 0.1786 percentage points through this term.\\
+\lambda_2 & 6.884643 & Raw parameter transformed into the positive labour-gap loading $L=8.99898$; it is not the direct loading itself.\\
+\lambda_3 & -4.011514 & Unemployment loading on the log output gap; a one percentage point gap contributes about $-0.0401$ percentage points.\\
+\rho_1 & 1.304940 & Loading of the first lagged unemployment-minus-NAIRU gap.\\
+\rho_2 & -0.482033 & Loading of the second lagged unemployment-minus-NAIRU gap.\\
+\phi_1 & 1.210914 & First AR coefficient of the latent output gap.\\
+\phi_2 & -0.319172 & Second AR coefficient of the latent output gap.\\
+\psi & 0.002892 & Inflation loading of the lagged four-quarter import-price change.\\
+g^* & 0.001678 & Quarterly potential-log-output drift, about 0.67\% at an annualized log-growth rate.\\
+\eps_1 & 0.006487 & Standard deviation of log GDP measurement noise, about 0.649\% in log-output terms.\\
+\eps_2 & 0.000010 & Standard deviation of unemployment measurement noise, in percentage points; at the imposed lower bound.\\
+\eps_3 & 0.285608 & Standard deviation of inflation measurement noise, in percentage points.\\
+\eps_4 & 5.349199 & Standard deviation of labour-cost-growth measurement noise, in percentage points.\\
+\eps_5 & 0.008176 & Standard deviation of the log output-gap state shock, about 0.818\% of potential output.\\
+\eps_6 & 0.005007 & Standard deviation of the potential-log-output state shock.\\
+\eps_7 & 0.112964 & Standard deviation of the quarterly NAIRU state shock, in unemployment percentage points.\\
+\bottomrule
+\end{longtable}
+
+The implied inflation-expectation weights are $0.3203$ from 2013Q1 and
+$0.3757$ before 2013. The labour equation's $L\approx8.999$ is a large,
+positive loading: holding its other terms fixed, one percentage point more
+unemployment above the previous NAIRU raises predicted labour-cost growth
+by about nine percentage points. That sign is unusual for a slack measure.
+It is inherited from the Japanese specification and constrained to the
+8--9 interval, so its magnitude should be read as a structural modelling
+choice, not an unrestricted empirical estimate. The labour-cost signal also
+has high measurement noise. The near-zero $\eps_2$ makes unemployment almost
+an exact measurement conditional on the latent states and is another reason
+to treat the NAIRU and output gap as specification-sensitive.
+
+\section{Likelihood fit and convergence}
+SciPy's bounded L-BFGS-B optimizer maximizes the Kalman-filter log
+likelihood. The accepted-iteration CSV records all 21 parameters and their
+full-sample likelihood; a second CSV records each quarter's contribution.
+The Japanese fit converged after 441 accepted iterations:
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Fit statistic & Japan\\
+\midrule
+Historical quarters & 112\\
+Initial log likelihood & $-137.5153$\\
+Iteration 25 & 23.8740\\
+Iteration 50 & 24.9822\\
+Final log likelihood & 25.7183\\
+\bottomrule
+\end{tabular}
+\end{center}
+The NAIRU innovation scale, $\eps_7=0.112964$, is above the imposed
+data-derived floor of $0.072897$. The unemployment observation noise,
+$\eps_2=0.000010$, is at its lower bound. Convergence establishes a numerical
+optimum from the selected starting point and bounds; it does not establish
+a global optimum, tight identification, or out-of-sample forecast accuracy.
+The script does not export standard errors or forecast scores. Quarter-level
+likelihood terms are Kalman one-step-ahead predictive densities, not direct
+squared-error measures; early missing regressors cause signals to be masked.
+
+\section{Reproduction and source files}
+From this model folder, run the generation script to re-estimate historical
+coefficients and overwrite the history CSVs. Then run the update script to
+apply the fixed fit to later quarters. This report uses the generation code,
+fitted parameter JSON, both fit-history CSVs, the updated state CSV, the
+\texttt{Update} tab of the local input workbook, and the saved figures.
+Its numerical tables are a snapshot and do not change automatically when
+Python is rerun.
+
+\end{document}
