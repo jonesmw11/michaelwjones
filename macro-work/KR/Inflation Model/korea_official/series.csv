@@ -1,0 +1,398 @@
+﻿Code,Name,Tier,First observation,Last observation,Observations
+0,0 Total item,0,1965-01-01,1990-12-01,312
+A,01 Food and non-alcoholic beverages,1,1985-01-01,1990-12-01,72
+A01,01.1 Food,2,1985-01-01,1990-12-01,72
+A011,Bread and cereals,3,1985-01-01,1990-12-01,72
+A01101,White rice,4,1975-01-01,1990-12-01,192
+A01103,Glutinous rice,4,1975-01-01,1990-12-01,192
+A01104,Barley,4,1975-01-01,1990-12-01,192
+A01105,Soybean,4,1975-01-01,1990-12-01,192
+A01106,Peanut,4,1975-01-01,1990-12-01,192
+A01108,Wheat flour,4,1975-01-01,1990-12-01,192
+A01109,Noodles,4,1975-01-01,1990-12-01,192
+A01110,Instant noodles,4,1975-01-01,1990-12-01,192
+A01111,Glass noodles,4,1975-01-01,1990-12-01,192
+A01112,Tofu,4,1975-01-01,1990-12-01,192
+A01115,Cake,4,1985-01-01,1990-12-01,72
+A01116,Sliced bread,4,1985-01-01,1990-12-01,72
+A01117,Rice cake,4,1975-01-01,1990-12-01,192
+A012,Meat,3,1985-01-01,1990-12-01,72
+A01201,Beef (domestic),4,1975-01-01,1990-12-01,192
+A01203,Pork,4,1975-01-01,1990-12-01,192
+A01204,Chicken,4,1975-01-01,1990-12-01,192
+A01205,Sausage,4,1975-01-01,1990-12-01,192
+A013,Fish and seafood,3,1985-01-01,1990-12-01,72
+A01301,Hairtail,4,1975-01-01,1990-12-01,192
+A01302,Pollack,4,1975-01-01,1990-12-01,192
+A01303,Yellow corvina,4,1975-01-01,1990-12-01,192
+A01304,Mackerel,4,1975-01-01,1990-12-01,192
+A01305,Squid,4,1975-01-01,1990-12-01,192
+A01307,Oyster,4,1975-01-01,1990-12-01,192
+A01308,Clam,4,1975-01-01,1990-12-01,192
+A01311,Dried anchovies,4,1975-01-01,1990-12-01,192
+A01312,Dried squid,4,1975-01-01,1990-12-01,192
+A01314,Dried shredded squid,4,1990-01-01,1990-12-01,12
+A01315,Dried shredded pollack,4,1990-01-01,1990-12-01,12
+A01316,Fish cake,4,1985-01-01,1990-12-01,72
+A01317,Imitation crab meat,4,1990-01-01,1990-12-01,12
+A01318,Canned marine products,4,1975-01-01,1990-12-01,192
+A01319,Fermented fish,4,1975-01-01,1990-12-01,192
+A014,"Milk, cheese and eggs",3,1985-01-01,1990-12-01,72
+A01401,Milk,4,1985-01-01,1990-12-01,72
+A01402,Milk powder,4,1975-01-01,1990-12-01,192
+A01403,Cheese,4,1990-01-01,1990-12-01,12
+A01404,Fermented milk,4,1975-01-01,1990-12-01,192
+A01405,Egg,4,1975-01-01,1990-12-01,192
+A015,Oils and fats,3,1985-01-01,1990-12-01,72
+A01501,Sesame oil,4,1975-01-01,1990-12-01,192
+A01502,Cooking oil,4,1975-01-01,1990-12-01,192
+A016,Fruit,3,1985-01-01,1990-12-01,72
+A01601,Apple,4,1980-01-01,1990-12-01,132
+A01602,Pear,4,1975-01-01,1990-12-01,192
+A01603,Peach,4,1975-01-01,1990-12-01,192
+A01604,Grape,4,1975-01-01,1990-12-01,192
+A01605,Chestnut,4,1975-01-01,1990-12-01,192
+A01606,Persimmon,4,1975-01-01,1990-12-01,192
+A01607,Mandarin orange,4,1975-01-01,1990-12-01,192
+A01609,Korean melons,4,1975-01-01,1990-12-01,192
+A01610,Watermelon,4,1975-01-01,1990-12-01,192
+A01611,Strawberry,4,1975-01-01,1990-12-01,192
+A01612,Banana,4,1990-01-01,1990-12-01,12
+A01620,Processed fruit products,4,1975-01-01,1990-12-01,192
+A017,Vegetables & seaweeds,3,1985-01-01,1990-12-01,72
+A01701,Chinese cabbage,4,1975-01-01,1990-12-01,192
+A01702,Lettuce,4,1985-01-01,1990-12-01,72
+A01703,Spinach,4,1975-01-01,1990-12-01,192
+A01704,Cabbage,4,1975-01-01,1990-12-01,192
+A01708,Radish,4,1975-01-01,1990-12-01,192
+A01709,Young radish,4,1990-01-01,1990-12-01,12
+A01710,Carrot,4,1975-01-01,1990-12-01,192
+A01711,Potato,4,1975-01-01,1990-12-01,192
+A01712,Sweet potato,4,1975-01-01,1990-12-01,192
+A01713,Bellflower roots,4,1975-01-01,1990-12-01,192
+A01714,Bean sprouts,4,1975-01-01,1990-12-01,192
+A01715,Mushroom,4,1985-01-01,1990-12-01,72
+A01716,Cucumber,4,1975-01-01,1990-12-01,192
+A01717,Unripe hot pepper,4,1985-01-01,1990-12-01,72
+A01718,Squash,4,1975-01-01,1990-12-01,192
+A01719,Eggplant,4,1975-01-01,1990-12-01,192
+A01720,Tomato,4,1975-01-01,1990-12-01,192
+A01721,Spring onion,4,1975-01-01,1990-12-01,192
+A01722,Onion,4,1975-01-01,1990-12-01,192
+A01723,Garlic,4,1975-01-01,1990-12-01,192
+A01725,Fernbrake,4,1985-01-01,1990-12-01,72
+A01727,Pickled radish,4,1975-01-01,1990-12-01,192
+A01728,Dried laver,4,1975-01-01,1990-12-01,192
+A01729,Seasoned laver,4,1990-01-01,1990-12-01,12
+A01730,Dried sea mustard,4,1975-01-01,1990-12-01,192
+A018,"Sugar, jam, honey, chocolate and confectionery",3,1985-01-01,1990-12-01,72
+A01801,Chocolate,4,1975-01-01,1990-12-01,192
+A01802,Candy,4,1975-01-01,1990-12-01,192
+A01803,Chewing gum,4,1975-01-01,1990-12-01,192
+A01804,Ice-cream cone,4,1985-01-01,1990-12-01,72
+A01805,Biscuit,4,1975-01-01,1990-12-01,192
+A01806,Snack food,4,1980-01-01,1990-12-01,132
+A01807,Pie,4,1985-01-01,1990-12-01,72
+A01808,Sugar,4,1975-01-01,1990-12-01,192
+A01810,Honey,4,1985-01-01,1990-12-01,72
+A019,Food products n.e.c,3,1985-01-01,1990-12-01,72
+A01901,Red pepper powder,4,1975-01-01,1990-12-01,192
+A01902,Sesame,4,1975-01-01,1990-12-01,192
+A01903,Ginger,4,1975-01-01,1990-12-01,192
+A01904,Salt,4,1975-01-01,1990-12-01,192
+A01905,Soy sauce,4,1975-01-01,1990-12-01,192
+A01906,Soybean paste,4,1975-01-01,1990-12-01,192
+A01908,Korean hot pepper sauce,4,1975-01-01,1990-12-01,192
+A01909,Curry powder,4,1980-01-01,1990-12-01,132
+A01911,Dressing,4,1980-01-01,1990-12-01,132
+A01912,Mixed condiment,4,1985-01-01,1990-12-01,72
+A01914,Baby food,4,1980-01-01,1990-12-01,132
+A01915,Kimchi,4,1990-01-01,1990-12-01,12
+A01917,Frozen food,4,1990-01-01,1990-12-01,12
+A02,01.2 Non-alcoholic beverages,2,1985-01-01,1990-12-01,72
+A021,"Coffee, tea and cocoa",3,1985-01-01,1990-12-01,72
+A02101,Coffee,4,1980-01-01,1990-12-01,132
+A02102,Tea,4,1985-01-01,1990-12-01,72
+A022,"Mineral waters, soft drinks, fruit and vegetable juices",3,1985-01-01,1990-12-01,72
+A02201,Juice,4,1990-01-01,1990-12-01,12
+A02202,Soybean milk,4,1985-01-01,1990-12-01,72
+A02204,Health drinks,4,1980-01-01,1990-12-01,132
+A02205,Carbonated beverages,4,1985-01-01,1990-12-01,72
+B,02 Alcoholic beverages and tobacco,1,1985-01-01,1990-12-01,72
+B01,02.1 Alcholic beverages,2,1985-01-01,1990-12-01,72
+B011,Alcholic beverages,3,1985-01-01,1990-12-01,72
+B01101,Soju,4,1975-01-01,1990-12-01,192
+B01103,Beer,4,1975-01-01,1990-12-01,192
+B01104,Rice wine(Makgeolli),4,1975-01-01,1990-12-01,192
+B01105,Spirits,4,1980-01-01,1990-12-01,132
+B02,02.2 Tobacco,2,1985-01-01,1990-12-01,72
+B021,Tobacco,3,1985-01-01,1990-12-01,72
+B02101,Cigarettes,4,1975-01-01,1990-12-01,192
+C,03 Clothing and footwear,1,1985-01-01,1990-12-01,72
+C01,03.1 Clothing,2,1985-01-01,1990-12-01,72
+C011,Garment for men,3,1985-01-01,1990-12-01,72
+C01101,Men's outerwear,4,1985-01-01,1990-12-01,72
+C01102,Men's tops,4,1985-01-01,1990-12-01,72
+C01104,Men's underwear,4,1985-01-01,1990-12-01,72
+C012,Garment for women,3,1985-01-01,1990-12-01,72
+C01201,Women's outerwear,4,1990-01-01,1990-12-01,12
+C01202,Dresses,4,1990-01-01,1990-12-01,12
+C01203,Women's tops,4,1990-01-01,1990-12-01,12
+C01205,Women's underwear,4,1985-01-01,1990-12-01,72
+C013,Casual wear,3,1985-01-01,1990-12-01,72
+C01301,Jumper,4,1975-01-01,1990-12-01,192
+C01302,T-shirts,4,1980-01-01,1990-12-01,132
+C01303,Sweaters,4,1990-01-01,1990-12-01,12
+C01304,Jeans,4,1990-01-01,1990-12-01,12
+C01305,Sportswear,4,1990-01-01,1990-12-01,12
+C014,Garment for children & infants,3,1985-01-01,1990-12-01,72
+C01401,Children's clothing,4,1985-01-01,1990-12-01,72
+C015,Other articles of clothing and clothing accessories,3,1985-01-01,1990-12-01,72
+C01501,Socks,4,1985-01-01,1990-12-01,72
+C01502,Hats & caps,4,1975-01-01,1990-12-01,192
+C01503,Gloves,4,1975-01-01,1990-12-01,192
+C016,"Cleaning, repair and hire of clothing",3,1985-01-01,1990-12-01,72
+C01601,Clothing alterations,4,1975-01-01,1990-12-01,192
+C01602,Laundry services,4,1975-01-01,1990-12-01,192
+C02,03.2 Footwear,2,1985-01-01,1990-12-01,72
+C021,Footwear,3,1985-01-01,1990-12-01,72
+C02101,Children's shoes,4,1990-01-01,1990-12-01,12
+C02102,Shoes,4,1985-01-01,1990-12-01,72
+C02103,Sneakers,4,1975-01-01,1990-12-01,192
+C02104,Slippers,4,1990-01-01,1990-12-01,12
+D,"04 Housing, water, electricity and other fuels",1,1985-01-01,1990-12-01,72
+D01,04.1 Actual rentals for housing,2,1985-01-01,1990-12-01,72
+D011,Rentals for housing,3,1985-01-01,1990-12-01,72
+D01101,Long-term deposit rental,4,1975-01-01,1990-12-01,192
+D01102,Monthly rental,4,1975-01-01,1990-12-01,192
+D03,04.3 Maintenance and repair of the dwelling,2,1985-01-01,1990-12-01,72
+D031,Maintenance and repair of the dwelling,3,1985-01-01,1990-12-01,72
+D03101,Home maintenance and repair materials,4,1985-01-01,1990-12-01,72
+D03102,Dwelling maintenance and repair services,4,1985-01-01,1990-12-01,72
+D04,04.4 Water supply and miscellaneous services relating to rhe dwelling,2,1985-01-01,1990-12-01,72
+D041,Water & Sewage disposal charge,3,1985-01-01,1990-12-01,72
+D04101,Water utilities,4,1975-01-01,1990-12-01,192
+D04102,Wastewater charges,4,1985-01-01,1990-12-01,72
+D042,Other services relating to the dwelling n.e.c,3,1985-01-01,1990-12-01,72
+D04201,Apartment maintenance fees,4,1990-01-01,1990-12-01,12
+D04202,Trash bags,4,1975-01-01,1990-12-01,192
+D04203,Septic tank cleaning fees,4,1975-01-01,1990-12-01,192
+D05,"04.5 Electricity, gas and other fuels",2,1985-01-01,1990-12-01,72
+D051,Electricity,3,1985-01-01,1990-12-01,72
+D05101,Electricity,4,1975-01-01,1990-12-01,192
+D052,Gas,3,1985-01-01,1990-12-01,72
+D05201,Gas utilities,4,1980-01-01,1990-12-01,132
+D05202,LPG (for cook),4,1975-01-01,1990-12-01,192
+D053,Other fuels and energy,3,1985-01-01,1990-12-01,72
+D05301,Kerosene,4,1975-01-01,1990-12-01,192
+E,"05 Furnishings, household equipment and routine household maintenance",1,1985-01-01,1990-12-01,72
+E01,"05.1 Furniture and furnishings, carpets and other floor coverings",2,1985-01-01,1990-12-01,72
+E011,"Furniture and furnishings, carpets and other floor coverings",3,1985-01-01,1990-12-01,72
+E01101,Closet,4,1980-01-01,1990-12-01,132
+E01102,Bed,4,1990-01-01,1990-12-01,12
+E01103,Living room cabinet,4,1985-01-01,1990-12-01,72
+E01104,Sofa,4,1990-01-01,1990-12-01,12
+E01105,Desk,4,1975-01-01,1990-12-01,192
+E01106,Chair,4,1975-01-01,1990-12-01,192
+E01107,Dining table,4,1985-01-01,1990-12-01,72
+E01108,Kitchen sink,4,1980-01-01,1990-12-01,132
+E02,05.2 Household textiles,2,1985-01-01,1990-12-01,72
+E021,Household textiles,3,1985-01-01,1990-12-01,72
+E02101,Bedding,4,1985-01-01,1990-12-01,72
+E02102,Curtain,4,1990-01-01,1990-12-01,12
+E03,05.3 Household appliances,2,1985-01-01,1990-12-01,72
+E031,Household electronic appliance & Household appliances,3,1985-01-01,1990-12-01,72
+E03101,Electric rice cooker,4,1980-01-01,1990-12-01,132
+E03102,Gas range,4,1980-01-01,1990-12-01,132
+E03103,Microwave oven,4,1990-01-01,1990-12-01,12
+E03105,Refrigerator,4,1975-01-01,1990-12-01,192
+E03107,Air conditioner,4,1990-01-01,1990-12-01,12
+E03108,Electric fan,4,1975-01-01,1990-12-01,192
+E03110,Washing machine,4,1980-01-01,1990-12-01,132
+E03113,Vacuum cleaner,4,1990-01-01,1990-12-01,12
+E03114,Small kitchen appliances,4,1975-01-01,1990-12-01,192
+E04,"05.4 Glassware, tableware and household ustensils",2,1985-01-01,1990-12-01,72
+E041,"Glassware, tableware and household ustensils",3,1985-01-01,1990-12-01,72
+E04101,Tableware,4,1985-01-01,1990-12-01,72
+E04102,Cup,4,1985-01-01,1990-12-01,72
+E04103,Iron pot,4,1990-01-01,1990-12-01,12
+E04104,Frying pan,4,1975-01-01,1990-12-01,192
+E04105,Sauce pan,4,1975-01-01,1990-12-01,192
+E04106,Spoon & chopsticks,4,1975-01-01,1990-12-01,192
+E04107,Airtight container,4,1990-01-01,1990-12-01,12
+E05,05.5 Tools and equipment for house and garden,2,1985-01-01,1990-12-01,72
+E051,Tools and equipment for house and garden,3,1985-01-01,1990-12-01,72
+E05101,Boiler,4,1990-01-01,1990-12-01,12
+E05102,Battery,4,1980-01-01,1990-12-01,132
+E06,05.6 Goods and services for routine household maintenance,2,1985-01-01,1990-12-01,72
+E061,Non-durable household goods,3,1985-01-01,1990-12-01,72
+E06101,Laundry detergent,4,1975-01-01,1990-12-01,192
+E06103,Light bulb,4,1975-01-01,1990-12-01,192
+E06104,Dishwasher detergent,4,1980-01-01,1990-12-01,132
+E06106,Insecticide,4,1975-01-01,1990-12-01,192
+E06107,Household plastic wrap,4,1990-01-01,1990-12-01,12
+E062,Domestic services and household services,3,1985-01-01,1990-12-01,72
+E06201,Housekeeping costs,4,1980-01-01,1990-12-01,132
+F,06 Health,1,1985-01-01,1990-12-01,72
+F01,"06.1 Medical products, appliances and equipment",2,1985-01-01,1990-12-01,72
+F011,Pharmaceutical products,3,1985-01-01,1990-12-01,72
+F01101,Cold medicine,4,1975-01-01,1990-12-01,192
+F01102,Painkiller,4,1980-01-01,1990-12-01,132
+F01103,Digestive,4,1975-01-01,1990-12-01,192
+F01104,Stomach medicine,4,1985-01-01,1990-12-01,72
+F01106,Anti-inflammatory medicine,4,1980-01-01,1990-12-01,132
+F01107,Skin disease medication,4,1980-01-01,1990-12-01,132
+F01111,Ginseng,4,1975-01-01,1990-12-01,192
+F01113,Multivitamin,4,1975-01-01,1990-12-01,192
+F012,Medical products and therapeutic appliances,3,1985-01-01,1990-12-01,72
+F01202,Sanitary pad,4,1980-01-01,1990-12-01,132
+F01205,Eyeglasses,4,1985-01-01,1990-12-01,72
+F02,06.2 Outpatient services,2,1985-01-01,1990-12-01,72
+F021,Medical services,3,1985-01-01,1990-12-01,72
+F02103,Oriental medicine treatment,4,1980-01-01,1990-12-01,132
+F03,06.3 Hospital services,2,1985-01-01,1990-12-01,72
+F031,Hospital services,3,1985-01-01,1990-12-01,72
+G,07 Transport,1,1985-01-01,1990-12-01,72
+G01,07.1 Purchase of vehicles,2,1985-01-01,1990-12-01,72
+G011,Purchase of vehicles,3,1985-01-01,1990-12-01,72
+G01101,Passenger car (small size),4,1990-01-01,1990-12-01,12
+G01102,Passenger car (medium size),4,1990-01-01,1990-12-01,12
+G01108,Bicycle,4,1975-01-01,1990-12-01,192
+G02,07.2 Operation of personal transport equipment,2,1985-01-01,1990-12-01,72
+G021,Fuels and lubricants for personal transport equipment,3,1985-01-01,1990-12-01,72
+G02101,Gasoline,4,1990-01-01,1990-12-01,12
+G02102,Diesel,4,1980-01-01,1990-12-01,132
+G022,Spare parts and accessories and maintenance and repair  for personal transport equipment,3,1990-01-01,1990-12-01,12
+G02205,Engine oil changes,4,1990-01-01,1990-12-01,12
+G023,Other services in respect of personal transport equipment,3,1985-01-01,1990-12-01,72
+G02301,Driving lessons,4,1975-01-01,1990-12-01,192
+G02302,Parking fee,4,1990-01-01,1990-12-01,12
+G03,07.3 Transport services,2,1985-01-01,1990-12-01,72
+G031,Passenger transport by railway,3,1985-01-01,1990-12-01,72
+G03101,Train fares,4,1975-01-01,1990-12-01,192
+G03102,Subway fares,4,1980-01-01,1990-12-01,132
+G032,Passenger transport by road,3,1985-01-01,1990-12-01,72
+G03201,Local bus fares,4,1975-01-01,1990-12-01,192
+G03202,Intercity bus fares,4,1985-01-01,1990-12-01,72
+G03203,Taxi fares,4,1975-01-01,1990-12-01,192
+G033,Passenger transport by air & sea and inland waterway,3,1985-01-01,1990-12-01,72
+G03301,Domestic air travel,4,1975-01-01,1990-12-01,192
+G034,Other purchased transport services,3,1990-01-01,1990-12-01,12
+G03401,Moving costs,4,1990-01-01,1990-12-01,12
+H,08 Communication,1,1985-01-01,1990-12-01,72
+H01,08.1 Postal services,2,1985-01-01,1990-12-01,72
+H011,Postal services,3,1985-01-01,1990-12-01,72
+H01101,Postage,4,1975-01-01,1990-12-01,192
+H02,08.2 Telephone and telefax equipment,2,1985-01-01,1990-12-01,72
+H021,Telephone and telefax equipment,3,1985-01-01,1990-12-01,72
+H03,08.3 Telephone and telefax services,2,1985-01-01,1990-12-01,72
+H031,Telephone and telefax services,3,1985-01-01,1990-12-01,72
+H03101,Landline telephone charges,4,1985-01-01,1990-12-01,72
+I,09 Recreation and culture,1,1985-01-01,1990-12-01,72
+I01,"09.1 Audio-visual, photographic and information processing equipment",2,1985-01-01,1990-12-01,72
+I011,Audio-visual equipment,3,1985-01-01,1990-12-01,72
+I01101,Television,4,1980-01-01,1990-12-01,132
+I01102,Audio-visual Device,4,1985-01-01,1990-12-01,72
+I012,Equipment & spare parts and accessories for information processing,3,1985-01-01,1990-12-01,72
+I01201,Computer,4,1990-01-01,1990-12-01,12
+I02,09.2 Other major durables for recreation and culture,2,1985-01-01,1990-12-01,72
+I021,Other major durables for recreation and culture,3,1985-01-01,1990-12-01,72
+I02101,Musical instruments,4,1985-01-01,1990-12-01,72
+I03,"09.3 Other recreational items and equipment, gardens and pets",2,1985-01-01,1990-12-01,72
+I031,"Other recreational items and equipment, gardens and pets",3,1985-01-01,1990-12-01,72
+I03101,Toy,4,1985-01-01,1990-12-01,72
+I03102,Leisure goods,4,1990-01-01,1990-12-01,12
+I03103,Sporting goods,4,1975-01-01,1990-12-01,192
+I03104,Flowers,4,1975-01-01,1990-12-01,192
+I04,09.4 Recreational and cultural services,2,1985-01-01,1990-12-01,72
+I041,Recreational and sporting services,3,1985-01-01,1990-12-01,72
+I04109,Amusement park admission,4,,,0
+I04110,Sporting event tickets,4,1980-01-01,1990-12-01,132
+I042,Cultural services,3,1985-01-01,1990-12-01,72
+I04201,Movie tickets,4,1975-01-01,1990-12-01,192
+I04204,Private study room fees,4,1975-01-01,1990-12-01,192
+I04207,TV license fees,4,1985-01-01,1990-12-01,72
+I04208,Photography services,4,1985-01-01,1990-12-01,72
+I05,"09.5 Books , newspapers & stationery",2,1985-01-01,1990-12-01,72
+I051,Books,3,1985-01-01,1990-12-01,72
+I05102,Elementary school textbooks,4,1990-01-01,1990-12-01,12
+I05103,Middle school textbooks,4,1990-01-01,1990-12-01,12
+I05104,High school textbooks,4,1980-01-01,1990-12-01,132
+I05106,Books,4,1980-01-01,1990-12-01,132
+I052,Newspapers and periodicals,3,1985-01-01,1990-12-01,72
+I05201,Newspaper,4,1975-01-01,1990-12-01,192
+I053,Stationery,3,1985-01-01,1990-12-01,72
+I05301,Paper stationery,4,1985-01-01,1990-12-01,72
+I05303,Writing tools,4,1985-01-01,1990-12-01,72
+I05304,Art supplies,4,1975-01-01,1990-12-01,192
+J,10 Education,1,1985-01-01,1990-12-01,72
+J01,10.1 Pre-primary and primary education,2,1985-01-01,1990-12-01,72
+J011,Pre-primary and primary education,3,1985-01-01,1990-12-01,72
+J01101,Kindergarten fees,4,1975-01-01,1990-12-01,192
+J03,10.3 Tertiary education,2,1985-01-01,1990-12-01,72
+J031,Tertiary education,3,1985-01-01,1990-12-01,72
+J03101,Tuition(vocational college),4,1985-01-01,1990-12-01,72
+J03102,Tuition (public university),4,1975-01-01,1990-12-01,192
+J03103,Tuition (private university),4,1975-01-01,1990-12-01,192
+J04,10.4 Education not definable by level,2,1985-01-01,1990-12-01,72
+J041,Private institutions and supplementary education,3,1985-01-01,1990-12-01,72
+J04101,Private education expenses(elementary school students),4,1985-01-01,1990-12-01,72
+J04103,Private education expenses(high school students),4,1985-01-01,1990-12-01,72
+J04104,Music classes,4,1985-01-01,1990-12-01,72
+J04105,Art classes,4,1990-01-01,1990-12-01,12
+J04107,Computer classes,4,1985-01-01,1990-12-01,72
+J04108,Worksheet-based study programs,4,1990-01-01,1990-12-01,12
+J042,Private institutions for adults & other education,3,1985-01-01,1990-12-01,72
+J04202,Foreign language institutions,4,1980-01-01,1990-12-01,132
+J04203,Sports lessons,4,1990-01-01,1990-12-01,12
+K,11 Restaurants and hotels,1,1985-01-01,1990-12-01,72
+K01,11.1 Catering services,2,1985-01-01,1990-12-01,72
+K011,Catering services,3,1985-01-01,1990-12-01,72
+K01101,Korean set menu with kimchi stew,4,1985-01-01,1990-12-01,72
+K01102,Korean set menu with bean paste stew,4,1990-01-01,1990-12-01,12
+K01103,Bibimbap,4,1975-01-01,1990-12-01,192
+K01104,Ox bone soup(Seolleongtang),4,1975-01-01,1990-12-01,192
+K01105,Beef short rib soup(Galbitang),4,1985-01-01,1990-12-01,72
+K01109,Korean BBQ beef(Bulgogi),4,1990-01-01,1990-12-01,12
+K01110,Beef(eating out),4,1990-01-01,1990-12-01,12
+K01114,Korean cold noodles(Naengmyeon),4,1975-01-01,1990-12-01,192
+K01115,Chopped wheat noodles(Kalgusksu),4,1980-01-01,1990-12-01,132
+K01117,Sushi,4,1990-01-01,1990-12-01,12
+K01119,Black bean sauce noodles(Jajangmyon),4,1975-01-01,1990-12-01,192
+K01120,Spicy seafood noodle soup(Jjambbong),4,1975-01-01,1990-12-01,192
+K01123,Pork cutlet,4,1990-01-01,1990-12-01,12
+K01129,Chicken,4,1990-01-01,1990-12-01,12
+K01130,Hamburger,4,1990-01-01,1990-12-01,12
+K01133,Coffee (eating out),4,1975-01-01,1990-12-01,192
+K01134,Other drinks(eating out),4,1985-01-01,1990-12-01,72
+K01136,Beer(eating out),4,1985-01-01,1990-12-01,72
+K02,11.2 Accommodation services,2,1985-01-01,1990-12-01,72
+K021,Accommodation services,3,1985-01-01,1990-12-01,72
+K02101,Hotel lodging,4,1975-01-01,1990-12-01,192
+K02102,Inn lodging,4,1975-01-01,1990-12-01,192
+L,12 Miscellaneous goods and services,1,1985-01-01,1990-12-01,72
+L01,12.1 Personal care,2,1985-01-01,1990-12-01,72
+L011,Hairdressing salons and personal grooming establishments,3,1985-01-01,1990-12-01,72
+L01101,Public baths,4,1975-01-01,1990-12-01,192
+L01103,Hairdressers,4,1975-01-01,1990-12-01,192
+L01104,Beauty parlors,4,1975-01-01,1990-12-01,192
+L012,"Electric appliances & other appliances, articles and products  for personal care",3,1985-01-01,1990-12-01,72
+L01201,Razor,4,1985-01-01,1990-12-01,72
+L01202,Hair dryer,4,1990-01-01,1990-12-01,12
+L01203,Toothbrush,4,1975-01-01,1990-12-01,192
+L01204,Toothpaste,4,1975-01-01,1990-12-01,192
+L01205,Soap,4,1975-01-01,1990-12-01,192
+L01206,Shampoo,4,1980-01-01,1990-12-01,132
+L01208,Toilet paper,4,1975-01-01,1990-12-01,192
+L01209,Basic cosmetics,4,1985-01-01,1990-12-01,72
+L01211,Makeup cosmetics,4,1990-01-01,1990-12-01,12
+L02,12.3 Personal effects n.e.c.,2,1985-01-01,1990-12-01,72
+L021,Personal effects n.e.c,3,1985-01-01,1990-12-01,72
+L02101,Wrist watch,4,1975-01-01,1990-12-01,192
+L02103,Bag,4,1975-01-01,1990-12-01,192
+L02104,Handbag,4,1975-01-01,1990-12-01,192
+L02105,Umbrella,4,1975-01-01,1990-12-01,192
+L03,12.4~7 Other services,2,1985-01-01,1990-12-01,72
+L031,Other services,3,1985-01-01,1990-12-01,72
+L03106,Financial services,4,1975-01-01,1990-12-01,192
+L03108,Administrative services,4,1975-01-01,1990-12-01,192

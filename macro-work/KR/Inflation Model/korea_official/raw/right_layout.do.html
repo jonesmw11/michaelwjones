@@ -1,0 +1,682 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+<title>KOSIS</title>
+<script type="text/javascript" src="ext/js/common/json2.js"></script>
+<script type="text/javascript" src="ext/js/jquery/jquery-1.9.1.js"></script>
+
+<script type="text/javascript" src="fusioncharts/fusioncharts.js"></script>
+								    
+<script type="text/javascript" src="ext/js/jqgrid/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="ext/js/jqgrid/jquery.jqGrid.src.js"></script>
+<script type="text/javascript" src="ext/js/jqgrid/grid.locale-en.js"></script>
+<link type="text/css" rel="stylesheet" href="ext/css/jqgrid/ui.jqgrid.css" />
+<link type="text/css" rel="stylesheet" href="ext/css/jqgrid/chart.custom.css" />
+<script type="text/javascript" src="ext/js/jquery/jquery-ui.js"></script>
+<link type="text/css" rel="stylesheet" href="ext/css/common/jquery-ui.css" />
+
+
+	
+	
+		<link type="text/css" rel="stylesheet" href="ext/css/common/base.css?v=20251218" />
+		<link type="text/css" rel="stylesheet" href="ext/css/common/popup.css?v=20251218" />
+	
+
+
+
+    <link type="text/css" rel="stylesheet" href="ext/css/common/design.css?v=210406" />
+    <link type="text/css" rel="stylesheet" href="ext/css/common/font.css?v=210406" />
+    <link type="text/css" rel="stylesheet" href="ext/css/common/ui.tree.css?v=210406" />
+    
+    <script type="text/javascript" src="ext/js/jquery/jquery-ui.js?v=210406"></script>
+	<link type="text/css" rel="stylesheet" href="ext/css/common/jquery-ui.css?v=210406" />
+    
+    <script type="text/javascript">
+    
+    var tab_index_check = 0;
+    var set_first_cookie = false;
+    $(document).ready(function(){
+    	$(":input", top.ParamInfo).each(function(index, obj){		     
+			var name = $(obj).attr("name");		   
+			$currInput = $("form[name='ParamInfo']:eq(0) :input[name='"+name+"']");		   
+			if($currInput.val() === undefined || $currInput.val() == ""){
+				$currInput.val($(obj).val());
+			}
+		});
+    	var connPath = parent.g_connPath
+    	var paramInfoForm = document.ParamInfo;    	
+    		paramInfoForm.tblSe = "";
+    		
+    		if(paramInfoForm.tblSe.value != 'F'){
+		    	paramInfoForm.action = "statHtmlContent.do";
+		    	paramInfoForm.orgId = "101";
+		    	paramInfoForm.tblId = "DT_1J22001";
+		    	paramInfoForm.pub = '2';
+		    	if(connPath == ""){
+	       				var url = "";
+	       				if(url.indexOf("kosis.kr") > -1){
+	       					paramInfoForm.conn_path = 'Z1';
+	       				}else{
+	       					paramInfoForm.conn_path = 'ZA';
+	       				}
+		    	}else{
+	   				paramInfoForm.conn_path = connPath;
+		    	}
+		    	
+		    	paramInfoForm.obj_var_id = 'A';
+		    	paramInfoForm.list_id = 'A41_10';
+		    	paramInfoForm.vw_cd = "";
+		    	paramInfoForm.itm_id = "";
+		    	paramInfoForm.dbUser = ""; 
+		    	paramInfoForm.target = "iframe_centerMenu";
+		    	paramInfoForm.method = "POST";
+		    	paramInfoForm.submit();
+    		}else{
+    			
+    			parent.iframe_leftMenu.showStats("101", "DT_1J22001", paramInfoForm.tblSe.value, "", "-", "", "","");   
+    			fnCloseTab('1');
+    		}
+//  		fn_callParent();
+ 		
+		
+			$arrow = $(event.target);
+			$(".grid_box > .tbl_grid_left_btn").css("background-image","none");
+		
+ 		
+ 		$("#dialog").dialog({
+				title : "사용자 알림"
+				, autoOpen : false
+				, modal : true
+				, width : "300"
+				, height : "200"
+				, buttons : {
+							"닫기" : function(){$(this).dialog('close');}   					
+							}
+ 				, open : function(){
+ 					$(".ui-widget-overlay").addClass(".custom-overlay");
+ 				}
+			});
+ 		$("#div_grid_left_btn").on('keydown', function(e){
+ 			
+ 			switch (e.keyCode) {
+ 			case 13:
+ 				fn_tblView();
+ 				break;
+ 			}
+ 		});
+ 	});
+
+	
+    /* var fn_cookieSetTblNm = function(f_tblNm){
+   		iframe_rightMenu. 
+    	var f_orgId = parent.fn_calOrgId();
+    	var f_tblId = parent.fn_calTblId();
+    	var f_checkCn = parent.iframe_leftMenu.getCheckCn();
+    }; */
+ 	function fn_callParent(){
+ 	//	var bodyWidth = $("body").width();
+ 		var bodyWidth = $(parent.iframe_rightMenu).width();
+//  		var right_layout_width = bodyWidth - 50;
+//  		$(".right_layout").css("width", (right_layout_width+10)+"px");
+ 		//right_layout_width -= 10;
+//  		$("iframe[name='iframe_centerMenu']").css("width", right_layout_width+"px");
+ 		
+ 		fn_setHeight();
+ 		
+ 		//fn_resizeTabWidth();//탭사이즈 자동조절
+ 	}
+ 	
+ 	function fn_setHeight(){
+ 		var rightLayoutHeight = $(".right_layout").height();
+ 		var statTabHeight = $(".stat_tab").height();
+ 		var statBoxHeight = rightLayoutHeight - statTabHeight;
+//  		$(".stat_box").css("height", statBoxHeight);
+ 		
+//  		
+ 		
+ 	}
+ 	
+ 	function fn_tblView(){
+ 		try{
+ 			$arrow = $(event.target);
+ 		} catch (e) {
+			$arrow = $($(".grid_box").children()[0]);
+		}
+ 		$left = $(".left_layout", parent.document);
+ 		if($left.css("display") == "none"){
+ 			$arrow.removeClass("tbl_grid_right_btn").addClass("tbl_grid_left_btn");
+ 			$left.show();
+//  			parent.fn_resizeNormal();
+ 		}else{
+ 			$arrow.removeClass("tbl_grid_left_btn").addClass("tbl_grid_right_btn");
+ 			$left.hide();
+//  			parent.fn_resizeFull();
+ 		}
+ 	}
+ 	
+ 	
+ 	
+   	var tabIndex = 1;
+   	
+   	function tabControll(orgId, tblId, pub, conn_path, parentId, vwCd, scrId, itmId){
+   		   		
+   		tabIndex++;
+   		var leftTabSize = $(".stat_tab>ul>li[tabIndex]").size();//tab 동적생성위해 추가
+
+   		if(leftTabSize+1 > 10){
+   			parent.fn_loading("setting");
+   			//$("#dialog > #msg").html("탭을 더 이상 열 수 없습니다. 탭을 닫은 후 재시도 바랍니다.");
+   			//$("#dialog").dialog("open");
+   			
+   			if(confirm("탭을 10개 이상 열 수 없습니다. 첫번째 탭을 닫고 여시겠습니까?")){
+   				tab_index_check = 1;
+   				fnCloseTab($(".stat_tab>ul>li[tabIndex]:first").attr("tabIndex"));
+   			}else{
+   				return;
+   			}
+   		}
+   		var uri = "statHtmlContent.do";
+   		try{
+	   		if(scrId != "" && scrId != undefined){
+	   			uri = uri + "?orgId=" + orgId + "&tblId=" + tblId + "&pub=" + pub + "&conn_path=" + conn_path + "&list_id=" + parentId + "&vw_cd=" + vwCd + "&language=en&dbUser=" + "" + "&scrId="+ scrId + "&tabYn=Y";
+	   		} else {
+	   			uri = uri + "?orgId=" + orgId + "&tblId=" + tblId + "&pub=" + pub + "&conn_path=" + conn_path + "&list_id=" + parentId + "&vw_cd=" + vwCd + "&language=en&dbUser=" + "" + "&tabYn=Y";
+	   		}
+	   		if(itmId != null && itmId != ""){
+	   			uri = uri + "&itm_id=" + itmId;
+	   		} else {
+	   			uri = uri + "&itm_id=";
+	   		}
+	   		if(vwCd == "MT_GTITLE01" || vwCd == "MT_GTITLE02" || vwCd == "MT_GTITLE03"){
+	   			uri = uri + "&obj_var_id=A";
+	   		} 
+   		} catch (e) {
+   			alert("통계표 정보가 없습니다.");
+   			parent.fn_loading("loading");
+   			return;
+   		}
+    	$(".stat_tab>ul>li.tab_on").removeClass("tab_on").addClass("tab_off");
+   		
+   		var tabHtml  = "<li class='tab_on' tabIndex='"+tabIndex+"'>";
+   			tabHtml += "<a href='javascript:fnActivate(\""+tabIndex+"\",\""+parentId+"\");'><div class='tab_title'>로딩중..</div></a>";
+   			tabHtml += "<a href='javascript:fnCloseTab(\""+tabIndex+"\");' class='close_r'><img src='images/btn_tabon_close.png' alt='close' title='닫기'></a>";
+   			tabHtml += "</li>";
+   		
+        	$(".stat_tab>ul>li.li_close").before(tabHtml);
+        	
+		//iframe 동적생성필요(index=1은 항상존재해야됨)
+		if(tabIndex != 1){
+	       	var tabIframeHtml  = "<div class='stat_box' index='"+tabIndex+"' style='display:none;'>";
+	       		tabIframeHtml += "<iframe id='iframe_centerMenu"+tabIndex+"' name='iframe_centerMenu' style='width:100%;height:100%;' scrolling='yes' frameborder='0' title='통계표그리드' ></iframe>";
+	       		tabIframeHtml += "</div>";
+	      		$(".stat_box:last").after(tabIframeHtml);
+		}
+
+       	$("div.stat_box").each(function(idx, div){
+       		if($(div).attr("index") == tabIndex){
+                  $(div).find("iframe").attr("src", uri);
+       			$(div).show();
+       		}else{
+       			$(div).hide();
+       		}
+       	});
+        	
+        leftTabSize = $(".stat_tab>ul>li[tabIndex]").size();
+
+       	if((leftTabSize + 1) > 6){
+//       		$(".right_layout .stat_tab li:not(.li_close)").animate({
+//       	   		width : "100px",
+//       	   	}).find("div.tab_title").css("width", "80px");
+      	}
+      	//fn_resizeTabWidth();//탭사이즈 자동조절
+        	
+        	
+        if(leftTabSize+1 > 0){
+        	$(".stat_tab>ul>li.li_close").show();
+        }
+        
+//         fn_callParent();
+        
+   	}
+   	
+    //임시 생성(실행시 탭 너비 사이즈 자동 조절) - 요놈도 지우지마쇼~ 나중에 수정해달라고하면 써먹을껴~
+   	function fn_resizeTabWidth(){
+        var minWidth = 100;
+        var maxWidth = 200;
+        //var leftTabSize	= $(".right_layout .stat_tab li").length;
+        var leftTabSize  = $(".stat_tab>ul>li[tabIndex]").size();//열린 탭 개수(전체닫기 탭 제외)
+        var closeAlldWidth = $("#tabContainer li.li_close").width() + 22;//마지막 전체닫기 탭 사이즈
+        var layoutWidth = $(".right_layout").width() - closeAlldWidth;//우측 레이아웃 전체 사이즈 - 고정 탭사이즈
+		var tabWidth = Math.floor(layoutWidth/leftTabSize) - 22; //22 : 각 탭의 추가 너비
+		
+		//console.log("전 leftTabSize="+leftTabSize+ "		tabWidth="+tabWidth);
+		
+		if(tabWidth < minWidth){tabWidth = minWidth;}
+		if(tabWidth > maxWidth){tabWidth = maxWidth;}
+		
+		//console.log("후 leftTabSize="+leftTabSize+ "		tabWidth="+tabWidth);
+
+   		$(".right_layout .stat_tab li:not(.li_close)").animate({
+   	   		width : tabWidth+"px",
+   	   	},1000).find("div.tab_title").width( tabWidth - 20 );
+      	
+   	}
+   	
+   	function fnActivate(index,listId){
+   		parent.iframe_leftMenu.treeColor("");
+   		parent.fn_loading("loading");
+   		var paramInfoForm = document.ParamInfo; 
+   		var param = { tblId : "", orgId : "", vwCd  : "", listId : "", itm_id : ""};
+   		//탭을 눌렀을 시 트리에서 해당 통계표 위치를 확인
+   		
+		parent.iframe_leftMenu.setListId(listId);
+   		fn_chageTopTitle(index);
+   		
+ 		param = fn_treeTblSet_param_impact(index);
+   		if(param.vwCd != "" && param.vwCd != "-"){ parent.fn_treeTblSet(param); } else {
+   			parent.fn_loading("setting");
+   		}
+   		
+   	};
+   	
+   	var fn_treeTblSet_param_impact = function(index){
+   		data = $("div.stat_box[index='"+index+"'] > iframe").attr("src");
+   		
+   		try {
+   			data = data.replace("statHtmlContent.do?","");
+   		} catch (e){
+   			data = "orgId=" + "101" + "&tblId=" + "DT_1J22001" + "&vw_cd=" + document.ParamInfo.vwCd.value + "&itm_id=" + document.ParamInfo.itm_id.value+ "&list_id=" + document.ParamInfo.listId.value;
+   		}
+   		dataValue = data.split("&");
+		param = { tblId : "", orgId : "", vwCd  : "", listId  : "", itm_id  : ""};
+		
+		for(var i=0; i < dataValue.length; i++){
+   			if(dataValue[i].indexOf("orgId=") >= 0){
+   				param.orgId = dataValue[i].replace("orgId=","");  
+   			} else if(dataValue[i].indexOf("tblId=") >= 0){
+   				param.tblId = dataValue[i].replace("tblId=","");
+   			} else if(dataValue[i].indexOf("vw_cd=") >= 0){
+   				param.vwCd = dataValue[i].replace("vw_cd=","");
+   			} else if(dataValue[i].indexOf("list_id=") >= 0){
+   				param.listId = dataValue[i].replace("list_id=","");
+   			} else if(dataValue[i].indexOf("itm_id=") >= 0){
+   				param.itm_id = dataValue[i].replace("itm_id=","");
+   			}
+   		}
+		fnActivate_impact(index);
+		return param;
+   	};
+   	
+   	var fnActivate_impact = function(index){
+   		$(".stat_tab>ul>li.tab_on").removeClass("tab_on").addClass("tab_off");
+   		$(".stat_tab>ul>li[tabIndex='"+index+"']").removeClass("tab_off").addClass("tab_on");
+   		$("div.stat_box[index!='"+index+"']").hide();
+   		$("div.stat_box[index='"+index+"']").show();
+   	};
+   	
+   	function fnCloseTab(index){
+   		
+   		$(".stat_tab>ul>li[tabIndex='"+index+"']").remove();
+   		if(index != 1){
+   			$(".stat_box[index='"+index+"']").remove();//iframe 제거
+   		}
+   		
+   		$frameDiv = $("div.stat_box[index='"+index+"']");
+   		
+   		$frameDiv.hide();
+   		$frameDiv.find("iframe").removeAttr("src");
+   		
+   		var leftTabSize = $(".stat_tab>ul>li[tabIndex]").size();
+   		var lastTabIndex = $(".stat_tab>ul>li[tabIndex]:last").attr("tabIndex");//삭제후 열린 탭중에 마지막 탭 활성화
+   		
+   		//console.log("lastTabIndex="+lastTabIndex+"	leftTabSize="+leftTabSize);
+   		
+   		if(leftTabSize > 0){
+			if(tab_index_check == 0) {
+				fnActivate(lastTabIndex);
+			} else {
+				tab_index_check = 0;
+			}
+			
+// 	   		if(leftTabSize < 6){
+// 	   			$(".right_layout .stat_tab li:not(.li_close)").animate({
+// 	 	      		width : "210px",
+// 	 	      	}).find("div.tab_title").css("width", "180px");
+	   	      			
+// 	   		}else{
+// 	   			$(".right_layout .stat_tab li:not(.li_close)").animate({
+// 	      	   		width : "100px",
+// 	      	   	}).find("div.tab_title").css("width", "80px");
+// 	   		}
+	   		
+	   		//탭번호 재정의
+	   		$(".stat_tab>ul>li[tabIndex]").each(function(idx, li){
+	   			var titleStr = $(li).find("div").text();
+	   			if(titleStr.indexOf(".") != -1){
+	   				titleStr = titleStr.substr(titleStr.indexOf(".") + 2);
+	   				//console.log("idx="+idx+"		titleStr="+titleStr);
+	   				$(li).find("div").text((idx+1) + ". "+titleStr);
+	   			}
+
+		   		top.document.title = (idx+1) + ". "+titleStr;
+	   		});
+	   		//fn_resizeTabWidth();//탭사이즈 자동조절
+	   		
+   		}else{
+   			tabIndex = 0;
+   			$(".stat_tab>ul>li.li_close").hide();
+   		}
+   		
+   		
+   	}
+   	
+   	function fn_closeAll(){   		
+   		var str = ""; 
+   		
+			str = "Close all open tabs?";
+   		
+   		
+   		if(!confirm(str)){
+			return;
+   		}
+   		
+		$(".stat_tab>ul>li[tabIndex]").remove();
+   		$(".stat_box[index!=1]").remove();//iframe 제거
+   		
+   		$frameDiv = $("div.stat_box[index]");
+   		
+   		$frameDiv.hide();
+   		$frameDiv.find("iframe").removeAttr("src");
+   		
+   		tabIndex = 0;
+   		
+   		
+   		$(".stat_tab>ul>li.li_close").hide();
+   		parent.iframe_leftMenu.treeColor("");
+   		
+   		if($($(".grid_box").children()[0]).context.className == "tbl_grid_right_btn"){
+   			fn_tblView();
+   		}
+   		
+   	}
+   	
+   	//Tab이 생성되어있는지 확인하기 위한 데이터 추출 함수
+   	var getIframeSrcData = function(){
+   		var data = "";
+   		var dataValue = "";
+   		var getData = [];
+   		var param = { tblId : "", orgId : "", vwCd  : "", itmId : "", index : ""};
+   		var index_number = "";
+   		var iframeCenterMenuBody = "";
+   		// 반복문을 돌린다. >> tab의 갯수만큼
+   		for(var i = 0; i < $("#tabContainer").children().length-1; i++){ 	
+   			//Iframe의 번호를 담는다.
+   			index_number = $("#tabContainer").children().find("li").prevObject[i].attributes.tabindex.value;
+   			
+   			//data에 프레임이 가지고 있던 파라미터 값을 가져와 준다.
+   			data = $( "#iframe_centerMenu" + (index_number) ).attr("src");
+   			iframeCenterMenuBody = $( "#iframe_centerMenu" + (index_number)).contents()[0].body.id;
+   			
+   			try{
+   				data = data.replace("statHtmlContent.do?","");
+   				dataValue = data.split("&");
+   			} catch (e) {
+	   			if(iframeCenterMenuBody != ""){
+	   				if(data == null || data == ""){
+	   					param = {
+	   	   	   	   				tblId : "DT_1J22001",      
+	   	   	   	   				orgId : "101",
+	   	   	   	   				vwCd  : "",
+	   	   	   	   				itmId : "",
+	   	   	   	   				listId : "",
+	   	   	   	   				index : index_number,
+	   	   	   	   		};
+	   				} else {
+	   					param = fn_paramReset(param);
+	   				}
+	   				getData[i] = param;
+	   				param = fn_paramReset(param);
+					continue;
+	   			} else {
+	   				continue;
+	   			}
+			}
+   			for(var f = 0; f < dataValue.length; f++){
+   	   			if(dataValue[f].indexOf("orgId=") >= 0){
+   	   				param.orgId = dataValue[f].replace("orgId=","");
+   	   			} else if(dataValue[f].indexOf("tblId=") >= 0){
+   	   				param.tblId = dataValue[f].replace("tblId=","");
+   	   			} else if(dataValue[f].indexOf("vw_cd=") >= 0){
+   	   				param.vwCd = dataValue[f].replace("vw_cd=","");
+   	   			} else if(dataValue[f].indexOf("itm_id=") >= 0){
+   	   				param.itmId = dataValue[f].replace("itm_id=","");
+   	   			} else if(dataValue[f].indexOf("list_id=") >= 0){
+   	   				param.listId = dataValue[f].replace("list_id=","");
+   	   			}
+   	   		}
+   			param.index = index_number;
+   			getData[i] = param;
+   			param = fn_paramReset(param);
+  			
+   		}
+   		return getData;
+   	}
+   	function fn_paramReset(param){
+   		param = {
+   				tblId : "",
+   				orgId : "",
+   				vwCd  : "",
+   				itmId : "",
+   				listId : "",
+   				index : ""
+   		}
+   		return param;
+   	}
+   	function fn_chageTopTitle(index){
+   		
+   		$li = $("li[tabIndex='"+index+"']");
+   		var title = $li.find("div.tab_title").text();
+   		
+   		top.document.title = title;
+   		
+   	}
+   	
+   	//include_centerGrid.js에서 사용할 tab_title 수정 함수, 처음 조회하는 통계표 쿠키추가
+   	function fn_setTabTitle(find, tableNm, tabNum, tableNm2, orgId, tblId, tblNm) {
+   		$(".stat_tab").find(find).attr("title", tableNm).html(tabNum + ". " + tableNm2);
+   		g_tableNm = tabNum + ". " + tableNm2;
+   		
+   		if(!set_first_cookie) {
+   			var checkCn = "";
+   			
+   			set_first_cookie = true;
+   		}
+   		
+   	}
+   	
+   	var fn_tab = function() {
+   		var index = $(".tab_on").attr("tabIndex");
+   		var param = { tblId : "", orgId : "", vwCd  : ""};
+   		if(index >= 1){
+   			data = $("#iframe_centerMenu" + index).attr("src");
+   			if(data != null && data != ""){
+	   			data = data.replace("statHtmlContent.do?","");
+	   			dataValue = data.split("&");
+	   			for(var f = 0; f < dataValue.length; f++){
+	   	   			if(dataValue[f].indexOf("orgId=") >= 0){
+	   	   				param.orgId = dataValue[f].replace("orgId=","");
+	   	   			} else if(dataValue[f].indexOf("tblId=") >= 0){
+	   	   				param.tblId = dataValue[f].replace("tblId=","");
+	   	   			} else if(dataValue[f].indexOf("vw_cd=") >= 0){
+	   	   				param.vwCd = dataValue[f].replace("vw_cd=","");
+	   	   			}
+	   	   		}
+   			}
+   			return param;
+   		} else {
+   			param = { tblId : "", orgId : "", vwCd  : ""};
+   			return param;
+   		}
+   	}
+   	
+    </script>
+    
+    <style>
+		.ui-widget.ui-widget-content { border-top : none; }
+		.custom-overlay{
+			background-color : black;
+			background-image : none;
+			opacity : 0.9;
+			z-index : 1040;
+		}
+	</style>
+    
+    
+</head>
+<body>
+	<form id="ParamInfo" name="ParamInfo" action="/statHtml/right_layout.do?orgId=101&amp;tblId=DT_1J22001&amp;language=en&amp;conn_path=I2" method="post">
+	  <input type="hidden" id="jsonStr" name="jsonStr" value="" />
+	  <input id="orgId" name="orgId" type="hidden" value="101"/>
+	  <input id="tblId" name="tblId" type="hidden" value="DT_1J22001"/>
+	  <input id="language" name="language" type="hidden" value="en"/>
+	  <input type="hidden" id="file" name="file" value="" />
+	  <input id="analText" name="analText" type="hidden" value=""/>
+	  <input id="scrId" name="scrId" type="hidden" value=""/>
+	  <input id="fieldList" name="fieldList" type="hidden" value=""/>
+	  <input id="colAxis" name="colAxis" type="hidden" value=""/>
+	  <input id="rowAxis" name="rowAxis" type="hidden" value=""/>
+	  <input id="isFirst" name="isFirst" type="hidden" value="Y"/>
+	  <input id="contextPath" name="contextPath" type="hidden" value=""/>
+	  <input id="ordColIdx" name="ordColIdx" type="hidden" value=""/>
+	  <input id="ordType" name="ordType" type="hidden" value=""/>
+	  <input id="logSeq" name="logSeq" type="hidden" value=""/>
+	  <input id="vwCd" name="vwCd" type="hidden" value=""/>
+	  <input id="listId" name="listId" type="hidden" value=""/>
+	  <input id="connPath" name="connPath" type="hidden" value=""/>
+	  <input id="statId" name="statId" type="hidden" value=""/>
+	  <input id="pub" name="pub" type="hidden" value=""/>
+	  <input id="pubLog" name="pubLog" type="hidden" value=""/>
+	  <input id="viewKind" name="viewKind" type="hidden" value=""/>
+	  <input id="viewSubKind" name="viewSubKind" type="hidden" value=""/>
+	  <input id="doAnal" name="doAnal" type="hidden" value="N"/>
+	  <input id="analType" name="analType" type="hidden" value=""/>
+	  <input id="analCmpr" name="analCmpr" type="hidden" value=""/>
+	  <input id="analTime" name="analTime" type="hidden" value=""/>
+	  <input id="analCombo" name="analCombo" type="hidden" value=""/>
+	  <input id="originData" name="originData" type="hidden" value=""/>
+	  <input id="analClass" name="analClass" type="hidden" value=""/>
+	  <input id="analItem" name="analItem" type="hidden" value=""/>
+	  <input id="obj_var_id" name="obj_var_id" type="hidden" value=""/>
+	  <input id="itm_id" name="itm_id" type="hidden" value=""/>
+	  <input id="mode" name="mode" type="hidden" value=""/>
+	  <input id="dataOpt" name="dataOpt" type="hidden" value=""/>
+	  <input id="noSelect" name="noSelect" type="hidden" value=""/>
+	  <input id="view" name="view" type="hidden" value="table"/>
+	  <!-- 통계표주석여부 및 보기 값 추가 -->
+	  <input type="hidden" name="existStblCmmtKor" id="existStblCmmtKor"
+	   value="" />
+	  <input type="hidden" name="existStblCmmtEng" id="existStblCmmtEng"
+	   value="" />
+	  <!-- 선택정보 전체보기//분석 탭메뉴 objvarId -->
+	  <input type="hidden" id="classAllArr" name="classAllArr" value="" />
+	  <!-- 일괄설정 objVarId -->
+	  <input type="hidden" id="classSet" name="classSet" value="" />
+	  <!-- 선택정보 전체보기를 click할 경우 java 분기 flag -->
+	  <input type="hidden" id="selectAllFlag" name="selectAllFlag" value="" />
+	  <!-- 조회범위 상세설정에 따른 시점카운트 -->
+	  <input type="hidden" id="selectTimeRange" name="selectTimeRangeCnt" value="" />
+	  <!-- 조회범위 상세설정 주기문자열 -->
+	  <input type="hidden" id="periodStr" name="periodStr" value="" />
+	  <!-- 분석설정 호출시 화면에서 선택된 1개의 주기-->
+	  <input id="funcPrdSe" name="funcPrdSe" type="hidden" value=""/>
+	  <input type="hidden" name="tblNm" id="tblNm" value="" />
+	  <input type="hidden" name="tblEngNm" id="tblEngNm" value="" />
+	  <input type="hidden" name="isChangedDataOpt" id="isChangedDataOpt" value="" />
+	  <input id="itemMultiply" name="itemMultiply" type="hidden" value=""/>
+	  <input id="dimCo" name="dimCo" type="hidden" value=""/>
+	  
+	  <input id="dbUser" name="dbUser" type="hidden" value=""/>
+	  <input type="hidden" name="usePivot" id="usePivot" value="N" />
+	  <input type="hidden" name="isChangedTableType" id="isChangedTableType" value="N" />
+	  <input type="hidden" name="isChangedPeriodCo" id="isChangedPeriodCo" value="N" />
+	  <input type="hidden" name="isChangedPrdSort" id="isChangedPrdSort" value="N" />
+	  
+	  <input type="hidden" id="p_chkStatus" name="p_chkStatus" value="" />
+	  <input type="hidden" id="p_objVarId" name="p_objVarId" value="" />
+	  <input type="hidden" id="p_lvl" name="p_lvl" value="" />
+	  <input type="hidden" id="p_logicFlag" name="p_logicFlag" value="" />
+	  
+	  <input type="hidden" id="p_classAllChkYn" name="p_classAllChkYn" value="N" />
+	  
+	  <input type="hidden" id="p_classAllSelectYn" name="p_classAllSelectYn" value="N" />
+	  
+	  <input id="useAddFuncLog" name="useAddFuncLog" type="hidden" value=""/>
+	  <input id="chargerLvl" name="chargerLvl" type="hidden" value=""/>
+	  <input id="st" name="st" type="hidden" value=""/>
+	  
+	  <input id="new_win" name="new_win" type="hidden" value=""/>
+	  <input id="first_open" name="first_open" type="hidden" value=""/>
+	  <input type="hidden" name="debug" id="debug" value="" />
+	  <input id="maxCellOver" name="maxCellOver" type="hidden" value=""/>
+	  <input id="reqCellCnt" name="reqCellCnt" type="hidden" value="0"/>
+	  
+	  <input id="inheritYn" name="inheritYn" type="hidden" value="N"/>
+	  <input id="originOrgId" name="originOrgId" type="hidden" value=""/>
+	  <input id="originTblId" name="originTblId" type="hidden" value=""/>
+	  <input id="pubSeType" name="pubSeType" type="hidden" value=""/>
+	  
+	  <input id="relChkOrgId" name="relChkOrgId" type="hidden" value=""/>
+	  <input id="relChkTblId" name="relChkTblId" type="hidden" value=""/>
+	  
+	  <input id="highLightStr" name="highLightStr" type="hidden" value=""/>
+	  <input id="markType" name="markType" type="hidden" value=""/>
+	  <input id="docId" name="docId" type="hidden" value=""/>
+	  <input id="itmNm" name="itmNm" type="hidden" value=""/>
+	  <input id="tblSe" name="tblSe" type="hidden" value=""/>
+	  <!-- 국제기구명 구분 파라미터 추가 사용X -->
+	  <input id="isType" name="isType" type="hidden" value=""/>
+	  
+	  
+	  
+	  <input id="tmprScrId" name="tmprScrId" type="hidden" value=""/>
+	</form>
+
+	<div class="grid_box">
+		
+			
+				<div class="tbl_grid_left_btn" style="cursor: auto;">
+					<span class="hide">통계목록</span>
+				</div>
+			
+			
+		
+    <div class="right_layout" style="overflow:auto;">
+	    	
+	        
+	        <div class="stat_box" index="1" style="">
+	        	<iframe id="iframe_centerMenu1" name="iframe_centerMenu" style="width:100%;height:100%;" scrolling="yes" frameborder="0" title="통계표그리드" ></iframe>
+	
+	    	</div>
+    </div>
+    
+	<div id="dialog"><div id="msg" style="padding:10px"><span>탭을 더 이상 열 수 없습니다.</span><br/><br/><span>탭을 닫은 후 재시도 바랍니다.</span> </div></div>
+		
+</body>
+</html>

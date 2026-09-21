@@ -1,0 +1,65 @@
+[
+  {
+    "title": "Measurement and Theory of Core Inflation \u2014 Almuzara and Sbordone (2024)",
+    "url": "https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr1115.pdf",
+    "resolved_url": "https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr1115.pdf",
+    "file": "nyfed_measurement_and_theory_core_inflation_2024.pdf",
+    "note": "NY Fed research paper; broader framework and discussion of MCT.",
+    "downloaded_utc": "2026-09-19T14:06:10.967327+00:00",
+    "bytes": 1711202,
+    "sha256": "356fa7f414852db8463d2be11acada731b9c479e49987e26a8b924b3923133ae",
+    "pages": 29
+  },
+  {
+    "title": "Core Inflation and Trend Inflation \u2014 Stock and Watson (2016)",
+    "url": "https://www.princeton.edu/~mwatson/papers/core_and_trend_inflation_restat_2016.pdf",
+    "resolved_url": "https://www.princeton.edu/~mwatson/papers/core_and_trend_inflation_restat_2016.pdf",
+    "file": "stock_watson_core_and_trend_inflation_2016.pdf",
+    "note": "Foundational published paper cited by the NY Fed; not a description of every modification in current MCT.",
+    "downloaded_utc": "2026-09-19T14:06:12.396792+00:00",
+    "bytes": 950577,
+    "sha256": "fdc3998cf1c9414c3b204d17d28a8c8b1a6db4119a9baf14e20f59364040c79d",
+    "pages": 15
+  },
+  {
+    "title": "Core Inflation and Trend Inflation \u2014 technical appendix",
+    "url": "https://www.princeton.edu/~mwatson/papers/core_and_trend_inflation_online_appendix_20151103.pdf",
+    "resolved_url": "https://www.princeton.edu/~mwatson/papers/core_and_trend_inflation_online_appendix_20151103.pdf",
+    "file": "stock_watson_technical_appendix.pdf",
+    "note": "Technical background to Stock and Watson, including estimation details.",
+    "downloaded_utc": "2026-09-19T14:06:16.159170+00:00",
+    "bytes": 4538679,
+    "sha256": "20dcecf0c96f9e3d00298ffe866806d7a149867275994ee69e41876aecc013f5",
+    "pages": 36
+  },
+  {
+    "title": "NY Fed MCT overview and FAQ",
+    "url": "https://www.newyorkfed.org/research/policy/mct",
+    "resolved_url": "https://www.newyorkfed.org/research/policy/mct",
+    "file": "nyfed_mct_overview_faq.html",
+    "note": "Current official model description; web snapshot, not a publisher PDF.",
+    "downloaded_utc": "2026-09-19T14:06:16.511072+00:00",
+    "bytes": 127553,
+    "sha256": "302d81068336df84c56d0d18812bb12129a6c6db071889f703ffa71a6e7083e0"
+  },
+  {
+    "title": "Inflation Persistence: How Much Is There and Where Is It Coming From?",
+    "url": "https://libertystreeteconomics.newyorkfed.org/2022/04/inflation-persistence-how-much-is-there-and-where-is-it-coming-from/",
+    "resolved_url": "https://libertystreeteconomics.newyorkfed.org/2022/04/inflation-persistence-how-much-is-there-and-where-is-it-coming-from/",
+    "file": "nyfed_inflation_persistence_introduction_2022.html",
+    "note": "Original introductory MCT article, April 2022.",
+    "downloaded_utc": "2026-09-19T14:06:17.062314+00:00",
+    "bytes": 172853,
+    "sha256": "907f99cd776711b5e328d6eca0c9d92cfb1cb5b37c4d8fe6cb192eb6f2b1250a"
+  },
+  {
+    "title": "Where Is Inflation Persistence Coming From?",
+    "url": "https://libertystreeteconomics.newyorkfed.org/2023/07/where-is-inflation-persistence-coming-from/",
+    "resolved_url": "https://libertystreeteconomics.newyorkfed.org/2023/07/where-is-inflation-persistence-coming-from/",
+    "file": "nyfed_where_persistence_comes_from_2023.html",
+    "note": "Accessible explanation accompanying the July 2023 launch.",
+    "downloaded_utc": "2026-09-19T14:06:17.723947+00:00",
+    "bytes": 171677,
+    "sha256": "ae227b8612c25e3637c33db09bb5deb844c7b56eb553b345d22c808190674a92"
+  }
+]

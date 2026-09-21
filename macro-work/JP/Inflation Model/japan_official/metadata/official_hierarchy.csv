@@ -1,0 +1,736 @@
+﻿code,name,parent,depth,raw_weight,rounded_weight,official_type
+0001,All items,,0,3543757090,10000,Group
+0002,Food,0001,1,975803165,2754,Group
+0003,Cereals,0002,2,89417743,252,Group
+0004,Rice,0003,3,35742127,101,Group
+1001,Non-glutinous rice-A,0004,4,11286986,32,Item
+1002,Non-glutinous rice-B,0004,4,24455141,69,Item
+0005,Bread,0003,3,29335362,83,Group
+1021,White bread,0005,4,11168932,32,Item
+1022,Bean-jam buns,0005,4,14129442,40,Item
+1023,Curry buns,0005,4,4036988,11,Item
+0006,Noodles,0003,3,18739691,53,Group
+1031,Boiled “Udon”,0006,4,3347735,9,Item
+1041,"“Somen”, fine wheat noodles",0006,4,2097718,6,Item
+1042,Spaghetti,0006,4,1365264,4,Item
+1051,Instant noodles in cups,0006,4,7642049,22,Item
+1052,Chinese noodles,0006,4,4286925,12,Item
+0007,Other cereals,0003,3,5600563,16,Group
+1071,Wheat flour,0007,4,884625,2,Item
+1081,"“Mochi”, rice-cakes",0007,4,2556328,7,Item
+1090,Cereal,0007,4,2159610,6,Item
+0008,Fish & seafood,0002,2,63331028,179,Group
+0009,Fresh fish & seafood,0008,3,34438066,97,Group
+1101,Tuna fish,0009,4,7216472,20,Item
+1102,Horse mackerel,0009,4,1256052,4,Item
+1103,Sardines,0009,4,562043,2,Item
+1104,Bonito,0009,4,2117227,6,Item
+1106,Salmon,0009,4,6903768,19,Item
+1107,Mackerel,0009,4,1120172,3,Item
+1108,Saury,0009,4,1301265,4,Item
+1110,Sea bream,0009,4,1362069,4,Item
+1111,Yellowtail,0009,4,3330817,9,Item
+1112,Cuttlefish,0009,4,2121212,6,Item
+1113,Octopus,0009,4,1367983,4,Item
+1114,Prawns,0009,4,3673922,10,Item
+1131,Short-necked clams,0009,4,701405,2,Item
+1132,Oysters,0009,4,704354,2,Item
+1133,Scallops,0009,4,699305,2,Item
+0010,Salted & dried fish,0008,3,11414582,32,Group
+1141,Salted salmon,0010,4,3089010,9,Item
+1142,Salted cod roe,0010,4,2341850,7,Item
+1143,"“Shirasu-boshi”, dried young sardines",0010,4,1787952,5,Item
+1144,Dried horse mackerel,0010,4,600574,2,Item
+1150,Capelin,0010,4,798937,2,Item
+1167,Salmon roe,0010,4,1198398,3,Item
+1168,Salted mackerel,0010,4,1597861,5,Item
+0011,Fish-paste products,0008,3,7950453,22,Group
+1151,"“Agekamaboko”, fried fish-paste patties",0011,4,2554858,7,Item
+1152,"“Chikuwa”, baked fish-paste bars",0011,4,2156078,6,Item
+1153,"“Kamaboko”, steamed fish-paste cakes",0011,4,3239517,9,Item
+0012,Other processed fish & seafood,0008,3,9527927,27,Group
+1161,Dried bonito fillets,0012,4,1093794,3,Item
+1165,Pickled fish,0012,4,3730427,11,Item
+1166,Fish prepared in soy sauce,0012,4,1048517,3,Item
+1173,Canned fish,0012,4,3655189,10,Item
+0013,Meats,0002,2,85873687,242,Group
+0014,Raw meats,0013,3,69932557,197,Group
+1201,Beef (domestic),0014,4,11679233,33,Item
+1203,Beef (imported),0014,4,7786157,22,Item
+1211,Pork (domestic),0014,4,19687454,56,Item
+1214,Pork (imported),0014,4,13124964,37,Item
+1221,Chicken,0014,4,17654749,50,Item
+0015,Meat products,0013,3,15941130,45,Group
+1252,Ham,0015,4,4195128,12,Item
+1261,Sausages,0015,4,7296618,21,Item
+1271,Bacon,0015,4,2248448,6,Item
+1292,Seasoned meat,0015,4,2200936,6,Item
+0016,Dairy products & eggs,0002,2,46467605,131,Group
+0017,Fresh milk & dairy products,0016,3,34592763,98,Group
+0018,Fresh milk,0017,4,13336836,38,Group
+1303,Fresh milk,0018,5,13336836,38,Item
+0019,Dairy products,0017,4,21255927,60,Group
+1311,Powdered milk,0019,5,934746,3,Item
+1333,Yogurt,0019,5,12787334,36,Item
+1321,Butter,0019,5,1284273,4,Item
+1331,Cheese (domestic),0019,5,3749746,11,Item
+1332,Cheese (imported),0019,5,2499828,7,Item
+0020,Eggs,0016,3,11874842,34,Group
+1341,Hen eggs,0020,4,11874842,34,Item
+0021,Vegetables & seaweeds,0002,2,97870815,276,Group
+0022,Fresh vegetables,0021,3,65627165,185,Group
+1401,Cabbage,0022,4,3601928,10,Item
+1402,Spinach,0022,4,2169870,6,Item
+1403,Chinese cabbage,0022,4,1763102,5,Item
+1405,Welsh onions,0022,4,3969885,11,Item
+1406,Lettuce,0022,4,2952184,8,Item
+1409,Broccoli,0022,4,3108895,9,Item
+1407,Bean sprouts,0022,4,1170912,3,Item
+1410,Asparagus,0022,4,1525532,4,Item
+1411,Sweet potatoes,0022,4,1214849,3,Item
+1412,White potatoes,0022,4,2886112,8,Item
+1413,Taros,0022,4,719680,2,Item
+1414,Radishes,0022,4,1684226,5,Item
+1415,Carrots,0022,4,2718906,8,Item
+1416,Burdocks,0022,4,925399,3,Item
+1417,Onions,0022,4,4133309,12,Item
+1419,Lotus roots,0022,4,917477,3,Item
+1420,"“Naga-imo”, yams",0022,4,1617556,5,Item
+1421,Ginger,0022,4,647021,2,Item
+1430,Green soybeans,0022,4,760251,2,Item
+1432,Kidney beans,0022,4,760251,2,Item
+1433,Pumpkins,0022,4,1702978,5,Item
+1434,Cucumbers,0022,4,3404727,10,Item
+1435,Eggplants,0022,4,2122132,6,Item
+1436,Tomatoes,0022,4,7918717,22,Item
+1437,Green peppers,0022,4,2244585,6,Item
+1438,"“Shiitake”, Japanese mushrooms, fresh",0022,4,2827661,8,Item
+1442,"“Enokitake”, mushrooms",0022,4,2109388,6,Item
+1443,"“Shimeji”, mushrooms",0022,4,2807627,8,Item
+1444,Cut vegetables,0022,4,1242005,4,Item
+0023,Processed vegetables & seaweeds,0021,3,32243650,91,Group
+0024,Dried vegetables & seaweeds,0023,4,8188553,23,Group
+1453,"“Shiitake”, Japanese mushrooms, dried",0024,5,427385,1,Item
+1461,Dried laver,0024,5,3961105,11,Item
+1462,"“Wakame”, seaweed",0024,5,1886034,5,Item
+1463,Dried tangle,0024,5,861666,2,Item
+1464,"“Hijiki”, edible brown algae",0024,5,1052363,3,Item
+0025,Soybean products,0023,4,12088669,34,Group
+1471,"“Tofu”, bean curd",0025,5,4826370,14,Item
+1472,Fried bean curd,0025,5,2743163,8,Item
+1473,"“Natto”, fermented soybeans",0025,5,4519136,13,Item
+0026,Other processed vegetables & seaweeds,0023,4,11966428,34,Group
+1481,"“Konnyaku”, devil's-tongue",0026,5,1511477,4,Item
+1482,"“Umeboshi”, pickled plums",0026,5,2782039,8,Item
+1483,Pickled radishes,0026,5,2207607,6,Item
+1487,“Kimuchi”,0026,5,2723583,8,Item
+1485,Tangle prepared in soy sauce,0026,5,1583012,4,Item
+1491,Canned vegetables,0026,5,1158710,3,Item
+0027,Fruits,0002,2,37528886,106,Group
+0028,Fresh fruits,0027,3,34187531,96,Group
+1502,Apples,0028,4,4051805,11,Item
+1511,Mandarin oranges,0028,4,4948472,14,Item
+1515,Oranges,0028,4,701528,2,Item
+1517,"“Shiranui”, citrus fruits",0028,4,614810,2,Item
+1521,Pears,0028,4,1808656,5,Item
+1533,Grapes,0028,4,3425298,10,Item
+1541,Persimmons,0028,4,966079,3,Item
+1551,Peaches,0028,4,984267,3,Item
+1561,Watermelons,0028,4,1457756,4,Item
+1563,Melons,0028,4,802587,2,Item
+1571,Strawberries,0028,4,3473005,10,Item
+1581,Bananas,0028,4,5915438,17,Item
+1582,Kiwi fruits,0028,4,2492213,7,Item
+1572,Cherries,0028,4,636405,2,Item
+1583,Avocados,0028,4,1272807,4,Item
+1584,Pineapples,0028,4,636405,2,Item
+0029,Processed fruits,0027,3,3341355,9,Group
+1594,Nuts,0029,4,3341355,9,Item
+0030,"Oils, fats & seasonings",0002,2,42480425,120,Group
+0031,Oils & fats,0030,3,4517787,13,Group
+1601,Edible oil,0031,4,3967933,11,Item
+1602,Margarine,0031,4,549854,2,Item
+0032,Seasonings,0030,3,37962638,107,Group
+1611,Salt,0032,4,499439,1,Item
+1621,Soy sauce,0032,4,1995473,6,Item
+1631,Soybean paste,0032,4,2578219,7,Item
+1632,Sugar,0032,4,1303756,4,Item
+1633,Vinegar,0032,4,817128,2,Item
+1641,Worcester sauce,0032,4,922824,3,Item
+1642,Ketchup,0032,4,908639,3,Item
+1643,Mayonnaise,0032,4,1905120,5,Item
+1645,Dressing,0032,4,2504423,7,Item
+1644,Jam,0032,4,1578447,4,Item
+1652,Instant curry mix,0032,4,1711097,5,Item
+1653,Instant dried soup,0032,4,4601540,13,Item
+1654,Flavor seasonings,0032,4,3041330,9,Item
+1656,"“Furikake”, granular flavor seasonings ",0032,4,2215281,6,Item
+1655,"“Tare”, liquid seasonings",0032,4,2087783,6,Item
+1659,"“Tsuyu”, liquid seasonings",0032,4,4175564,12,Item
+1657,Mixed seasonings,0032,4,1705525,5,Item
+1658,Prepared pasta sauce,0032,4,1705525,5,Item
+1660,Spice ,0032,4,1705525,5,Item
+0033,Cakes & candies,0002,2,94788055,267,Group
+1701,"“Yokan”, sweet bean jelly",0033,3,3335706,9,Item
+1702,"“Manju”, bean-jam cakes",0033,3,4143421,12,Item
+1703,"“Daifukumochi”, rice cakes stuffed with sweetened bean jam",0033,3,5992239,17,Item
+1711,"“Kasutera”, sponge cakes",0033,3,2209002,6,Item
+1712,Cakes,0033,3,8437108,24,Item
+1784,Jelly,0033,3,6049279,17,Item
+1714,Pudding,0033,3,4715001,13,Item
+1713,Cream puffs,0033,3,2769723,8,Item
+1715,Roll cakes,0033,3,2466083,7,Item
+1741,"“Sembei”, Japanese crackers",0033,3,7910189,22,Item
+1721,Biscuits,0033,3,6673226,19,Item
+1783,Potato chips,0033,3,7897752,22,Item
+1732,Candies,0033,3,3091199,9,Item
+1761,Chocolate,0033,3,10799069,30,Item
+1782,Ice cream,0033,3,14279782,40,Item
+1772,Peanuts,0033,3,1004820,3,Item
+1781,Chewing gum,0033,3,1004820,3,Item
+1785,Gummies,0033,3,2009636,6,Item
+0034,Cooked food,0002,2,138511440,391,Group
+0035,"Cooked food with rice, bread or noodles",0034,3,59851735,169,Group
+1795,Sushi (box lunch)-A,0035,4,11020652,31,Item
+1798,Sushi (box lunch)-B,0035,4,5510330,16,Item
+1791,Box lunch-A,0035,4,4803578,14,Item
+1797,Box lunch-B,0035,4,4803578,14,Item
+1862,Box lunch-C,0035,4,9607146,27,Item
+1793,Rice balls,0035,4,6481538,18,Item
+1792,Bread like sandwiches,0035,4,7136696,20,Item
+1794,Frozen cooked rice,0035,4,2622057,7,Item
+1796,Cooked pasta,0035,4,2622057,7,Item
+1799,Processed pizza,0035,4,1748028,5,Item
+1863,"“Takoyaki”, octopus balls",0035,4,874018,2,Item
+1790,Aseptic packaged cooked rice,0035,4,2622057,7,Item
+0036,Other cooked food,0034,3,78659705,222,Group
+1801,"“Kabayaki”, broiled eels",0036,4,3745558,11,Item
+1811,Salad,0036,4,9283468,26,Item
+1821,Croquettes,0036,4,5852876,17,Item
+1831,Pork cutlets,0036,4,5918229,17,Item
+1842,Deep fried chicken,0036,4,14317614,40,Item
+1881,“Gyoza”,0036,4,4416161,12,Item
+1843,"“Yakitori”, grilled chicken",0036,4,4013587,11,Item
+1844,Hamburg steaks,0036,4,2399773,7,Item
+1851,Frozen croquettes,0036,4,3335760,9,Item
+1852,Frozen hamburg steak,0036,4,3335760,9,Item
+1853,Frozen“Gyoza”,0036,4,10007285,28,Item
+1871,Cooked curry,0036,4,2865158,8,Item
+1891,"“Mazegohan no moto”, prepared materials to steamed rice with assorted ingredients   ",0036,4,1146057,3,Item
+1812,Boiled beans,0036,4,1146057,3,Item
+1802,Grilled fish,0036,4,1719094,5,Item
+1813,“Kimpira”,0036,4,573030,2,Item
+1814,Roast pork,0036,4,1146057,3,Item
+1892,“Salad chicken”,0036,4,573030,2,Item
+1893,"“Oden”, Japanese stew",0036,4,1146057,3,Item
+1894,Meat balls,0036,4,1719094,5,Item
+0037,Beverages,0002,2,60169161,170,Group
+0038,Tea,0037,3,12526164,35,Group
+1902,Green tea,0038,4,3722121,11,Item
+1911,Black tea,0038,4,1081658,3,Item
+1914,Tea beverages,0038,4,7722385,22,Item
+0039,Coffee & cocoa,0037,3,14066407,40,Group
+1921,Instant coffee,0039,4,4058767,11,Item
+1922,Coffee beans,0039,4,4058767,11,Item
+1923,Coffee beverages-A,0039,4,4759102,13,Item
+1924,Coffee beverages-B,0039,4,1189771,3,Item
+0040,Other beverages,0037,3,33576590,95,Group
+1930,Fruit juice,0040,4,2012432,6,Item
+1931,Beverages containing juice,0040,4,2012432,6,Item
+1941,Vegetable juice,0040,4,4024875,11,Item
+1951,Carbonated beverages-A,0040,4,5082197,14,Item
+1953,Carbonated beverages-B,0040,4,2541095,7,Item
+1952,Carbonated beverages-C,0040,4,1270555,4,Item
+1972,Fermented lactic drinks,0040,4,5922311,17,Item
+1982,Mineral water,0040,4,3775455,11,Item
+1984,Home delivery water,0040,4,1258485,4,Item
+1981,Sports drinks,0040,4,1717825,5,Item
+1983,Soy milk,0040,4,1979464,6,Item
+1985,Jelly drinks,0040,4,1979464,6,Item
+0041,Alcoholic beverages,0002,2,39342683,111,Group
+2003,“Sake” ,0041,3,4920909,14,Item
+2011,"“Shochu”, distilled spirits",0041,3,5044472,14,Item
+2021,Beer,0041,3,11987210,34,Item
+2026,Low-malt beer,0041,3,6728685,19,Item
+2033,Whisky,0041,3,2613534,7,Item
+2041,Wine (domestic),0041,3,892828,3,Item
+2042,Wine (imported),0041,3,2083283,6,Item
+2012,"“Chu-hi”, liquor with soda & fruits",0041,3,5071762,14,Item
+0042,Meals outside the home,0002,2,180021637,508,Group
+0043,Eating out,0042,3,173952365,491,Group
+2101,"“Udon”, Japanese noodles (eating out)",0043,4,5414308,15,Item
+2103,"“Soba”, Japanese noodles (eating out)",0043,4,5414308,15,Item
+2102,Chinese noodles (eating out),0043,4,13086479,37,Item
+2112,Spaghetti (eating out),0043,4,4674126,13,Item
+2123,Sushi (eating out)-A,0043,4,14157122,40,Item
+2121,Sushi (eating out)-B,0043,4,9438080,27,Item
+2132,Tempura bowls (eating out),0043,4,3772893,11,Item
+2133,Curry & rice (eating out),0043,4,8300355,23,Item
+2136,Beef bowls (eating out),0043,4,7545773,21,Item
+2142,Pork cutlet set meals (eating out),0043,4,8300355,23,Item
+2146,Ginger pork set meals (eating out),0043,4,2263741,6,Item
+2164,Fried chickens (eating out),0043,4,7545773,21,Item
+2134,“Gyoza” (eating out),0043,4,7497947,21,Item
+2141,Hamburg steaks (eating out),0043,4,11711665,33,Item
+2145,Broiled meat (eating out),0043,4,19480039,55,Item
+2135,Hamburgers (eating out),0043,4,9214567,26,Item
+2161,Sandwiches (eating out),0043,4,2115373,6,Item
+2144,Delivered pizza,0043,4,4057924,11,Item
+2163,Doughnuts (eating out),0043,4,1081346,3,Item
+2162,Coffee (eating out)-A,0043,4,5568694,16,Item
+2165,Coffee (eating out)-B,0043,4,4454957,13,Item
+2171,Beer (eating out),0043,4,11313925,32,Item
+2172,"“Yakitori”, grilled chicken (eating out)",0043,4,7542615,21,Item
+0044,School lunch,0042,3,6069272,17,Group
+2182,(elementary school),0044,4,4041700,11,Item
+2183,(junior high school),0044,4,2027572,6,Item
+0045,Housing,0001,1,773321148,2182,Group
+0046,Rent,0045,2,659437087,1861,Group
+0047,"House rent, private",0046,3,76922872,217,Group
+3000,"House rent, private",0047,4,76922872,217,Item
+0048,"House rent, public, Urban Renaissance Agency & public corporation",0046,3,3442595,10,Group
+3016,"House rent, public",0048,4,2345686,7,Item
+3017,"House rent, Urban Renaissance Agency & public corporation",0048,4,1096909,3,Item
+0050,Imputed rent,0046,3,579071620,1634,Group
+3030,Imputed rent,0050,4,579071620,1634,Item
+0051,Repairs & maintenance,0045,2,113884061,321,Group
+0052,Tools & materials for repairs & maintenance,0051,3,35853886,101,Group
+3101,Custom bath,0052,4,4830587,14,Item
+3103,Toilet seat with a hot douche,0052,4,4830587,14,Item
+3104,Hot-water supply equipment,0052,4,12881565,36,Item
+3105,Custom kitchen,0052,4,8050977,23,Item
+3106,Carports,0052,4,1610273,5,Item
+3121,Materials for repairs & maintenance,0052,4,3649897,10,Item
+0053,Service charges for repairs & maintenance,0051,3,78030175,220,Group
+3151,“Tatami” reupholstering,0053,4,392078,1,Item
+3176,Plumbing,0053,4,4711169,13,Item
+3175,Fence construction,0053,4,2510597,7,Item
+3178,External wall coating,0053,4,20015253,56,Item
+3162,Repairing roofs,0053,4,7510056,21,Item
+3174,Gardening,0053,4,3710463,10,Item
+3171,"“Fusuma”, sliding doors, reupholstering ",0053,4,2184157,6,Item
+3172,Carpentering,0053,4,3276235,9,Item
+3179,Parking lot construction,0053,4,7644542,22,Item
+3185,Wallpaper reupholstering,0053,4,4368307,12,Item
+3180,Fire & earthquake insurance premium,0053,4,21707318,61,Item
+0054,"Fuel, light & water charges",0001,1,247346867,698,Group
+0056,Electricity,0054,2,133318023,376,Group
+3500,Electricity,0056,3,133318023,376,Item
+0057,Gas,0054,2,49084785,139,Group
+3600,"Gas, manufactured & piped",0057,3,31707459,89,Item
+3612,Liquefied propane,0057,3,17377326,49,Item
+0058,Other fuel & light,0054,2,13761542,39,Group
+3701,Kerosene,0058,3,13761542,39,Item
+0059,Water & sewerage charges,0054,2,51182517,144,Group
+3810,Water charges,0059,3,30077349,85,Item
+4610,Sewerage charges,0059,3,21105168,60,Item
+0060,Furniture & household utensils,0001,1,131897186,372,Group
+0061,Household durable goods,0060,2,44403921,125,Group
+0062,Durable goods assisting housework,0061,3,21639795,61,Group
+4003,Microwave ovens,0062,4,1440552,4,Item
+4002,Electric rice-cookers,0062,4,3333337,9,Item
+4011,Gas cooking tables,0062,4,469674,1,Item
+4021,Refrigerators,0062,4,6569095,19,Item
+4032,Vacuum cleaners,0062,4,3085133,9,Item
+4042,Washing machines,0062,4,3371002,10,Item
+4043,Washing & drying machines,0062,4,3371002,10,Item
+0063,Heating & cooling appliances,0061,3,17126149,48,Group
+4063,Room air conditioners,0063,4,14792559,42,Item
+4072,Fan heaters,0063,4,1429690,4,Item
+4075,Air cleaners,0063,4,903900,3,Item
+0064,General furniture,0061,3,5637977,16,Group
+4092,Dining sets,0064,4,1325007,4,Item
+4093,Sofas,0064,4,3804188,11,Item
+4083,Kitchen cabinets,0064,4,508782,1,Item
+0066,Interior furnishings,0060,2,5998863,17,Group
+4115,Lighting apparatus,0066,3,1632795,5,Item
+4121,Carpets,0066,3,1991275,6,Item
+4141,Curtains,0066,3,1607755,5,Item
+4142,Cushions,0066,3,767038,2,Item
+0070,Bedding,0060,2,8214562,23,Group
+4201,Beds,0070,3,1961159,6,Item
+4211,Japanese style futon,0070,3,3173216,9,Item
+4251,Sheets,0070,3,857973,2,Item
+4271,Duvet covers,0070,3,740740,2,Item
+4272,Mattress pads,0070,3,1481474,4,Item
+0073,Domestic utensils,0060,2,24963736,70,Group
+0074,Tableware,0073,3,2846287,8,Group
+4301,Bowls,0074,4,569254,2,Item
+4302,Dishes,0074,4,2277033,6,Item
+0075,Kitchen utensils,0073,3,7901280,22,Group
+4326,Canteens,0075,4,1528088,4,Item
+4331,Pans,0075,4,1999667,6,Item
+4334,Frying pans,0075,4,2999511,8,Item
+4342,Scrubbing sponges,0075,4,1374014,4,Item
+0076,Other domestic utensils,0073,3,14216169,40,Group
+4352,Electric bulbs & lamps,0076,4,2047804,6,Item
+4361,Towels,0076,4,5333483,15,Item
+4362,Mattings,0076,4,2733951,8,Item
+4372,Clothes drying hangers,0076,4,1366980,4,Item
+4373,Storage cases,0076,4,2733951,8,Item
+0077,Domestic non-durable goods,0060,2,38822448,110,Group
+0078,Facial tissue & rolled toilet paper,0077,3,8361221,24,Group
+4412,Facial tissue,0078,4,3044602,9,Item
+4413,Rolled toilet paper,0078,4,5316619,15,Item
+0079,Detergent,0077,3,12294181,35,Group
+4431,"Liquid detergent, kitchen",0079,4,4770735,13,Item
+4441,"Detergent, laundry",0079,4,7523446,21,Item
+0080,Other domestic non-durable goods,0077,3,18167046,51,Group
+4401,Food wrap,0080,4,2234363,6,Item
+4402,Plastic bags,0080,4,3351559,9,Item
+4451,Insecticide,0080,4,2934055,8,Item
+4442,Fabric softener,0080,4,3603276,10,Item
+4471,Air fresheners & deodorizer,0080,4,2791807,8,Item
+4403,Kitchen paper,0080,4,1083994,3,Item
+4472,Bleach,0080,4,2167992,6,Item
+0081,Domestic services,0060,2,9493656,27,Group
+0174,Domestic help,0081,3,1956216,6,Group
+4501,Domestic help,0174,4,1956216,6,Item
+0175,Cleaning fees,0081,3,5840773,16,Group
+4521,Recycle fees,0175,4,1665077,5,Item
+4515,Septic tank cleaning fees,0175,4,4175696,12,Item
+0176,Other domestic services,0081,3,1696667,5,Group
+4701,Mop-rental fees,0176,4,1696667,5,Item
+0082,Clothes & footwear,0001,1,105807048,299,Group
+0083,Clothes,0082,2,42767080,121,Group
+0084,Japanese clothing,0083,3,1089323,3,Group
+5011,Women's“Kimono”,0084,4,1089323,3,Item
+0085,Clothing,0083,3,41677757,118,Group
+0086,Men's clothing,0085,4,14832249,42,Group
+5101,"Men's suits (for spring & summer, medium)",0086,5,1496857,4,Item
+5103,"Men's suits (for spring & summer, ordinary)",0086,5,749320,2,Item
+5102,"Men's suits (for autumn & winter, medium)",0086,5,1122941,3,Item
+5104,"Men's suits (for autumn & winter, ordinary)",0086,5,749320,2,Item
+5111,Men's jackets,0086,5,2209178,6,Item
+5122,Men's slacks (for spring & summer),0086,5,3041350,9,Item
+5121,Men's slacks (for autumn & winter),0086,5,2433083,7,Item
+5123,Men's slacks (jeans),0086,5,608267,2,Item
+5131,Men's coats,0086,5,1031839,3,Item
+5141,Boys' school uniforms,0086,5,1390094,4,Item
+0087,Women's clothing,0085,4,21622040,61,Group
+5166,"Women's suits (for spring & summer, medium)",0087,5,701925,2,Item
+5167,"Women's suits (for spring & summer, ordinary)",0087,5,244360,1,Item
+5162,"Women's suits (for autumn & winter, medium)",0087,5,1871278,5,Item
+5168,"Women's suits (for autumn & winter, ordinary)",0087,5,469215,1,Item
+5161,One-piece dresses (for spring & summer),0087,5,244360,1,Item
+5163,One-piece dresses (for autumn & winter),0087,5,1403462,4,Item
+5183,Women's jackets,0087,5,2484238,7,Item
+5169,Skirts (for spring & summer),0087,5,951735,3,Item
+5172,Skirts (for autumn & winter),0087,5,951735,3,Item
+5181,Women's slacks (for autumn & winter),0087,5,2126102,6,Item
+5179,Women's slacks (jeans),0087,5,6378311,18,Item
+5182,Women's coats,0087,5,2216476,6,Item
+5184,Girls' school uniforms,0087,5,1578843,4,Item
+0088,Children's clothing,0085,4,5223468,15,Group
+5195,Children's trousers (for spring & summer),0088,5,1802331,5,Item
+5196,Children's trousers (for autumn & winter),0088,5,2703490,8,Item
+5193,Babies' clothes,0088,5,717647,2,Item
+0089,"Shirts, sweaters & underwear",0082,2,32904173,93,Group
+0090,Shirts & sweaters,0089,3,22334968,63,Group
+0091,Men's shirts & sweaters,0090,4,7707996,22,Group
+5202,Men's business shirts,0091,5,1680526,5,Item
+5211,Men's sports shirts (long sleeves),0091,5,1348506,4,Item
+5212,Men's sports shirts (short sleeves),0091,5,3146510,9,Item
+5221,Men's sweaters,0091,5,1532454,4,Item
+0092,Women's shirts & sweaters,0090,4,12751237,36,Group
+5231,Blouses (long sleeves),0092,5,931087,3,Item
+5232,Blouses (short sleeves),0092,5,1396645,4,Item
+5233,Women's T-shirts (long sleeves),0092,5,2690909,8,Item
+5234,Women's T-shirts (short sleeves),0092,5,4036368,11,Item
+5241,Women's sweaters (long sleeves),0092,5,2956989,8,Item
+5242,Women's sweaters (short sleeves),0092,5,739239,2,Item
+0093,Children's shirts & sweaters,0090,4,1875735,5,Group
+5243,Children's T-shirts (long sleeves),0093,5,1125444,3,Item
+5244,Children's T-shirts (short sleeves),0093,5,750291,2,Item
+0094,Underwear,0089,3,10569205,30,Group
+0095,Men's underwear,0094,4,3222840,9,Group
+5301,Men's undershirts,0095,5,1704919,5,Item
+5311,Men's underpants,0095,5,852462,2,Item
+5331,Men's pajamas,0095,5,665459,2,Item
+0096,Women's underwear,0094,4,6119191,17,Group
+5341,Brassieres,0096,5,984343,3,Item
+5351,Panties,0096,5,2567424,7,Item
+5361,Lingeries,0096,5,2567424,7,Item
+0097,Children's underwear,0094,4,1227174,3,Group
+5372,Children's underwear,0097,5,1227174,3,Item
+0098,Footwear,0082,2,15793408,45,Group
+5601,Men's shoes,0098,3,3432892,10,Item
+5611,Women's shoes,0098,3,4415797,12,Item
+5641,Children's shoes,0098,3,2244380,6,Item
+5631,Canvas shoes,0098,3,4296054,12,Item
+5671,Sandals,0098,3,319944,1,Item
+5652,Slippers,0098,3,1084341,3,Item
+0103,Other clothing,0082,2,8627972,24,Group
+5501,Hats & caps,0103,3,2080591,6,Item
+5572,Mufflers,0103,3,638081,2,Item
+5521,Men's socks,0103,3,2176890,6,Item
+5541,Women's socks,0103,3,2822180,8,Item
+5571,Belts,0103,3,910230,3,Item
+0106,Services related to clothing,0082,2,5714415,16,Group
+5711,Laundry charges-A,0106,3,2011079,6,Item
+5712,Laundry charges-B,0106,3,2011079,6,Item
+5721,Footwear repair charges,0106,3,579008,2,Item
+5731,Charges for clothing rent,0106,3,1113249,3,Item
+0107,Medical care,0001,1,165090296,466,Group
+0108,Medicines & health fortification,0107,2,41625151,117,Group
+6001,Medicines for cold,0108,3,3298740,9,Item
+6002,Antipyretic & analgesic medicines,0108,3,2199167,6,Item
+6012,Gastrointestinal medicines,0108,3,3433141,10,Item
+6021,Vitamin preparations-A,0108,3,1364856,4,Item
+6022,Vitamin preparations-B,0108,3,1364856,4,Item
+6031,Health drinks,0108,3,6369327,18,Item
+6051,Dermal medicines,0108,3,2400658,7,Item
+6061,Plasters,0108,3,1752027,5,Item
+6062,Eyewashes,0108,3,2628039,7,Item
+6091,Chinese medicines,0108,3,2692943,8,Item
+6003,Medicines for rhinitis,0108,3,2692943,8,Item
+6090,Supplements,0108,3,5714227,16,Item
+6096,Protein powder,0108,3,5714227,16,Item
+0109,Medical supplies & appliances,0107,2,30404943,86,Group
+6141,Disposable diapers (for babies),0109,3,1422683,4,Item
+6142,Disposable diapers (for adults),0109,3,2134032,6,Item
+6101,Sanitary napkins,0109,3,2665465,8,Item
+6095,Bath additives,0109,3,2665465,8,Item
+6181,Contact lenses cleaning solution,0109,3,888483,3,Item
+6102,Masks,0109,3,2164200,6,Item
+6182,Supplies for slight incontinence,0109,3,2665465,8,Item
+6121,Spectacles,0109,3,6334639,18,Item
+6161,Contact lenses,0109,3,4034443,11,Item
+6171,Sphygmomanometers,0109,3,1086009,3,Item
+6172,Hearing aids,0109,3,3258050,9,Item
+6173,Supporters,0109,3,1086009,3,Item
+0110,Medical services,0107,2,93060202,263,Group
+6200,Medical treatment,0110,3,82726264,233,Item
+6221,Charges for massage,0110,3,3829832,11,Item
+6222,Fees for complete medical checkup,0110,3,3960163,11,Item
+6223,Fees for vaccination,0110,3,2543943,7,Item
+0111,Transportation & communication,0001,1,511544532,1444,Group
+0112,Public transportation,0111,2,62835244,177,Group
+0179,Railway fares (JR),0112,3,22398117,63,Group
+7527,(ordinary fares),0179,4,9560032,27,Item
+7528,"(special fares, excluding “Shinkansen”)",0179,4,2084613,6,Item
+7530,"(special fares, for “Shinkansen”)",0179,4,5389801,15,Item
+7029,(students' season tickets),0179,4,1318741,4,Item
+7030,(commuters' season tickets),0179,4,4044930,11,Item
+0180,Railway fares (excluding JR),0112,3,14907289,42,Group
+7008,(ordinary fares),0180,4,7945168,22,Item
+7009,(students' season tickets),0180,4,1359951,4,Item
+7010,(commuters' season tickets),0180,4,5602170,16,Item
+0181,Other public transportation,0112,3,17033652,48,Group
+7050,Fixed route bus fares,0181,4,2638628,7,Item
+7057,Expressway bus fares,0181,4,1760037,5,Item
+7060,Taxi fares,0181,4,4306344,12,Item
+7070,Airplane fares,0181,4,8328643,24,Item
+0182,Highway tolls,0112,3,8496186,24,Group
+7363,National expressway tolls,0182,4,6420894,18,Item
+7364,City expressway tolls,0182,4,2075292,6,Item
+0113,Private transportation,0111,2,328857072,928,Group
+0114,Automobiles,0113,3,94395535,266,Group
+7105,Light motor vehicles (0.66L or less),0114,4,18879961,53,Item
+7106,Small motor vehicles,0114,4,16520507,47,Item
+7113,Motor vehicles-A,0114,4,44834022,127,Item
+7115,Motor vehicles-B,0114,4,14161045,40,Item
+0115,Bicycles,0113,3,3358736,9,Group
+7201,Bicycles-A,0115,4,2014319,6,Item
+7202,Bicycles-B,0115,4,1344417,4,Item
+0116,Automotive maintenance,0113,3,231102801,652,Group
+7301,Gasoline,0116,4,69181855,195,Item
+7311,Tires,0116,4,15963007,45,Item
+7312,Automobile batteries,0116,4,3990751,11,Item
+7313,Automobile navigations,0116,4,4223565,12,Item
+7315,Drive recorders,0116,4,1407853,4,Item
+7316,Helmets,0116,4,1407853,4,Item
+7331,Automotive maintenance charges (regular inspections),0116,4,15209138,43,Item
+7335,Automotive maintenance charges (puncture repairs),0116,4,12167315,34,Item
+7341,Motor oil replacement,0116,4,8673253,24,Item
+7342,Charges for garage rental,0116,4,11744066,33,Item
+7343,Charges for parking,0116,4,3523625,10,Item
+7351,Charges for driving license,0116,4,595548,2,Item
+7344,Charges for rental car,0116,4,1620626,5,Item
+7353,Car lease,0116,4,2264963,6,Item
+7347,Car wash fees,0116,4,595548,2,Item
+7350,Road services,0116,4,1191081,3,Item
+7370,Automotive insurance premium (compulsion),0116,4,11716673,33,Item
+7390,Automotive insurance premium (option),0116,4,65626081,185,Item
+0117,Communication,0111,2,119852216,338,Group
+7401,Postcards,0117,3,488237,1,Item
+7402,Letters,0117,3,976486,3,Item
+7410,Telephone charges (fixed-line phone),0117,3,11348482,32,Item
+7430,Telephone charges (mobile phone),0117,3,81976154,231,Item
+7433,Forwarding charges,0117,3,4568818,13,Item
+7446,Mobile phones,0117,3,20494039,58,Item
+0118,Education,0001,1,110104238,311,Group
+0119,School fees,0118,2,79573626,225,Group
+8001,PTA membership fees (elementary school),0119,3,4461847,13,Item
+8002,PTA membership fees (junior high school),0119,3,3987822,11,Item
+8010,Junior high school fees (private),0119,3,6037183,17,Item
+8020,High school fees (public),0119,3,1005343,3,Item
+8030,High school fees (private),0119,3,7603121,21,Item
+8040,College & university fees (national),0119,3,4441332,13,Item
+8060,College & university fees (private),0119,3,46254932,131,Item
+8070,Junior college fees (private),0119,3,2443027,7,Item
+8077,Special training school fees (private),0119,3,3339019,9,Item
+0120,School textbooks & reference books for study,0118,2,2099663,6,Group
+8110,School textbooks,0120,3,968660,3,Item
+8100,Reference books for study,0120,3,1131003,3,Item
+0121,Tutorial fees,0118,2,28430949,80,Group
+8203,(elementary school),0121,3,7907977,22,Item
+8201,(junior high school),0121,3,12141871,34,Item
+8204,(high school & preparatory school),0121,3,7495705,21,Item
+8205,Correspondence education,0121,3,885396,2,Item
+0122,Culture & recreation,0001,1,320898162,906,Group
+0123,Recreational durable goods,0122,2,25613499,72,Group
+9013,TV sets,0123,3,5409680,15,Item
+9034,Video recorders,0123,3,832692,2,Item
+9078,Personal computers (desktop),0123,3,3741466,11,Item
+9079,Personal computers (laptop),0123,3,6734278,19,Item
+9080,Tablet computers,0123,3,2993256,8,Item
+9081,PC printers,0123,3,1496947,4,Item
+9043,Cameras,0123,3,901932,3,Item
+9051,Pianos,0123,3,1995980,6,Item
+9061,Desks,0123,3,671101,2,Item
+9062,Headphones & earphones,0123,3,836167,2,Item
+0128,Recreational goods,0122,2,70186803,198,Group
+0129,Stationery,0128,3,6321416,18,Group
+9111,Ball-point pens,0129,4,1395029,4,Item
+9121,Notebooks,0129,4,3482510,10,Item
+9129,Scissors,0129,4,1443877,4,Item
+0130,Sporting goods,0128,3,16001130,45,Group
+9142,Golf clubs,0130,4,3167520,9,Item
+9141,Baseball gloves,0130,4,1012606,3,Item
+9143,Tennis rackets,0130,4,1012606,3,Item
+9144,Fishing rods,0130,4,1012606,3,Item
+9145,Pants for exercise,0130,4,2798795,8,Item
+9149,Swimming suits,0130,4,1399402,4,Item
+9140,Athletic shoes,0130,4,5597595,16,Item
+0131,Toys,0128,3,10081759,28,Group
+9154,Computer games for domestic use,0131,4,1954544,6,Item
+9156,Game softwares,0131,4,2209037,6,Item
+9151,Dolls,0131,4,591818,2,Item
+9152,Toy cars,0131,4,1775453,5,Item
+9153,Building blocks,0131,4,3550907,10,Item
+0132,Cut flowers,0128,3,7451971,21,Group
+9181,(Carnations),0132,4,1064575,3,Item
+9182,(Chrysanthemums),0132,4,4258264,12,Item
+9183,(Roses),0132,4,2129132,6,Item
+0133,Other recreational goods,0128,3,30330527,86,Group
+9199,Memory cards,0133,4,472190,1,Item
+9172,Compact discs,0133,4,1007491,3,Item
+9174,Video softwares,0133,4,673620,2,Item
+9193,Pet foods (dog foods),0133,4,4215534,12,Item
+9196,Pet foods (cat foods),0133,4,6323308,18,Item
+9185,Pet toilet supplies,0133,4,5924679,17,Item
+9184,Potted plants,0133,4,3575856,10,Item
+9190,Gardening earth,0133,4,1831764,5,Item
+9189,Horticultural fertilizer,0133,4,2747636,8,Item
+9195,Batteries,0133,4,2140338,6,Item
+9128,Ink cartridges for printer,0133,4,1418111,4,Item
+0134,Books & other reading materials,0122,2,30205061,85,Group
+0135,Newspapers,0134,3,21513937,61,Group
+9204,(regional),0135,4,9658991,27,Item
+9205,(national),0135,4,11854946,33,Item
+0136,Magazines,0134,3,1879558,5,Group
+9226,Monthly magazines,0136,4,1503458,4,Item
+9230,Weekly magazines,0136,4,376100,1,Item
+0137,Books,0134,3,6811566,19,Group
+9261,Books-A,0137,4,3892322,11,Item
+9263,Books-B,0137,4,2919244,8,Item
+0138,Recreational services,0122,2,194892799,550,Group
+0139,Hotel charges,0138,3,41656664,118,Group
+9300,Hotel charges,0139,4,41656664,118,Item
+0177,Charges for package tours,0138,3,7723795,22,Group
+9305,Charges for package tours to overseas,0177,4,7723795,22,Item
+0140,Lesson fees,0138,3,26955106,76,Group
+9328,(English conversation school),0140,4,2324451,7,Item
+9329,(calligraphy school),0140,4,2169248,6,Item
+9326,(music school),0140,4,4821829,14,Item
+9319,(dancing school),0140,4,2234305,6,Item
+9313,(swimming school),0140,4,8995420,25,Item
+9343,(physical education school),0140,4,2248914,6,Item
+9320,"Lesson fees, driving school",0140,4,4160939,12,Item
+0141,Other recreational services,0138,3,118557234,335,Group
+0142,Charges for TV license,0141,4,22464175,63,Group
+9330,Charges for NHK TV license,0142,5,10932666,31,Item
+9368,Charges for cable TV license,0142,5,10163385,29,Item
+9367,Charges for other TV licenses,0142,5,1368124,4,Item
+0143,Admission & game charges,0141,4,43147909,122,Group
+9341,Admission to movies,0143,5,5842959,16,Item
+9342,Admission to theater,0143,5,4382227,12,Item
+9350,Admission to professional baseball games,0143,5,1327163,4,Item
+9353,Charges for practicing golf,0143,5,2616307,7,Item
+9357,Charges for playing golf,0143,5,10294954,29,Item
+9361,"Game charges, bowling",0143,5,2207253,6,Item
+9359,Swimming pool charges,0143,5,1103621,3,Item
+9362,Fitness club fees,0143,5,6543739,18,Item
+9374,Admission fees to cultural establishments,0143,5,4569145,13,Item
+9372,Admission fees to theme parks,0143,5,4073546,11,Item
+9395,“Karaoke” room charges,0143,5,186995,1,Item
+0144,Other recreational services,0141,4,52945150,149,Group
+9381,Photography fees,0144,5,2809961,8,Item
+9397,Internet connection charges,0144,5,33487255,94,Item
+9403,Charges for web content,0144,5,2372712,7,Item
+9404,Qualification examination,0144,5,790904,2,Item
+9396,Veterinary surgeon fees,0144,5,9134925,26,Item
+9188,Grooming parlor fees,0144,5,3044517,9,Item
+9187,Insurance fee for pet,0144,5,1304876,4,Item
+0145,Miscellaneous,0001,1,201944448,570,Group
+0146,Personal care services,0145,2,39164099,111,Group
+9504,Bathing charges,0146,3,3884876,11,Item
+9511,Charges for barbers' services,0146,3,8775629,25,Item
+9521,Permanent wave charges,0146,3,3995383,11,Item
+9531,Haircut charges,0146,3,12684664,36,Item
+9532,Hair dyeing charges,0146,3,6309331,18,Item
+9505,Charges for beauty-treatment,0146,3,3514216,10,Item
+0147,Toilet articles,0145,2,55642785,157,Group
+0148,Toilet utensils,0147,3,4609808,13,Group
+9602,Electric shavers,0148,4,1330158,4,Item
+9604,Hair dryers,0148,4,1330158,4,Item
+9611,Toothbrushes,0148,4,1949492,6,Item
+0149,Soap & others,0147,3,17520475,49,Group
+9621,Hand soap,0149,4,1374987,4,Item
+9626,Body soap,0149,4,1833318,5,Item
+9627,Facial wash,0149,4,1833318,5,Item
+9628,Cleansing products,0149,4,1833318,5,Item
+9622,Shampoo,0149,4,4001369,11,Item
+9624,Hair conditioner,0149,4,2902466,8,Item
+9623,Toothpaste,0149,4,3741699,11,Item
+0150,Cosmetics,0147,3,33512502,95,Group
+9631,Hair styling products,0150,4,2605287,7,Item
+9641,Hair tonic,0150,4,2131591,6,Item
+9650,Face cream-A,0150,4,5836319,16,Item
+9652,Face cream-B,0150,4,1167265,3,Item
+9660,Toilet lotion-A,0150,4,4902621,14,Item
+9661,Toilet lotion-B,0150,4,1634203,5,Item
+9690,Milky lotion-A,0150,4,2324347,7,Item
+9692,Milky lotion-B,0150,4,581092,2,Item
+9670,Foundation-A,0150,4,3000977,8,Item
+9672,Foundation-B,0150,4,600200,2,Item
+9680,Lipsticks-A,0150,4,832024,2,Item
+9682,Lipsticks-B,0150,4,832024,2,Item
+9625,Hair color,0150,4,2425900,7,Item
+9693,Face serums,0150,4,3478992,10,Item
+9694,Antiperspirant,0150,4,1159660,3,Item
+0151,Personal effects,0145,2,20480111,58,Group
+0152,Bags,0151,3,14759234,42,Group
+9721,Bags-A,0152,4,2790670,8,Item
+9722,Bags-B,0152,4,6976689,20,Item
+9711,School knapsacks,0152,4,2433457,7,Item
+9731,Suitcases,0152,4,2558418,7,Item
+0153,Watches & rings,0151,3,3006546,8,Group
+9741,Rings,0153,4,1402053,4,Item
+9751,Wrist watches,0153,4,1604493,5,Item
+0154,Other personal effects,0151,3,2714331,8,Group
+9701,Umbrellas,0154,4,1792881,5,Item
+9761,Handkerchiefs,0154,4,921450,3,Item
+0155,Tobacco,0145,2,13470674,38,Group
+9799,(domestics),0155,3,5773150,16,Item
+9798,(imported),0155,3,7697524,22,Item
+0156,Other miscellaneous,0145,2,73186779,207,Group
+9960,Funeral fees,0156,3,11666404,33,Item
+9928,Charges for accident insurance,0156,3,39435924,111,Item
+9921,Nursery school fees,0156,3,11757154,33,Item
+9951,After-school childcare fees,0156,3,2334079,7,Item
+9914,Charges for nursing care,0156,3,6419091,18,Item
+9901,Charges for administrative certificates,0156,3,393532,1,Item
+9912,Charges for acquisition of passport,0156,3,393532,1,Item
+9931,Home security services,0156,3,787063,2,Item

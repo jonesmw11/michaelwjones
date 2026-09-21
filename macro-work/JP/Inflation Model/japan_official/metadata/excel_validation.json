@@ -1,0 +1,32 @@
+[
+  {
+    "tier": 1,
+    "series": 10,
+    "weight_sum": 1.0,
+    "verified_observations": 21380
+  },
+  {
+    "tier": 2,
+    "series": 47,
+    "weight_sum": 1.0000000000000002,
+    "verified_observations": 99688
+  },
+  {
+    "tier": 3,
+    "series": 203,
+    "weight_sum": 1.0,
+    "verified_observations": 347684
+  },
+  {
+    "tier": 4,
+    "series": 520,
+    "weight_sum": 0.9999999999999994,
+    "verified_observations": 772336
+  },
+  {
+    "tier": 5,
+    "series": 589,
+    "weight_sum": 0.9999999999999991,
+    "verified_observations": 871623
+  }
+]

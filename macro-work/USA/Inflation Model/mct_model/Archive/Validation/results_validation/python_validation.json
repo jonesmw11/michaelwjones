@@ -1,0 +1,23 @@
+{
+  "same_seed_reproducibility": "PASS",
+  "updated_data_smoother": "PASS",
+  "official_smoother_comparisons": {
+    "initial": {
+      "status": "PASS",
+      "maximum_absolute_error": 6.039613253960852e-14
+    },
+    "latent": {
+      "status": "PASS",
+      "maximum_absolute_error": 6.616929226765933e-14
+    },
+    "loadings": {
+      "status": "PASS",
+      "maximum_absolute_error": 2.6201263381153694e-13
+    },
+    "volatility": {
+      "status": "PASS",
+      "maximum_absolute_error": 2.615963001773025e-14
+    }
+  },
+  "official_state_matrix_assembly": "PASS"
+}

@@ -1,0 +1,25 @@
+{
+  "history_status": "PARTIAL HISTORY \u2014 additional exports required",
+  "months": 312,
+  "series": 397,
+  "observations": 44532,
+  "tier_counts": {
+    "0": 1,
+    "1": 12,
+    "2": 38,
+    "3": 68,
+    "4": 278
+  },
+  "division_weight_sum": 0.9999999999999998,
+  "item_weight_sum": 1.0,
+  "intermediate_tier_weights": "NOT JOINED",
+  "sources": [
+    {
+      "file": "history_1965_1990.csv",
+      "sha256": "43d6b0f603e8117484ea76c233cb65bb4751ae929125e001cf0682a1d5a62d1a",
+      "first_month": "1965-01-01",
+      "last_month": "1990-12-01",
+      "series": 397
+    }
+  ]
+}

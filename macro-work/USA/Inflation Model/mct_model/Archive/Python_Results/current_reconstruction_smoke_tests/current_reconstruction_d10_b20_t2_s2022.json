@@ -1,0 +1,15 @@
+{
+  "engine": "Python / statsmodels simulation smoother / NumPy-SciPy sampling",
+  "status": "SMOKE TEST ONLY - NOT AN INFLATION ESTIMATE",
+  "vintage": "current_reconstruction",
+  "draws": 10,
+  "burn_in": 20,
+  "thinning": 2,
+  "elapsed_seconds": 47.5276889000088,
+  "latest_date": "2026-07-01",
+  "latest_median": 3.0356988223161165,
+  "reference_comparison": "Different vintages and reconstructed housing input: differences are not pure replication error",
+  "reference_rmse_pp": 0.36245611276807377,
+  "reference_mean_absolute_error_pp": 0.2777676990967759,
+  "convergence": "Not established. Run independent chains and inspect mixing before relying on estimates."
+}

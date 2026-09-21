@@ -1,0 +1,6 @@
+﻿series_code,name_en,name_ja,serial_number,weight_per_10000,weight_raw,first_period,last_period,observations,missing_periods,source_file_id,base_year
+0901,"All items, seasonally adjusted",総合（季節調整済）,901,,,201001,202608,200,0,000040482947,2025
+0902,"All items, less fresh food, seasonally adjusted",生鮮食品を除く総合（季節調整済）,902,,,201001,202608,200,0,000040482947,2025
+0906,"All items, less fresh food and energy, seasonally adjusted",生鮮食品及びエネルギーを除く総合（季節調整済）,903,,,201001,202608,200,0,000040482947,2025
+0921,"Goods, seasonally adjusted",財（季節調整済）,904,,,201001,202608,200,0,000040482947,2025
+0924,"Services, seasonally adjusted",サービス（季節調整済）,905,,,201001,202608,200,0,000040482947,2025

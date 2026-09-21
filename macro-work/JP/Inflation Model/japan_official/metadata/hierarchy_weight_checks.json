@@ -1,0 +1,44 @@
+{
+  "source_url": "https://www.stat.go.jp/english/data/cpi/zuhyou/2025base-list.xlsx",
+  "source_sha256": "d3cdab3bcc22a85d6293047610e07c44c2df4c1ee30d02ac52387e4336041d22",
+  "root_weight": 3543757090,
+  "leaf_count": 589,
+  "parent_checks_passed": 146,
+  "tiers": [
+    {
+      "tier": 1,
+      "series": 10,
+      "raw_weight_sum": 3543757090,
+      "weight_sum": 1.0,
+      "carried_leaves": 0
+    },
+    {
+      "tier": 2,
+      "series": 47,
+      "raw_weight_sum": 3543757090,
+      "weight_sum": 1.0,
+      "carried_leaves": 0
+    },
+    {
+      "tier": 3,
+      "series": 203,
+      "raw_weight_sum": 3543757090,
+      "weight_sum": 1.0,
+      "carried_leaves": 0
+    },
+    {
+      "tier": 4,
+      "series": 520,
+      "raw_weight_sum": 3543757090,
+      "weight_sum": 1.0,
+      "carried_leaves": 132
+    },
+    {
+      "tier": 5,
+      "series": 589,
+      "raw_weight_sum": 3543757090,
+      "weight_sum": 1.0,
+      "carried_leaves": 503
+    }
+  ]
+}

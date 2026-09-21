@@ -1,0 +1,14 @@
+{
+  "replication_first": "1960-01",
+  "replication_last": "2023-10",
+  "replication_months": 766,
+  "current_first": "1960-01-01",
+  "current_last": "2026-07-01",
+  "current_months": 799,
+  "sectors": 17,
+  "core_sectors": 14,
+  "upstream_transform_checks": "PASS",
+  "current_weights_sum_check": "PASS",
+  "current_status": "Reconstruction, not exact replication: housing aggregation preparer unavailable",
+  "source_sha256": "15cf497cda39c122fbc116783119d9bd99691f3396081ce04496fce5500c3ef1"
+}

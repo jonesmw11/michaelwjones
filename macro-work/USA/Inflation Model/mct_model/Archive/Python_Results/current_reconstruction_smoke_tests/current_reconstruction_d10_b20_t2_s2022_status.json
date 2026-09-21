@@ -1,0 +1,19 @@
+{
+  "pid": 15632,
+  "status": "complete",
+  "vintage": "current_reconstruction",
+  "seed": 2022,
+  "engine": "Python / statsmodels simulation smoother / NumPy-SciPy sampling",
+  "started_utc": "2026-09-19T13:42:52.883538+00:00",
+  "versions": {
+    "python": "3.14.6",
+    "numpy": "2.5.1",
+    "scipy": "1.18.0",
+    "statsmodels": "0.14.6"
+  },
+  "iteration": 31,
+  "total": 31,
+  "elapsed_seconds": 47.52092040001298,
+  "finished_utc": "2026-09-19T13:43:41.741057+00:00",
+  "result": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\macro-work\\inflation-forecasts\\USA\\mct_model\\results\\python\\current_reconstruction_d10_b20_t2_s2022.mat"
+}

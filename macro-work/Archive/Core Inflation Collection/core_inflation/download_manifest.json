@@ -1,0 +1,52 @@
+[
+  {
+    "file": "usa_mct.csv",
+    "url": "https://www.newyorkfed.org/medialibrary/Research/Interactives/Data/mct/mct-chart-data.csv",
+    "sha256": "c6136b1f406bf40a44d69ac2309b638ef09afdb3a6ded7f243d54fba98094907"
+  },
+  {
+    "file": "usa_dallas_history.xlsx",
+    "url": "https://www.dallasfed.org/~/media/documents/research/pce/pcehist",
+    "sha256": "eebe797630cbcc3c2ce67466c6fd8e11dca20b0b9350425dbeaf124cea9709fc"
+  },
+  {
+    "file": "japan_boj.xlsx",
+    "url": "https://www.boj.or.jp/en/research/research_data/cpi/cpirev.xlsx",
+    "sha256": "5ed86085ed501101c5d5469cb1d279aebdaed956fee0cded43cb52d2ee63bc8d"
+  },
+  {
+    "file": "australia_rba.xlsx",
+    "url": "https://www.rba.gov.au/statistics/tables/xls/g01hist.xlsx",
+    "sha256": "3b1116d907c0cfa8497c903bc97af59da95b581d1db1fb1cf6ff4f90a210146f"
+  },
+  {
+    "file": "usa_dallas.xlsx",
+    "url": "https://www.dallasfed.org/-/media/documents/research/pce/pcedata.xlsx",
+    "sha256": "bf881b4cea14e5d3d284b0ac91e355d94a9c12db59d6f4246de7ca2e9310bbc3"
+  },
+  {
+    "file": "usa_median_pce.csv",
+    "url": "https://www.clevelandfed.org/-/media/files/webcharts/medianpce/median-pce-full-history.csv",
+    "sha256": "f0a54504554140ae4851ecad266a8e249dffd08efb764526eedefeefa2d874ab"
+  },
+  {
+    "file": "usa_median_cpi.csv",
+    "url": "https://www.clevelandfed.org/-/media/files/webcharts/mediancpi/mcpi_revised.csv?sc_lang=en",
+    "sha256": "47e806d9e9f876931f0d1f31737c6968bd65022662367e2b1298c1df963c0f99"
+  },
+  {
+    "file": "usa_trimmed_cpi.csv",
+    "url": "https://www.clevelandfed.org/-/media/files/webcharts/mediancpi/trim_revised.csv?sc_lang=en",
+    "sha256": "4386ba518fc79ad27b513339f2f805e7b2a3e93fc66a38ec082394a54c1a2528"
+  },
+  {
+    "file": "usa_core_cpi.csv",
+    "url": "https://www.clevelandfed.org/-/media/files/webcharts/mediancpi/core.csv?sc_lang=en",
+    "sha256": "5ce1969b7ccf6a9450aced2deabfb460b80966fc8d329dffcd79a2b966ed5b89"
+  },
+  {
+    "file": "usa_sticky.xlsx",
+    "url": "https://www.atlantafed.org/-/media/Project/Atlanta/FRBA/Documents/datafiles/research/inflationproject/stickprice/stickyprice.xlsx",
+    "sha256": "64607f5ca980a85f8c38619ddcbea4209ad405b4caf835f43ce6c9f66cfa5950"
+  }
+]

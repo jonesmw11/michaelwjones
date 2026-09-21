@@ -1,0 +1,74 @@
+[
+  {
+    "filename": "640101.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/640101.xlsx",
+    "sha256": "0c1c6fa0d6ed6f11d7ddf5e5bd684432acee59e83eb36c840f42b1f36cb472dc",
+    "retrieved_utc": "2026-09-18T17:46:54.797141+00:00"
+  },
+  {
+    "filename": "640102.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/640102.xlsx",
+    "sha256": "4a28977a451ba54b837074d5649f788a01b81a2b1365c18e5fba56bb27ebe138",
+    "retrieved_utc": "2026-09-18T17:46:54.797453+00:00"
+  },
+  {
+    "filename": "640103.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/640103.xlsx",
+    "sha256": "0475b3eb702ff95cc9b7cd9f30f1f07fad9829b3648d3a60568b6abcae671cce",
+    "retrieved_utc": "2026-09-18T17:46:54.798138+00:00"
+  },
+  {
+    "filename": "640104.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/640104.xlsx",
+    "sha256": "78699d43c288e7a239519bcfff357933e6321050e442b17928936c50ccc46153",
+    "retrieved_utc": "2026-09-18T17:46:54.798623+00:00"
+  },
+  {
+    "filename": "640105.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/640105.xlsx",
+    "sha256": "685eb8488f7523487d19a3fbc46d62cad7d59037ab8aa7b4aeb616d336d83f86",
+    "retrieved_utc": "2026-09-18T17:46:54.799046+00:00"
+  },
+  {
+    "filename": "640106.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/640106.xlsx",
+    "sha256": "76c9f516943e3353cae01440651925f737de6121299b5618fdf5e54701f545c4",
+    "retrieved_utc": "2026-09-18T17:46:54.799708+00:00"
+  },
+  {
+    "filename": "640107.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/640107.xlsx",
+    "sha256": "abfb0389104a0311c2e30473863cbaea84789fe6cc28a0fcc8b536056a213ad8",
+    "retrieved_utc": "2026-09-18T17:46:54.800708+00:00"
+  },
+  {
+    "filename": "640108.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/640108.xlsx",
+    "sha256": "97b6302e52b914e118f3d9bbefb8b9153b3968029fed3e2b94e11027d2f9e2c3",
+    "retrieved_utc": "2026-09-18T17:46:54.801292+00:00"
+  },
+  {
+    "filename": "640109.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/640109.xlsx",
+    "sha256": "b596e8007e241999a7c81843e61835814bb7867bb90f03f7c082fad4bfc02663",
+    "retrieved_utc": "2026-09-18T17:46:54.801660+00:00"
+  },
+  {
+    "filename": "6401017.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/6401017.xlsx",
+    "sha256": "742c7159d8a0a5cf7c357f418d2ba467209d3547aa1583e80a9ff1dd4478cb9f",
+    "retrieved_utc": "2026-09-18T17:46:54.801970+00:00"
+  },
+  {
+    "filename": "6401018.xlsx",
+    "url": "https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/jul-2026/6401018.xlsx",
+    "sha256": "cc608103d747d8acf59ba54c529de952bb0619d68beb2e442ded71d49f3ff15a",
+    "retrieved_utc": "2026-09-18T17:46:54.802958+00:00"
+  },
+  {
+    "filename": "weights_2025.xlsx",
+    "url": "https://www.abs.gov.au/system/files/83cf3a8e846b6b3f91ae7ea99ef968ab/Consumer%20Price%20Index%20-%202025%20Weighting%20Pattern.xlsx",
+    "sha256": "2bfe75f9da76d974801128418bcd36d49d9affd452f2e6f264a87ca36673c494",
+    "retrieved_utc": "2026-09-18T17:46:54.803441+00:00"
+  }
+]

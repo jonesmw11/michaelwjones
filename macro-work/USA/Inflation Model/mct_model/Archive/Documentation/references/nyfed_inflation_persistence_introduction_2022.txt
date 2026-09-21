@@ -1,0 +1,405 @@
+Inflation Persistence: How Much Is There and Where Is It Coming From?
+Source: https://libertystreeteconomics.newyorkfed.org/2022/04/inflation-persistence-how-much-is-there-and-where-is-it-coming-from/
+Retrieved: 2026-09-19T14:06:17.062314+00:00
+
+Inflation Persistence: How Much Is There and Where Is It Coming From? - Liberty Street Economics
+Liberty Street Economics
+«
+Expected Home Price Increases Accelerate over the Short Term but Remain Stable over the Medium Term
+|
+Main
+|
+What Might Happen When Student Loan Forbearance Ends?
+»
+April 20, 2022
+Inflation Persistence: How Much Is There and Where Is It Coming From?
+Martín Almuzara and Argia Sbordone
+The surge in inflation since early 2021 has sparked intense debate. Would it be short-lived or prove to be persistent? Would it be concentrated within a few sectors or become broader? The answers to these questions are not so clear-cut. In our view, one should ask
+how much
+of the inflation is persistent and
+how much
+of it is broad-based. In this post, we address this question through a quantitative lens. We find that the large ups and downs in inflation over the course of 2020 were largely the result of transitory shocks, often sector-specific. In contrast, sometime in the fall of 2021, inflation dynamics became dominated by the trend component, which is persistent and largely common across sectors.
+A Multivariate Core Trend of PCE Inflation
+To address the issues of inflation persistence and broadness, we estimate a dynamic factor model on monthly data for the seventeen major sectors of the personal consumption expenditures (PCE) price index. The model (which builds on
+this paper
+) decomposes each sector’s inflation as the sum of a common trend, a sector-specific trend, a common transitory shock, and a sector-specific transitory shock. From sectoral level estimates, we then construct the trend in PCE inflation as the sum of the common and sector-specific trends weighted by the expenditure shares. We estimate the model using data from all sectors; however, in constructing the trend in PCE inflation, we exclude the non-core sectors (that is, food and energy). We thus refer to the measure as a Multivariate Core Trend (MCT) of PCE inflation.
+Compared to the widely used core PCE inflation measure, which simply removes the volatile components, the MCT seeks to further remove the transitory variation from the core sectoral inflation rates. This is key in understanding recent inflation developments because during the pandemic many core sectors (motor vehicles and furniture, for example) were hit by unusually large transitory shocks. An ideal measure of inflation persistence should filter those out.
+The chart below reports our estimated MCT (light blue line) alongside monthly headline PCE inflation (annualized, grey line) and the twelve-month change in headline PCE prices (black line). The shaded area around the MCT is a 68 percent band that captures the uncertainty associated with the estimate. A few features of the estimated trend are worth highlighting.
+PCE Inflation and Multivariate Core Trend
+Sources: Bureau of Economic Analysis; authors’ calculations.
+First, the trend hovers below but close to 2 percent from early 2016 through late 2020 and remains remarkably stable in the face of negative inflation numbers at the onset of the pandemic. The increasingly high inflation readings in mid-2021 are instead dominated by increases in the trend, which moves up rapidly to reach about 5 percent in February 2022.
+Second, both month-to-month price changes and twelve-month inflation display notable transitory variation. The most recent reading of headline PCE, at 6.4 percent, is well outside the 68 percent probability interval for the estimated trend, which goes from 4.5 to 5.5 percent. In fact, twelve-month inflation often deviates substantially from our estimated trend because of the presence of outliers and because, in some sectors, the effect of transitory shocks takes a few months to dissipate. Note that the standard core PCE measure also retains some transitory elements, often falling outside the band of our estimated trend.
+Overall, the increase in the estimated trend—of about 3.2 percentage points (ppts) relative to its pre-pandemic average—indicates that inflation has become notably more persistent. Where does this increase in persistence come from?
+Are There Sectors that Contribute Disproportionately to the Recent Increase in Trend?
+To quantify the contribution of different sectors and different components (that is, common versus sector-specific) to the increase in trend, we start by constructing trends for the broad aggregates of durables, nondurables, and services. We then recover the incidence of each of these sectors on the overall trend (defined as the sectoral trend scaled by the corresponding expenditure share) to evaluate the role that these different sectors played in its recent increase (see the chart below).
+The incidence of durables (blue) went from a pre-pandemic negative, of roughly -0.2 ppt, to positive, at +0.9 ppt, implying a contribution to the increase in trend of 1.1 ppts as of the last data release. By the same type of calculation, nondurables (gold) explain 0.6 ppt of the increase in trend (going from slightly under 0.1 ppt pre-pandemic to 0.7 ppt currently), and services (grey) account for 1.5 out of the total 3.2 ppts of trend increase (from 1.9 to 3.4 ppts).
+Inflation Trend Decomposition by Sector
+Sources: Bureau of Economic Analysis; authors’ calculations.
+The incidence of durables on the current trend (0.9 ppt) is notable by historical standards but is significantly lower than their disproportionate incidence on twelve-month core inflation numbers—which totaled 1.6 ppts in February. This is owed to our model attributing nearly half of the inflation in durables to highly volatile transitory shocks to the sector and to outliers. The narrative for core services is quite different: their incidence on the twelve-month core inflation, at 3.2 ppts, is more in line with their incidence on the trend, suggesting a smaller role of the transitory component and some attenuation coming from sector-specific trends.
+If we look at the increase in trend inflation since pre-pandemic levels, the contribution of durables (1.1 ppts) and services (1.5 ppts) are of comparable magnitude. In other words, according to our model, the
+increase
+in the persistence of inflation is not explained by a single sector or group of sectors but is more pervasive.
+How Widespread Are the Trend Dynamics?
+Since sectors display heterogeneous persistent and transitory price movements, a complementary perspective distinguishes between changes in trend that are common across sectors and changes that are idiosyncratic, or sector-specific. We think of the common trend as capturing economy-wide macro factors; idiosyncratic trends, on the other hand, represent developments of a more micro nature. While both play a role in explaining inflation dynamics, our model can quantify changes over time in their relative importance.
+The next chart illustrates this point by allocating the cumulative change in trend inflation (measured from its average 2017-19 level and displayed as a solid black line) to common and sector-specific components. We focus on cumulative
+changes
+between the pre-pandemic and current periods as opposed to the
+levels
+of the components since the locations of the latter are pinned down by an arbitrary normalization for the purpose of estimation.
+Inflation Trend Decomposition by Component
+Sources: Bureau of Economic Analysis; authors’ calculations.
+We can see that the cumulative change in trend is currently dominated by its common component (gold), with the aggregate contribution of the idiosyncratic trends (blue) playing a smaller role. The dynamics, however, evolved significantly during the pandemic. The relative stability of the trend during 2020, for example, occurred as common and idiosyncratic trends pulled in opposite directions. In the second half of 2021, however, the common trend component continued to rise while opposing forces of the idiosyncratic trends diminished, leading to a sizable rise in the inflation trend.
+Concluding Comments
+As the recent surge in inflation has endured, it has triggered a series of narrative shifts—price increases were initially deemed to be transitory, then they were tied to developments in specific sectors and changes in consumption patterns, and now inflation is acknowledged to be a broad-based phenomenon.
+In this post, we provide a model-based perspective on this narrative: large increases and decreases in monthly inflation during 2020 were largely the result of transitory shocks and outliers, with the trend component remaining relatively stable until early 2021, as common and sector-specific forces pulled in opposite directions. Sometime in the fall of 2021, the common persistent component came to dominate the evolution of the trend and today it stands as a significant driver of inflation. Sector-specific movements may have been relevant at the beginning of the pandemic but are currently playing a smaller role than common dynamics.
+Of course, the preceding assessment uses all available data as of April 2022 and therefore has the benefit of hindsight. Even though the model captured early on the persistent nature of inflation movements, today’s interpretation is subject to much less uncertainty than what the model suggested in real time.
+Chart data
+Martín Almuzara
+is an economist in the Federal Reserve Bank of New York’s Research and Statistics Group.
+Argia Sbordone is a vice president in the Bank’s Research and Statistics Group.
+How to cite this post:
+Martin Almuzara and Argia Sbordone, “Inflation Persistence: How Much Is There and Where Is It Coming From?,” Federal Reserve Bank of New York
+Liberty Street Economics
+, April 20, 2022, https://libertystreeteconomics.newyorkfed.org/2022/04/inflation-persistence-how-much-is-there-and-where-is-it-coming-from/.
+Related reading
+:
+Global Supply Chain Pressure Index: March 2022 Update
+(March 2022)
+Drivers of Inflation: The New York Fed DSGE Model’s Perspective
+(March 2022)
+What Are Consumers’ Inflation Expectations Telling Us Today?
+(February 2022)
+Disclaimer
+The views expressed in this post are those of the authors and do not necessarily reflect the position of the Federal Reserve Bank of New York or the Federal Reserve System. Any errors or omissions are the responsibility of the authors.
+Share this:
+Share on X (Opens in new window)
+X
+Share on Facebook (Opens in new window)
+Facebook
+Share on LinkedIn (Opens in new window)
+LinkedIn
+Email a link to a friend (Opens in new window)
+Email
+Print (Opens in new window)
+Print
+All Liberty Street Economics
+Search
+RSS Feed
+Follow Liberty Street Economics
+receive email alerts for this page
+WATCH: Liberty Street Economics 15th Anniversary
+<span data-mce-type="bookmark" style="display: inline-block; width: 0px; overflow: hidden; line-height: 0;" class="mce_SELRES_start"></span><span data-mce-type="bookmark" style="display: inline-block; width: 0px; overflow: hidden; line-height: 0;" class="mce_SELRES_start"></span>
+About the Blog
+Liberty Street Economics
+features insight and analysis from New York Fed economists working at the intersection of research and policy. Launched in 2011, the blog takes its name from the Bank’s headquarters at 33 Liberty Street in Manhattan’s Financial District.
+The editors are Michael Fleming, Thomas Klitgaard, Maxim Pinkovskiy, and Asani Sarkar, all economists in the Bank’s Research Group.
+Liberty Street Economics
+does not publish new posts during the blackout periods surrounding Federal Open Market Committee meetings.
+The views expressed are those of the authors, and do not necessarily reflect the position of the New York Fed or the Federal Reserve System.
+Economic Research Tracker
+Liberty Street Economics
+is available on the iPhone® and iPad® and can be customized by economic research topic or economist.
+View by Topic
+Artificial Intelligence (AI)
+Balance of Payments
+Bank Capital
+Banks
+Central Bank
+Corporate Finance
+COVID-19 Facilities
+Credit
+Crisis
+Cryptocurrencies
+Demographics
+DSGE
+Economic History
+Education
+Employment
+Euro Area
+Exchange Rates
+Expectations
+Exports
+Federal Reserve
+Fed Funds
+Financial Institutions
+Financial Intermediation
+Financial Markets
+Fiscal Policy
+Forecasting
+Hey, Economist!
+Historical Echoes
+Household Finance
+Housing
+Human Capital
+Inflation
+International Economics
+K-Shaped Economy
+Labor Market
+Lender of Last Resort
+Liquidity
+Macroeconomics
+Microeconomics
+Monetary Policy
+New Jersey
+New York
+Nonbank (NBFI)
+Pandemic
+Panic
+Puerto Rico
+Recession
+Regional Analysis
+Regulation
+Repo
+Stocks
+Street Level
+Student Loans
+Supply Chain
+Systemic Risk
+Tariffs
+Treasury
+Unemployment
+Most Read this Year
+Who Is Paying for the 2025 U.S. Tariffs?
+Remote Work Leaves Younger Workers Sidelined
+Is College Still Worth It?
+Explaining the K-Shaped Economy: What’s Behind the Divide?
+The Post-COVID Decline in the Labor Share
+Comment Guidelines
+We encourage your comments and queries on our posts and will publish them (below the post) subject to the following guidelines:
+Please be brief
+: Comments are limited to 1,500 characters.
+Please be aware:
+Comments submitted shortly before or during the FOMC blackout may not be published until after the blackout.
+Please be relevant:
+Comments are moderated and will not appear until they have been reviewed to ensure that they are substantive and clearly related to the topic of the post.
+Please be respectful:
+We reserve the right not to post any comment, and will not post comments that are abusive, harassing, obscene, or commercial in nature. No notice will be given regarding whether a submission will or will
+not be posted.‎
+Comments with links:
+Please do not include any links in your comment, even if you feel the links will contribute to the discussion. Comments with links will not be posted.
+Send Us Feedback
+Disclosure Policy
+The LSE editors ask authors submitting a post to the blog to confirm that they have no conflicts of interest as defined by the American Economic Association in its Disclosure Policy. If an author has sources of financial support or other interests that could be perceived as influencing the research presented in the post, we disclose that fact in a statement prepared by the author and appended to the author information at the end of the post. If the author has no such interests to disclose, no statement is provided. Note, however, that we do indicate in all cases if a data vendor or other party has a right to review a post.
+Archives
+2026
+September 2026
+August 2026
+July 2026
+June 2026
+May 2026
+April 2026
+March 2026
+February 2026
+January 2026
+2025
+December 2025
+November 2025
+October 2025
+September 2025
+August 2025
+July 2025
+June 2025
+May 2025
+April 2025
+March 2025
+February 2025
+January 2025
+2024
+December 2024
+November 2024
+October 2024
+September 2024
+August 2024
+July 2024
+June 2024
+May 2024
+April 2024
+March 2024
+February 2024
+January 2024
+2023
+December 2023
+November 2023
+October 2023
+September 2023
+August 2023
+July 2023
+June 2023
+May 2023
+April 2023
+March 2023
+February 2023
+January 2023
+2022
+December 2022
+November 2022
+October 2022
+September 2022
+August 2022
+July 2022
+June 2022
+May 2022
+April 2022
+March 2022
+February 2022
+January 2022
+2021
+December 2021
+November 2021
+October 2021
+September 2021
+August 2021
+July 2021
+June 2021
+May 2021
+April 2021
+March 2021
+February 2021
+January 2021
+2020
+December 2020
+November 2020
+October 2020
+September 2020
+August 2020
+July 2020
+June 2020
+May 2020
+April 2020
+March 2020
+February 2020
+January 2020
+2019
+December 2019
+November 2019
+October 2019
+September 2019
+August 2019
+July 2019
+June 2019
+May 2019
+April 2019
+March 2019
+February 2019
+January 2019
+2018
+December 2018
+November 2018
+October 2018
+September 2018
+August 2018
+July 2018
+June 2018
+May 2018
+April 2018
+March 2018
+February 2018
+January 2018
+2017
+December 2017
+November 2017
+October 2017
+September 2017
+August 2017
+July 2017
+June 2017
+May 2017
+April 2017
+March 2017
+February 2017
+January 2017
+2016
+December 2016
+November 2016
+October 2016
+September 2016
+August 2016
+July 2016
+June 2016
+May 2016
+April 2016
+March 2016
+February 2016
+January 2016
+2015
+December 2015
+November 2015
+October 2015
+September 2015
+August 2015
+July 2015
+June 2015
+May 2015
+April 2015
+March 2015
+February 2015
+January 2015
+2014
+December 2014
+November 2014
+October 2014
+September 2014
+August 2014
+July 2014
+June 2014
+May 2014
+April 2014
+March 2014
+February 2014
+January 2014
+2013
+December 2013
+November 2013
+October 2013
+September 2013
+August 2013
+July 2013
+June 2013
+May 2013
+April 2013
+March 2013
+February 2013
+January 2013
+2012
+December 2012
+November 2012
+October 2012
+September 2012
+August 2012
+July 2012
+June 2012
+May 2012
+April 2012
+March 2012
+February 2012
+January 2012
+2011
+December 2011
+November 2011
+October 2011
+September 2011
+August 2011
+July 2011
+June 2011
+May 2011
+April 2011
+March 2011
+X
+YouTube
+LinkedIn
+Email
+Instagram
+Facebook
+Request a Speaker
+International, Seminars & Training
+Governance & Culture Reform
+Data Visualization
+Economic Research
+Tracker
+Markets Data APIs
+Podcast
+Contact Us
+Terms of Use
+Privacy
+Site Map
+Report a Fraud or Scam

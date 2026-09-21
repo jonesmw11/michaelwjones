@@ -1,0 +1,14 @@
+{
+  "index_shape": [
+    680,
+    751
+  ],
+  "complete_series": 362,
+  "latest_nonmissing_series": 745,
+  "nonpositive_index_values": 0,
+  "base_year_all_items_mean": 100.00833333333334,
+  "mom_headline_latest_published": 0.1,
+  "mom_median_rounding_difference_pp": 0.027272727272710573,
+  "yoy_headline_latest_published": 1.9,
+  "yoy_median_rounding_difference_pp": 0.047524752475247733
+}

@@ -1,0 +1,61 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+
+\title{Australian Inflation Forecast\\Results and Method}
+\author{Model output review}
+\date{16 September 2026\\Input snapshot through 2026Q2}
+
+\begin{document}
+\maketitle
+
+\section{Results}
+The saved quarterly vector autoregression (VAR) projects three Australian CPI measures through 2029Q2. Headline year-ended inflation moves from 3.95\% in the latest observation to 3.20\% a year later and 3.14\% at the end of the path. Trimmed mean inflation moves from 3.65\% to 3.29\% by 2029Q2. The excluding-food-and-energy measure initially rises to 4.47\% in 2027Q2, then reaches 3.76\% in 2029Q2. These are conditional model projections, not observed future outcomes or a policy target.
+
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Period & Headline & Trimmed mean & Ex food and energy \\
+\midrule
+2026Q2 (observed) & 3.95 & 3.65 & 3.43 \\
+2027Q2 & 3.20 & 3.27 & 4.47 \\
+2028Q2 & 3.20 & 3.36 & 3.94 \\
+2029Q2 & 3.14 & 3.29 & 3.76 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\noindent All entries are year-ended percentage changes in the corresponding CPI index, rounded from \texttt{results/au\_inflation\_forecast.csv}. The dotted chart rule marks 2026Q2; solid lines are observed rates and dashed lines are projections.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{\detokenize{../results/figures/au_inflation_forecast.png}}
+\caption{Australian CPI inflation history and 12-quarter VAR forecast.}
+\end{figure}
+
+\clearpage
+\section{Methodology}
+\subsection{Data and specification}
+The bundled \texttt{Data Inputs.xlsx} contains only the required series from the original \texttt{AU} and \texttt{AU-M} sheets. The model reads quarterly headline, trimmed mean, and excluding-food-and-energy CPI indices; unemployment; inflation expectations; and import prices. It reads monthly oil and Stage 2 pipeline-price indices and averages their available monthly observations within each quarter. The three CPI measures are estimated separately, each with the same five-driver block. The starting quarter is 2001Q1; the transformed estimation sample runs from 2001Q2 to 2026Q2.
+
+For each CPI measure, the endogenous vector is quarterly CPI inflation, unemployment, inflation expectations, import-price inflation, oil-price inflation, and Stage 2 price inflation. Price inflation is 100 times the one-quarter percentage change in its index. Unemployment and expectations enter in levels. The code estimates
+\[
+  x_t=c+A_1x_{t-1}+\cdots+A_px_{t-p}+u_t,
+\]
+where \texttt{statsmodels} selects $p$ by the Akaike information criterion from at most six lags. The saved fits select one lag for headline and trimmed mean, and two for the excluding-food-and-energy measure. All variables are endogenous: the forecast recursively projects the drivers together with CPI inflation.
+
+\subsection{From quarterly changes to year-ended rates}
+The projected CPI quarterly changes are chained to the last observed index level, $P_{t+h}=P_{t+h-1}(1+\widehat{\pi}_{t+h}/100)$. The reported year-ended rate is $100(P_t/P_{t-4}-1)$. The model runs 12 forecast quarters. Chart and CSV generation can be repeated from the \texttt{macro-work} folder with \texttt{py -3.14 run\_all\_var\_models.py}.
+
+\section{Interpretation and limits}
+The June 2026 quarter is the latest CPI quarter in the bundled snapshot. The monthly \texttt{AU-M} inputs end in April 2026, so their 2026Q2 quarterly averages use April alone. The last driver observation is therefore provisional as a quarterly average and can change when later monthly data are added. The plotted paths are point forecasts; no uncertainty bands or out-of-sample accuracy assessment are included. The model has no judgmental assumptions or structural treatment of future policy and shocks. In particular, the rise in the excluding-food-and-energy path is a result of its fitted VAR dynamics, not a separate scenario.
+
+\end{document}

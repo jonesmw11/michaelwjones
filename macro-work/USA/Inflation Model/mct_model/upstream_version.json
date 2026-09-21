@@ -1,0 +1,30 @@
+{
+  "repository": "https://github.com/MCT-Inflation-NYFed/MCT-PCE",
+  "commit": "7e68e46e2ff4ad55b712f2c6c49f08f9c48e1ea1",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "automated_PCE.m",
+    "data/pce_m59_202310.mat",
+    "functions/Kalman_filter.m",
+    "functions/auxiliary/hac.m",
+    "functions/auxiliary/hacm.m",
+    "functions/auxiliary/readxls.m",
+    "functions/auxiliary/smpl.m",
+    "functions/auxiliary/table2latex.m",
+    "functions/decompose_update.m",
+    "functions/estimate_MCT.m",
+    "functions/fast_smoother.m",
+    "functions/simulate_SSM.m",
+    "functions/simulation_smoother.m",
+    "functions/slice_sampling.m",
+    "functions/update_gam.m",
+    "functions/update_ps.m",
+    "functions/update_scl.m",
+    "functions/update_theta.m",
+    "functions/update_tvcoef.m",
+    "functions/update_vol.m",
+    "results/results_202310.mat",
+    "tables/mct-charts-public_202310.xlsx"
+  ]
+}

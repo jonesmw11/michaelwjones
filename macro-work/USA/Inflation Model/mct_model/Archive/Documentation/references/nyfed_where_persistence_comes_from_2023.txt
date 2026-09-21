@@ -1,0 +1,405 @@
+Where Is Inflation Persistence Coming From?
+Source: https://libertystreeteconomics.newyorkfed.org/2023/07/where-is-inflation-persistence-coming-from/
+Retrieved: 2026-09-19T14:06:17.723947+00:00
+
+Where Is Inflation Persistence Coming From? - Liberty Street Economics
+Liberty Street Economics
+«
+The EGIs: Analyzing the Economy Through an Equitable Growth Lens
+|
+Main
+|
+How Exposed Are U.S. Banks’ Loan Portfolios to Climate Transition Risks?
+»
+July 6, 2023
+Where Is Inflation Persistence Coming From?
+Martin Almuzara, Babur Kocaoglu, and Argia Sbordone
+Elevated inflation continues to be a top-of-mind preoccupation for households, businesses, and policymakers. Why has the post-pandemic inflation proved so persistent? In a Liberty Street Economics
+post
+early in 2022, we introduced a measure designed to dissect the buildup of the inflationary pressures that emerged in mid-2021 and to understand where the sources of its persistence are. This measure, that we labeled Multivariate Core Trend (MCT) inflation analyzes whether inflation is short-lived or persistent, and whether it is concentrated in particular economic sectors or broad-based.
+As we documented in a series of posts (most recently
+here
+), MCT inflation remained roughly stable through most of 2020 despite a visible drop in headline and core personal consumption expenditures (PCE) inflation due to the pandemic (see chart below). Early in 2021 the MCT estimate started to rise, ahead of core PCE inflation, and peaked in mid-2022. Its decline since then has been more notable starting in March of this year. Today we are updating the MCT estimates following the release of the May PCE data and we are launching “
+Multivariate Core Trend Inflation
+” as a standalone product, with new readings to be published each month on the New York Fed’s public website, after the Bureau of Economic Analysis (BEA) official releases.
+Multivariate Core Trend of PCE Inflation
+Sources: Bureau of Economic Analysis; authors’ calculations.
+Notes: The twelve-month changes in the headline and core personal consumption expenditures (PCE) price indexes are plotted alongside Multivariate Core Trend (MCT) inflation for comparison. The shaded area surrounding the MCT estimate is a 68 percent probability band.
+Methodology
+The MCT measure is obtained by a dynamic factor model estimated on monthly data for the seventeen major sectors of the PCE price index. The approach (that builds on
+this paper
+)  decomposes each sector’s inflation as the sum of a common trend, a sector-specific trend, a common transitory shock, and a sector-specific transitory shock. The trend in PCE inflation is constructed from the sectoral level estimates as the sum of the common and the sector-specific trends weighted by the expenditure shares. In the estimation, we use data from all seventeen of the PCE sectors; however, in constructing the trend in PCE inflation, we exclude the volatile non-core sectors (that is, food and energy).
+MCT and Core PCE Inflation
+The Multivariate Core Trend model estimate stands at 3.5 percent in May, as in April, after experiencing a substantial moderation in the first part of the year. For reference, the twelve-month core PCE inflation rate is at 4.6 percent.
+Why is the MCT estimate so different from twelve-month core inflation rates? The MCT model measures the persistent component of
+month-on-month
+core inflation data as opposed to its twelve-month rate. This makes it timelier since transitory shocks tend to remain in the twelve-month measure for too long.
+Additionally, the MCT model gives more weight to sectors that have relatively few transitory shocks (for example, housing and food services and accommodation) and less weight to sectors that have large amounts of noise (for example, motor vehicles and transportation). Recently, low inflation readings occurred in sectors with high signal value, leading to downward revisions of their trends, while increases occurred in sectors with low signal value, leaving their trends basically untouched.
+We visualize the differences in the sectors’ contributions to the MCT estimate versus their contributions to the core PCE inflation in the chart below. The two panels in the chart compare the change in each measure over a period of run-up in inflation (on the left) and the period after the MCT peak (labeled “Moderation,” on the right).
+Specifically, the “Run-up” panel reports each sector’s contribution (color-coded) to the increase in core PCE (left bar) and MCT inflation (right bar) in the June 2021-May 2022 period, where the contribution is measured relative to their respective pre-pandemic values (January-December 2019). Similarly, the “Moderation” panel on the right gives the sectoral decomposition of the changes in core PCE and MCT inflation since June 2022 (June 2022 was the recent peak of overall inflation, while it is near the recent peak for core inflation.)
+As the chart illustrates, the MCT measure takes more signal from the moderation of inflation in food services and accommodation (purple bars) than does core inflation, and less from the moderation of motor vehicle inflation (brown bars). The different contribution of housing inflation (teal bars) is also notable. In the run-up, housing inflation has a larger positive contribution to the MCT estimate than to the core PCE measure; during the moderation period, it still adds positive pressure to the core PCE reading, while it contributes to the decline in the MCT measure.
+Sectoral Contributions to the Inflation Estimates
+Sources: Bureau of Economic Analysis; authors’ calculations.
+Notes: Core is core PCE inflation. MCT is MCT inflation. NPISH is nonprofit institutions serving households.
+Indeed, while the decline in the inflation trend since early 2023 was initially due to declines in the aggregate core goods and non-housing services inflation, it is the moderation in month-on-month housing inflation that explains a large part of the decline in overall inflation persistence in the most recent months. This moderation, arguably due to prices of new rental contracts, is captured more clearly by the MCT model by its own design.
+Conclusion
+Post-pandemic imbalances have led to inflation rising well above policymakers’ longer-run objective. The MCT framework provides a model-based, sectoral perspective on inflationary pressures: interpreting the interrelated dynamics of multiple sectors, the model helps tracking the extent to which inflation is a broad-based phenomenon and in which sectors it remains most stubborn. Similarly, it helps interpreting the nature and the sources of the surge in inflation as well as its recent moderation.
+Martín Almuzara
+is a research economist in Macroeconomic and Monetary Studies in the Federal Reserve Bank of New York’s Research and Statistics Group.
+Babur Kocaoglu is a senior research analyst in the Federal Reserve Bank of New York’s Research and Statistics Group.
+Argia Sbordone is the head of Macroeconomic and Monetary Studies in the Federal Reserve Bank of New York’s Research and Statistics Group.
+How to cite this post:
+Martin Almuzara, Babur Kocaoglu, and Argia Sbordone, “Where Is Inflation Persistence Coming From?,” Federal Reserve Bank of New York
+Liberty Street Economics
+, July 6, 2023, https://libertystreeteconomics.newyorkfed.org/2023/07/where-is-inflation-persistence-coming-from/
+BibTeX:
+View
+|
+Download
+@article{MartinAlmuzara,BaburKocaoglu,andArgiaSbordone2023,
+    author={Martin Almuzara, Babur Kocaoglu, and Argia Sbordone},
+    title={Where Is Inflation Persistence Coming From?},
+    journal={Liberty Street Economics},
+    note={Liberty Street Economics Blog},
+    number={July 6},
+    year={2023},
+    url={https://libertystreeteconomics.newyorkfed.org/2023/07/where-is-inflation-persistence-coming-from/}
+}
+You may also be interested in:
+Multivariate Core Trend Inflation
+MCT Update: Inflation Persistence Declined Significantly in April
+Inflation Persistence: How Much Is There and Where Is It Coming From?
+Disclaimer
+The views expressed in this post are those of the author(s) and do not necessarily reflect the position of the Federal Reserve Bank of New York or the Federal Reserve System. Any errors or omissions are the responsibility of the author(s).
+Share this:
+Share on X (Opens in new window)
+X
+Share on Facebook (Opens in new window)
+Facebook
+Share on LinkedIn (Opens in new window)
+LinkedIn
+Email a link to a friend (Opens in new window)
+Email
+Print (Opens in new window)
+Print
+All Liberty Street Economics
+Search
+RSS Feed
+Follow Liberty Street Economics
+receive email alerts for this page
+WATCH: Liberty Street Economics 15th Anniversary
+<span data-mce-type="bookmark" style="display: inline-block; width: 0px; overflow: hidden; line-height: 0;" class="mce_SELRES_start"></span><span data-mce-type="bookmark" style="display: inline-block; width: 0px; overflow: hidden; line-height: 0;" class="mce_SELRES_start"></span>
+About the Blog
+Liberty Street Economics
+features insight and analysis from New York Fed economists working at the intersection of research and policy. Launched in 2011, the blog takes its name from the Bank’s headquarters at 33 Liberty Street in Manhattan’s Financial District.
+The editors are Michael Fleming, Thomas Klitgaard, Maxim Pinkovskiy, and Asani Sarkar, all economists in the Bank’s Research Group.
+Liberty Street Economics
+does not publish new posts during the blackout periods surrounding Federal Open Market Committee meetings.
+The views expressed are those of the authors, and do not necessarily reflect the position of the New York Fed or the Federal Reserve System.
+Economic Research Tracker
+Liberty Street Economics
+is available on the iPhone® and iPad® and can be customized by economic research topic or economist.
+View by Topic
+Artificial Intelligence (AI)
+Balance of Payments
+Bank Capital
+Banks
+Central Bank
+Corporate Finance
+COVID-19 Facilities
+Credit
+Crisis
+Cryptocurrencies
+Demographics
+DSGE
+Economic History
+Education
+Employment
+Euro Area
+Exchange Rates
+Expectations
+Exports
+Federal Reserve
+Fed Funds
+Financial Institutions
+Financial Intermediation
+Financial Markets
+Fiscal Policy
+Forecasting
+Hey, Economist!
+Historical Echoes
+Household Finance
+Housing
+Human Capital
+Inflation
+International Economics
+K-Shaped Economy
+Labor Market
+Lender of Last Resort
+Liquidity
+Macroeconomics
+Microeconomics
+Monetary Policy
+New Jersey
+New York
+Nonbank (NBFI)
+Pandemic
+Panic
+Puerto Rico
+Recession
+Regional Analysis
+Regulation
+Repo
+Stocks
+Street Level
+Student Loans
+Supply Chain
+Systemic Risk
+Tariffs
+Treasury
+Unemployment
+Most Read this Year
+Who Is Paying for the 2025 U.S. Tariffs?
+Remote Work Leaves Younger Workers Sidelined
+Is College Still Worth It?
+Explaining the K-Shaped Economy: What’s Behind the Divide?
+The Post-COVID Decline in the Labor Share
+Comment Guidelines
+We encourage your comments and queries on our posts and will publish them (below the post) subject to the following guidelines:
+Please be brief
+: Comments are limited to 1,500 characters.
+Please be aware:
+Comments submitted shortly before or during the FOMC blackout may not be published until after the blackout.
+Please be relevant:
+Comments are moderated and will not appear until they have been reviewed to ensure that they are substantive and clearly related to the topic of the post.
+Please be respectful:
+We reserve the right not to post any comment, and will not post comments that are abusive, harassing, obscene, or commercial in nature. No notice will be given regarding whether a submission will or will
+not be posted.‎
+Comments with links:
+Please do not include any links in your comment, even if you feel the links will contribute to the discussion. Comments with links will not be posted.
+Send Us Feedback
+Disclosure Policy
+The LSE editors ask authors submitting a post to the blog to confirm that they have no conflicts of interest as defined by the American Economic Association in its Disclosure Policy. If an author has sources of financial support or other interests that could be perceived as influencing the research presented in the post, we disclose that fact in a statement prepared by the author and appended to the author information at the end of the post. If the author has no such interests to disclose, no statement is provided. Note, however, that we do indicate in all cases if a data vendor or other party has a right to review a post.
+Archives
+2026
+September 2026
+August 2026
+July 2026
+June 2026
+May 2026
+April 2026
+March 2026
+February 2026
+January 2026
+2025
+December 2025
+November 2025
+October 2025
+September 2025
+August 2025
+July 2025
+June 2025
+May 2025
+April 2025
+March 2025
+February 2025
+January 2025
+2024
+December 2024
+November 2024
+October 2024
+September 2024
+August 2024
+July 2024
+June 2024
+May 2024
+April 2024
+March 2024
+February 2024
+January 2024
+2023
+December 2023
+November 2023
+October 2023
+September 2023
+August 2023
+July 2023
+June 2023
+May 2023
+April 2023
+March 2023
+February 2023
+January 2023
+2022
+December 2022
+November 2022
+October 2022
+September 2022
+August 2022
+July 2022
+June 2022
+May 2022
+April 2022
+March 2022
+February 2022
+January 2022
+2021
+December 2021
+November 2021
+October 2021
+September 2021
+August 2021
+July 2021
+June 2021
+May 2021
+April 2021
+March 2021
+February 2021
+January 2021
+2020
+December 2020
+November 2020
+October 2020
+September 2020
+August 2020
+July 2020
+June 2020
+May 2020
+April 2020
+March 2020
+February 2020
+January 2020
+2019
+December 2019
+November 2019
+October 2019
+September 2019
+August 2019
+July 2019
+June 2019
+May 2019
+April 2019
+March 2019
+February 2019
+January 2019
+2018
+December 2018
+November 2018
+October 2018
+September 2018
+August 2018
+July 2018
+June 2018
+May 2018
+April 2018
+March 2018
+February 2018
+January 2018
+2017
+December 2017
+November 2017
+October 2017
+September 2017
+August 2017
+July 2017
+June 2017
+May 2017
+April 2017
+March 2017
+February 2017
+January 2017
+2016
+December 2016
+November 2016
+October 2016
+September 2016
+August 2016
+July 2016
+June 2016
+May 2016
+April 2016
+March 2016
+February 2016
+January 2016
+2015
+December 2015
+November 2015
+October 2015
+September 2015
+August 2015
+July 2015
+June 2015
+May 2015
+April 2015
+March 2015
+February 2015
+January 2015
+2014
+December 2014
+November 2014
+October 2014
+September 2014
+August 2014
+July 2014
+June 2014
+May 2014
+April 2014
+March 2014
+February 2014
+January 2014
+2013
+December 2013
+November 2013
+October 2013
+September 2013
+August 2013
+July 2013
+June 2013
+May 2013
+April 2013
+March 2013
+February 2013
+January 2013
+2012
+December 2012
+November 2012
+October 2012
+September 2012
+August 2012
+July 2012
+June 2012
+May 2012
+April 2012
+March 2012
+February 2012
+January 2012
+2011
+December 2011
+November 2011
+October 2011
+September 2011
+August 2011
+July 2011
+June 2011
+May 2011
+April 2011
+March 2011
+X
+YouTube
+LinkedIn
+Email
+Instagram
+Facebook
+Request a Speaker
+International, Seminars & Training
+Governance & Culture Reform
+Data Visualization
+Economic Research
+Tracker
+Markets Data APIs
+Podcast
+Contact Us
+Terms of Use
+Privacy
+Site Map
+Report a Fraud or Scam

@@ -1,0 +1,87 @@
+{
+  "source": "https://apps.bea.gov/national/Release/XLS/Underlying/Section2All_xls.xlsx",
+  "built_at_utc": "2026-09-19T12:31:00.509007+00:00",
+  "raw_sha256": "15cf497cda39c122fbc116783119d9bd99691f3396081ce04496fce5500c3ef1",
+  "release_notes": [
+    "Table 2.4.4U. Price Indexes for Personal Consumption Expenditures by Type of Product",
+    "[Index numbers, 2017=100; quarters and months are seasonally adjusted]",
+    "Monthly data from 1959M01 to 2026M07",
+    "Bureau of Economic Analysis",
+    "Data published August 26, 2026",
+    "File created Aug 25 2026  1:05PM"
+  ],
+  "first_month": "1959-01-01",
+  "last_month": "2026-07-01",
+  "table_rows": 402,
+  "unique_price_codes": 389,
+  "months": 811,
+  "price_observations": 303410,
+  "tiers": [
+    {
+      "Tier": 1,
+      "Components": 2,
+      "Latest sum": 1.0,
+      "Complete weight months": 811,
+      "Maximum sum error": 0.0,
+      "Negative latest shares": 0
+    },
+    {
+      "Tier": 2,
+      "Components": 4,
+      "Latest sum": 1.0,
+      "Complete weight months": 811,
+      "Maximum sum error": 2.220446049250313e-16,
+      "Negative latest shares": 0
+    },
+    {
+      "Tier": 3,
+      "Components": 17,
+      "Latest sum": 1.0,
+      "Complete weight months": 811,
+      "Maximum sum error": 4.440892098500626e-16,
+      "Negative latest shares": 1
+    },
+    {
+      "Tier": 4,
+      "Components": 70,
+      "Latest sum": 0.9999999999999996,
+      "Complete weight months": 811,
+      "Maximum sum error": 8.881784197001252e-16,
+      "Negative latest shares": 9
+    },
+    {
+      "Tier": 5,
+      "Components": 155,
+      "Latest sum": 1.0,
+      "Complete weight months": 475,
+      "Maximum sum error": 3.3306690738754696e-16,
+      "Negative latest shares": 13
+    },
+    {
+      "Tier": 6,
+      "Components": 222,
+      "Latest sum": 1.0,
+      "Complete weight months": 235,
+      "Maximum sum error": 2.220446049250313e-16,
+      "Negative latest shares": 17
+    },
+    {
+      "Tier": 7,
+      "Components": 238,
+      "Latest sum": 1.0,
+      "Complete weight months": 235,
+      "Maximum sum error": 2.220446049250313e-16,
+      "Negative latest shares": 17
+    },
+    {
+      "Tier": 8,
+      "Components": 243,
+      "Latest sum": 1.0,
+      "Complete weight months": 235,
+      "Maximum sum error": 2.220446049250313e-16,
+      "Negative latest shares": 17
+    }
+  ],
+  "hierarchy_parent_checks": 123,
+  "workbook": "USA PCE - Historical Data and Weights.xlsx"
+}

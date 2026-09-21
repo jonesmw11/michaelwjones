@@ -1,0 +1,14 @@
+{
+  "status": "SMOKE TEST ONLY - NOT AN INFLATION ESTIMATE",
+  "vintage": "replication_202310",
+  "draws": 5,
+  "burn_in": 5,
+  "thinning": 1,
+  "elapsed_seconds": 191.70187211036682,
+  "latest_date": "2023-10-01",
+  "latest_median": 4.125051051783391,
+  "reference_comparison": "Same October 2023 input vintage",
+  "reference_rmse_pp": 0.5586512014963816,
+  "reference_mean_absolute_error_pp": 0.42270105206876235,
+  "convergence": "Not established. Run independent chains and inspect mixing before relying on estimates."
+}

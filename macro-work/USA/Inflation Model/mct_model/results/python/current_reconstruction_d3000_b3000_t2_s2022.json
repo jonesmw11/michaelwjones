@@ -1,0 +1,15 @@
+{
+  "engine": "Python / statsmodels simulation smoother / NumPy-SciPy sampling",
+  "status": "Full official sampling settings; convergence not established by a single chain",
+  "vintage": "current_reconstruction",
+  "draws": 3000,
+  "burn_in": 3000,
+  "thinning": 2,
+  "elapsed_seconds": 68783.40958069998,
+  "latest_date": "2026-07-01",
+  "latest_median": 2.6549665769342368,
+  "reference_comparison": "Different vintages and reconstructed housing input: differences are not pure replication error",
+  "reference_rmse_pp": 0.05326650745418054,
+  "reference_mean_absolute_error_pp": 0.03111228154571718,
+  "convergence": "Not established. Run independent chains and inspect mixing before relying on estimates."
+}

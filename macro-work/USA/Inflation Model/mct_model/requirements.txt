@@ -1,0 +1,7 @@
+numpy
+pandas
+scipy
+requests
+XlsxWriter
+matplotlib
+statsmodels==0.14.6

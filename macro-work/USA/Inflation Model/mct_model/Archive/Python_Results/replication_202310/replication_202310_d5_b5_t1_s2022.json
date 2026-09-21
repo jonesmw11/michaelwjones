@@ -1,0 +1,15 @@
+{
+  "engine": "Python / statsmodels simulation smoother / NumPy-SciPy sampling",
+  "status": "SMOKE TEST ONLY - NOT AN INFLATION ESTIMATE",
+  "vintage": "replication_202310",
+  "draws": 5,
+  "burn_in": 5,
+  "thinning": 1,
+  "elapsed_seconds": 7.925400299980538,
+  "latest_date": "2023-10-01",
+  "latest_median": 2.5666591239447136,
+  "reference_comparison": "Same October 2023 input vintage",
+  "reference_rmse_pp": 0.5824904824617502,
+  "reference_mean_absolute_error_pp": 0.4472905315335342,
+  "convergence": "Not established. Run independent chains and inspect mixing before relying on estimates."
+}

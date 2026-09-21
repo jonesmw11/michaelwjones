@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "checked_numeric_values": 1210062,
+  "tier_checks": [
+    {
+      "sheet": "Tier 1 weights",
+      "components": 2,
+      "complete_months": 811,
+      "latest_sum": 1.0
+    },
+    {
+      "sheet": "Tier 2 weights",
+      "components": 4,
+      "complete_months": 811,
+      "latest_sum": 0.9999999999999999
+    },
+    {
+      "sheet": "Tier 3 weights",
+      "components": 17,
+      "complete_months": 811,
+      "latest_sum": 0.9999999999999999
+    },
+    {
+      "sheet": "Tier 4 weights",
+      "components": 70,
+      "complete_months": 811,
+      "latest_sum": 1.0
+    },
+    {
+      "sheet": "Tier 5 weights",
+      "components": 155,
+      "complete_months": 475,
+      "latest_sum": 1.0
+    },
+    {
+      "sheet": "Tier 6 weights",
+      "components": 222,
+      "complete_months": 235,
+      "latest_sum": 1.0
+    },
+    {
+      "sheet": "Tier 7 weights",
+      "components": 238,
+      "complete_months": 235,
+      "latest_sum": 1.0
+    },
+    {
+      "sheet": "Tier 8 weights",
+      "components": 243,
+      "complete_months": 235,
+      "latest_sum": 1.0
+    }
+  ],
+  "workbook_bytes": 30682179
+}

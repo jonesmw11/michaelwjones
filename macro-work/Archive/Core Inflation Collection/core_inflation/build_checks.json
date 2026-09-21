@@ -1,0 +1,27 @@
+{
+  "countries": {
+    "Australia": 144,
+    "Japan": 75,
+    "Korea": 6,
+    "USA": 113
+  },
+  "observations": 118803,
+  "korea_food_energy_count": 440,
+  "korea_ag_oil_count": 620,
+  "korea_overlap_matches": 7,
+  "raw_hashes": {
+    "australia_rba.xlsx": "3b1116d907c0cfa8497c903bc97af59da95b581d1db1fb1cf6ff4f90a210146f",
+    "japan_boj.xlsx": "5ed86085ed501101c5d5469cb1d279aebdaed956fee0cded43cb52d2ee63bc8d",
+    "korea_ag_oil_early.json": "b62ced2b6b998be6b050d3b523ec092fdb1c8aec9b78664d49abff0e6c5dd9cd",
+    "korea_ag_oil_recent.json": "df6d990d377f8380047c8e8fac1e56a23c0906cd513b3e57cbe227ddc2a6b997",
+    "korea_food_energy.json": "44371186e857872f56b6ba75fb62bd076bb7ac568b136ccf60793f973c9951ce",
+    "usa_core_cpi.csv": "5ce1969b7ccf6a9450aced2deabfb460b80966fc8d329dffcd79a2b966ed5b89",
+    "usa_dallas.xlsx": "bf881b4cea14e5d3d284b0ac91e355d94a9c12db59d6f4246de7ca2e9310bbc3",
+    "usa_dallas_history.xlsx": "eebe797630cbcc3c2ce67466c6fd8e11dca20b0b9350425dbeaf124cea9709fc",
+    "usa_mct.csv": "c6136b1f406bf40a44d69ac2309b638ef09afdb3a6ded7f243d54fba98094907",
+    "usa_median_cpi.csv": "47e806d9e9f876931f0d1f31737c6968bd65022662367e2b1298c1df963c0f99",
+    "usa_median_pce.csv": "f0a54504554140ae4851ecad266a8e249dffd08efb764526eedefeefa2d874ab",
+    "usa_sticky.xlsx": "64607f5ca980a85f8c38619ddcbea4209ad405b4caf835f43ce6c9f66cfa5950",
+    "usa_trimmed_cpi.csv": "4386ba518fc79ad27b513339f2f805e7b2a3e93fc66a38ec082394a54c1a2528"
+  }
+}

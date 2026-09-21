@@ -1,0 +1,15 @@
+{
+  "engine": "Python / statsmodels simulation smoother / NumPy-SciPy sampling",
+  "status": "Full official sampling settings; convergence not established by a single chain",
+  "vintage": "replication_202310",
+  "draws": 3000,
+  "burn_in": 3000,
+  "thinning": 2,
+  "elapsed_seconds": 86111.54362089999,
+  "latest_date": "2023-10-01",
+  "latest_median": 2.603655404008687,
+  "reference_comparison": "Same October 2023 input vintage",
+  "reference_rmse_pp": 0.03916439111533006,
+  "reference_mean_absolute_error_pp": 0.029173944103393322,
+  "convergence": "Not established. Run independent chains and inspect mixing before relying on estimates."
+}

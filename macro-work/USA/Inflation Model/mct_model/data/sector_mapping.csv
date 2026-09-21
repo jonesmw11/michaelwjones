@@ -1,0 +1,18 @@
+position,name,upstream_code,bea_lines,included_in_core,method
+1,Motor vehicles and parts,DMOTRG,4,True,Published BEA sector index and current-dollar spending
+2,Furnishings and durable household equipment,DFDHRG,23,True,Published BEA sector index and current-dollar spending
+3,Recreational goods and vehicles,DREQRG,38,True,Published BEA sector index and current-dollar spending
+4,Other durable goods,DODGRG,62,True,Published BEA sector index and current-dollar spending
+5,Food and beverages purchased for off-premises consumption,DFXARG,73,False,Published BEA sector index and current-dollar spending
+6,Clothing and footwear,DCLORG,104,True,Published BEA sector index and current-dollar spending
+7,Gasoline and other energy goods,DGOERG,113,False,Published BEA sector index and current-dollar spending
+8,Other nondurable goods,DONGRG,120,True,Published BEA sector index and current-dollar spending
+9,Housing excluding gas and electric utilities,pce_hu_xes,"153,166",True,Reconstructed bilateral Fisher chain of housing and water/sanitation; NY Fed input-preparation code is not supplied
+10,Gas and electric utilities,pce_hu_es,169,False,Published BEA sector index and current-dollar spending
+11,Health care,DHLCRG,172,True,Published BEA sector index and current-dollar spending
+12,Transportation services,DTRSRG,190,True,Published BEA sector index and current-dollar spending
+13,Recreation services,DRCARG,209,True,Published BEA sector index and current-dollar spending
+14,Food services and accommodations,DFSARG,234,True,Published BEA sector index and current-dollar spending
+15,Financial services and insurance,DIFSRG,252,True,Published BEA sector index and current-dollar spending
+16,Other services,DOTSRG,280,True,Published BEA sector index and current-dollar spending
+17,Final consumption expenditures of nonprofit institutions serving households (NPISHs),DNPIRG,342,True,Published BEA sector index and current-dollar spending

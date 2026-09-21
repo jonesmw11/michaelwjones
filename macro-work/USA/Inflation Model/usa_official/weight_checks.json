@@ -1,0 +1,20 @@
+[
+  {
+    "tier": 1,
+    "components": 8,
+    "published_percent_sum": 100.0,
+    "reconciled_sum": 1.0
+  },
+  {
+    "tier": 2,
+    "components": 70,
+    "published_percent_sum": 99.999,
+    "reconciled_sum": 1.0
+  },
+  {
+    "tier": 3,
+    "components": 204,
+    "published_percent_sum": 100.001,
+    "reconciled_sum": 0.9999999999999999
+  }
+]

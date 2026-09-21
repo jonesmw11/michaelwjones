@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "index_cells_verified": 225468,
+  "derived_rate_cells_verified": 436127,
+  "tier_components": [
+    8,
+    70,
+    204
+  ],
+  "tier_history_cells_match_master": true,
+  "tier_totals_sum_to_one": true,
+  "rebased_series_full_history_checks": 7,
+  "missing_months_preserved": true
+}
