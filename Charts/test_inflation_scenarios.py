@@ -25,6 +25,20 @@ def browser_projection(model, path):
 # =============================================================================
 #%% Baseline identity, oil intervention timing, and full recursive propagation
 class OilScenarioTests(unittest.TestCase):
+    def test_shared_edits_update_every_measure_and_reset(self):
+        models = scenario_payload("AU", config.INFLATION_MODELS["AU"][0])
+        edits = [[models[0]["dates"][2], 60], [models[0]["dates"][3], 55]]
+        script = "const fs=require('fs'); const {projectCountryScenario}=require('./inflation_scenarios.js'); const x=JSON.parse(fs.readFileSync(0,'utf8')); console.log(JSON.stringify({changed:projectCountryScenario(x.models,new Map(x.edits)),reset:projectCountryScenario(x.models,new Map())}));"
+        output = subprocess.run(["node", "-e", script], input=json.dumps(dict(models=models, edits=edits)),
+                                capture_output=True, text=True, check=True, cwd=Path(__file__).parent)
+        results = json.loads(output.stdout)
+        for i, model in enumerate(models):
+            rates = np.array(results["changed"][i]["rates"])
+            oil = model["oilLast"] * np.cumprod(1 + rates[:, model["oilIndex"]] / 100)
+            np.testing.assert_allclose(oil[2:4], [60, 55], atol=1e-9)
+            np.testing.assert_allclose(results["reset"][i]["yoy"], model["baselineYoy"], atol=1e-9)
+            self.assertGreater(np.max(np.abs(np.array(results["changed"][i]["yoy"]) - model["baselineYoy"])), 1e-5)
+
     def test_all_models(self):
         for country, specs in config.INFLATION_MODELS.items():
             for spec in specs:

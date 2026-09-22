@@ -9,7 +9,6 @@ from html import escape
 
 import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
 import plotly.io as pio
 from statsmodels.tsa.api import VAR
 
@@ -113,27 +112,27 @@ def scenario_html(country, spec, figure, include_plotlyjs):
     models = scenario_payload(country, spec)
     key = spec["path"].stem
     figure.update_xaxes(range=[str(pd.Timestamp(models[0]["lastDate"]) - pd.DateOffset(years=3)), models[0]["dates"][-1]])
-    figure.add_trace(go.Scatter(x=[], y=[], mode="lines", name="Oil scenario", line=dict(color="#A6242B", width=3)))
     chart = pio.to_html(figure, full_html=False, include_plotlyjs=include_plotlyjs,
                         div_id=f"{key}-inflation", config={"responsive": True, "displaylogo": False})
-    options = "".join(f'<option value="{i}">{escape(model["label"])}</option>' for i, model in enumerate(models))
     unit = "quarter" if spec["frequency"] == "Q" else "month"
     return (
-        f'<article class="chart-block oil-scenario" id="{key}">'
+        f'<article class="chart-block oil-scenario" id="{key}" data-country="{country}">'
         f'<h3>{escape(spec["title"])}</h3><p>{escape(spec["description"])}</p>{chart}'
         '<div class="scenario-editor"><h3>Explore an oil-price path</h3>'
-        f'<p>Select a forecast point on the oil chart, then change its price. Each point is one {unit} ahead. '
-        'The red inflation line shows the effect; the original forecasts stay visible.</p>'
-        f'<div class="scenario-controls"><label>Inflation measure <select data-role="measure">{options}</select></label>'
+        f'<p>Drag the orange points up or down. Each point is one {unit} ahead. '
+        'All inflation forecasts for this country update as you drag, replacing their existing forecast lines.</p>'
+        '<div class="scenario-controls">'
         '<label>Forecast period <select data-role="period"></select></label>'
         '<label>Oil price (USD per barrel) <input data-role="price" type="number" min="0.01" step="0.01"></label>'
         '<button type="button" data-role="apply">Apply price</button>'
-        '<button type="button" data-role="reset">Reset this path</button></div>'
+        '<button type="button" data-role="reset">Reset country forecasts</button></div>'
         '<p data-role="status" role="status" aria-live="polite"></p>'
-        f'<div id="{key}-oil" class="plotly-graph-div"></div>'
+        f'<div class="oil-drag-container"><div id="{key}-oil" class="plotly-graph-div"></div>'
+        '<div class="oil-drag-handles"></div></div>'
         '<p class="scenario-method">Coefficients stay fixed. The selected oil level is converted to period growth '
         'and imposed each period; inflation and the other drivers evolve recursively. Because this VAR uses lagged '
         'drivers, changing oil first affects inflation in a later period. This is a mechanical scenario, not an identified '
-        'causal oil shock. Each inflation measure has its own fitted VAR and oil baseline.</p></div>'
+        'causal oil shock. Edited prices apply to every measure for this country, including companion charts. '
+        'Unedited dates retain each model’s original oil forecast. Reset restores all original forecasts.</p></div>'
         f'<script type="application/json" class="scenario-data">{json.dumps(models, allow_nan=False)}</script></article>'
     )

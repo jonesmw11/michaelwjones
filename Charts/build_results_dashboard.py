@@ -695,6 +695,10 @@ h2 {{ margin:0 0 8px; font-size:28px; font-weight:500; border-bottom:2px solid v
 .scenario-controls input {{ width:160px; }}
 .scenario-controls button {{ cursor:pointer; color:var(--green); }}
 .scenario-method {{ font-size:13px; margin-top:12px !important; }}
+.oil-drag-container {{ position:relative; }}
+.oil-drag-handles {{ position:absolute; inset:0; pointer-events:none; }}
+.oil-handle {{ position:absolute; width:18px; height:18px; border:2px solid white; border-radius:50%; background:#B5651D; transform:translate(-50%,-50%); pointer-events:auto; cursor:ns-resize; touch-action:none; padding:0; }}
+.oil-handle:hover, .oil-handle:focus-visible {{ outline:3px solid #B5651D; outline-offset:2px; }}
 h3 {{ margin:0 0 6px; font-size:21px; font-weight:500; }}
 .chart-block p {{ margin:0 0 8px; max-width:900px; }}
 .plotly-graph-div {{ width:100% !important; }}
