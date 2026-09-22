@@ -133,8 +133,19 @@ def scenario_html(country, spec, figure, include_plotlyjs):
     chart = pio.to_html(figure, full_html=False, include_plotlyjs=include_plotlyjs,
                         div_id=f"{key}-inflation", config={"responsive": True, "displaylogo": False})
     unit = "quarter" if spec["frequency"] == "Q" else "month"
-    driver_options = "".join(f'<option value="{name}">{escape(driver["label"])}</option>'
-                             for name, driver in models[0]["drivers"].items())
+    cards = []
+    for name, driver in models[0]["drivers"].items():
+        cards.append(
+            f'<section class="driver-card" data-driver="{name}"><h5>{escape(driver["label"])}</h5>'
+            f'<p class="driver-unit">{escape(driver["unit"])}</p>'
+            f'<div class="oil-drag-container"><div id="{key}-{name}" class="plotly-graph-div"></div>'
+            '<div class="oil-drag-handles"></div></div>'
+            '<button type="button" data-role="reset-driver">Reset path</button>'
+            '<details class="driver-exact"><summary>Exact values</summary><div class="scenario-controls">'
+            '<label>Forecast period <select data-role="period"></select></label>'
+            f'<label>{escape(driver["label"])} <input data-role="price" type="number" step="0.01" required></label>'
+            '<button type="button" data-role="apply">Apply value</button></div></details></section>'
+        )
     availability = ('<p class="scenario-method">Japan’s VAR includes unemployment but no inflation-expectations input.</p>'
                     if "expectations" not in models[0]["drivers"] else "")
     return (
@@ -142,18 +153,12 @@ def scenario_html(country, spec, figure, include_plotlyjs):
         f'<h3>{escape(spec["title"])}</h3><p>{escape(spec["description"])}</p>'
         '<div class="scenario-columns"><section class="scenario-forecast"><h4>Inflation forecast</h4>'
         f'{chart}</section><section class="scenario-editor"><h4>Draw driver paths</h4>'
-        f'<label class="scenario-driver-label">Draw <select data-role="driver">{driver_options}</select></label>'
-        f'<div class="oil-drag-container"><div id="{key}-oil" class="plotly-graph-div"></div>'
-        '<div class="oil-drag-handles"></div></div>'
-        f'<p>Choose a driver, then draw across the shaded future area. Switch drivers to combine your paths. '
-        f'Each stroke sets the {unit}s it crosses. '
-        'All inflation forecasts for this country update as you draw.</p>'
-        '<div class="scenario-controls">'
-        '<label>Forecast period <select data-role="period"></select></label>'
-        '<label><span data-role="value-label">Oil price (USD per barrel)</span> <input data-role="price" type="number" min="0.01" step="0.01"></label>'
-        '<button type="button" data-role="apply">Apply value</button>'
-        '<button type="button" data-role="reset-driver">Reset this driver</button>'
-        '<button type="button" data-role="reset">Reset country forecasts</button></div>'
+        '<p class="driver-legend"><span class="legend-observed">Observed</span> · '
+        '<span class="legend-baseline">Original forecast</span> · <span class="legend-scenario">Drawn scenario</span></p>'
+        f'<div class="driver-mini-grid" style="--driver-count:{len(cards)}">{"".join(cards)}</div>'
+        f'<p>Draw across the shaded future area of any chart. Each stroke sets the {unit}s it crosses. '
+        'All paths stay visible and combine to update the inflation forecasts.</p>'
+        '<button type="button" data-role="reset">Reset country forecasts</button>'
         '<p data-role="status" role="status" aria-live="polite"></p>'
         f'{availability}</section></div>'
         '<p class="scenario-method">Coefficients stay fixed. Oil uses price levels; unemployment and expectations use percentages. '

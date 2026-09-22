@@ -689,10 +689,24 @@ h2 {{ margin:0 0 8px; font-size:28px; font-weight:500; border-bottom:2px solid v
 .empty-state {{ margin:30px 0; color:var(--note); }}
 .chart-block {{ margin:26px 0 46px; }}
 main:has(#family-var-panel:not([hidden])) {{ max-width:1600px; }}
-.scenario-columns {{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; align-items:start; margin-top:20px; }}
+.scenario-columns {{ display:grid; grid-template-columns:minmax(0,2fr) minmax(0,3fr); gap:20px; align-items:start; margin-top:20px; }}
 .scenario-columns > section {{ min-width:0; padding:12px; border:1px solid var(--line); border-radius:5px; }}
 .scenario-columns h4 {{ margin:4px 0 6px; font-size:19px; font-weight:500; }}
 .scenario-editor {{ background:var(--soft); }}
+.driver-mini-grid {{ display:grid; grid-template-columns:repeat(var(--driver-count,3),minmax(0,1fr)); gap:8px; margin:12px 0; }}
+.driver-card {{ min-width:0; background:white; padding:6px; border:1px solid var(--line); border-radius:4px; }}
+.driver-card h5 {{ font-size:14px; font-weight:500; margin:3px 0; min-height:34px; }}
+.driver-unit, .driver-legend {{ font-size:11px; }}
+.driver-card button:not(.oil-handle), .scenario-editor > button {{ padding:6px 8px; border:1px solid #BBB; border-radius:4px; background:white; color:var(--green); font:inherit; cursor:pointer; }}
+.driver-card button, .driver-exact {{ font-size:12px; }}
+.driver-exact {{ margin-top:8px; }}
+.driver-exact summary {{ cursor:pointer; color:var(--note); }}
+.driver-card .scenario-controls {{ display:grid; gap:8px; }}
+.driver-card .scenario-controls input, .driver-card .scenario-controls select {{ width:100%; min-width:0; padding:4px; font-size:12px; }}
+.legend-observed {{ color:#0B6E4F; }}
+.legend-baseline {{ color:#777; }}
+.legend-scenario {{ color:#B5651D; }}
+@media (max-width:520px) {{ .driver-mini-grid {{ grid-template-columns:minmax(0,1fr); }} }}
 .scenario-driver-label {{ display:flex; align-items:center; gap:10px; margin:8px 0; font-size:14px; }}
 .scenario-driver-label select {{ font:inherit; padding:7px; border:1px solid #BBB; border-radius:4px; background:white; max-width:100%; }}
 @media (max-width:800px) {{ .scenario-columns {{ grid-template-columns:minmax(0,1fr); }} }}
