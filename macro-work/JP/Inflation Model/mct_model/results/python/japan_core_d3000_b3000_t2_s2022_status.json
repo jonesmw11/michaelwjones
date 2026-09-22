@@ -1,0 +1,13 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-21T16:30:53.896912+00:00",
+  "draws": 3000,
+  "burn": 3000,
+  "thin": 2,
+  "seed": 2022,
+  "iteration": 6001,
+  "total": 6001,
+  "elapsed_seconds": 7029.5373338999925,
+  "finished_utc": "2026-09-21T18:28:07.342970+00:00",
+  "result": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\macro-work\\JP\\Inflation Model\\mct_model\\results\\python\\japan_core_d3000_b3000_t2_s2022.mat"
+}

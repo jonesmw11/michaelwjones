@@ -1,0 +1,16 @@
+{
+  "country": "Australia",
+  "target": "CPI excluding food and energy",
+  "status": "Production sampling settings",
+  "draws": 3000,
+  "burn_in": 3000,
+  "thinning": 2,
+  "elapsed_seconds": 1958.2353430000367,
+  "first_date": "2005-09-30",
+  "latest_date": "2026-06-30",
+  "latest_mct_median": 3.3412774990760292,
+  "latest_filtered_mct_median": 3.360618921457859,
+  "latest_official_core_yoy": null,
+  "limitation": "Quarterly implementation with fixed 2025 weights; historical housing and transport are geometrically decomposed using current component weights.",
+  "convergence": "Not established by a single chain; inspect independent seeds before substantive use."
+}

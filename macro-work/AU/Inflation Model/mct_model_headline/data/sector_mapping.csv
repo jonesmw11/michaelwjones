@@ -1,0 +1,8 @@
+name,included_in_core,fixed_2025_weight
+Food and non-alcoholic beverages,True,0.174
+Alcohol and tobacco,True,0.0650999999999999
+Clothing and footwear,True,0.0317
+Housing,True,0.2139
+"Furnishings, household equipment and services",True,0.079
+Transport,True,0.1149
+Other goods and services,True,0.32140000000000013

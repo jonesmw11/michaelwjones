@@ -1,0 +1,13 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-21T15:14:58.850237+00:00",
+  "draws": 2,
+  "burn": 2,
+  "thin": 1,
+  "seed": 2022,
+  "iteration": 5,
+  "total": 5,
+  "elapsed_seconds": 0.48833069996908307,
+  "finished_utc": "2026-09-21T15:15:00.854194+00:00",
+  "result": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\macro-work\\AU\\Inflation Model\\mct_model_headline\\results\\python\\australia_headline_d2_b2_t1_s2022.mat"
+}

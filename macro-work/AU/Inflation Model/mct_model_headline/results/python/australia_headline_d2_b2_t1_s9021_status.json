@@ -1,0 +1,13 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-21T16:30:25.561595+00:00",
+  "draws": 2,
+  "burn": 2,
+  "thin": 1,
+  "seed": 9021,
+  "iteration": 5,
+  "total": 5,
+  "elapsed_seconds": 1.09212689998094,
+  "finished_utc": "2026-09-21T16:30:29.463656+00:00",
+  "result": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\macro-work\\AU\\Inflation Model\\mct_model_headline\\results\\python\\australia_headline_d2_b2_t1_s9021.mat"
+}

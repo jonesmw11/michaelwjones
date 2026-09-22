@@ -1,0 +1,15 @@
+{
+  "country": "Australia",
+  "target": "Headline CPI",
+  "status": "Exploratory sampling settings; not a production estimate",
+  "draws": 2,
+  "burn_in": 2,
+  "thinning": 1,
+  "elapsed_seconds": 0.494573500007391,
+  "first_date": "1972-12-31",
+  "latest_date": "2026-06-30",
+  "latest_mct_median": 3.006547189751874,
+  "latest_official_core_yoy": null,
+  "limitation": "Uses fixed 2025 weights historically. The residual sector is constructed to reproduce the official headline index exactly under the fixed-weight geometric aggregation.",
+  "convergence": "Not established by a single chain; inspect independent seeds before substantive use."
+}

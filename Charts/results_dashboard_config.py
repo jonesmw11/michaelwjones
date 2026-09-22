@@ -24,15 +24,15 @@ COUNTRY_ORDER = ["AU", "JP", "KR", "USA"]
 COUNTRIES = {
     "AU": {
         "name": "Australia",
-        "summary": "Quarterly inflation VAR forecasts are followed by the SMOG state-space estimates of the output gap and NAIRU.",
+        "summary": "Quarterly inflation forecasts, an independent core MCT estimate, and SMOG state-space estimates of the output gap and NAIRU.",
     },
     "JP": {
         "name": "Japan",
-        "summary": "Monthly national and Tokyo CPI forecasts are followed by the Japanese SMOG estimates of spare capacity and the NAIRU.",
+        "summary": "Monthly national and Tokyo CPI forecasts, an ex-fresh-food MCT estimate, and Japanese SMOG estimates of spare capacity and the NAIRU.",
     },
     "KR": {
         "name": "South Korea",
-        "summary": "Monthly CPI and PPI forecasts are followed by smoothed and filtered Korean SMOG estimates.",
+        "summary": "Monthly CPI and PPI forecasts, a division-level core MCT proxy, and smoothed and filtered Korean SMOG estimates.",
     },
     "USA": {
         "name": "United States",
@@ -117,16 +117,74 @@ SMOG_MODELS = {
     }.items()
 }
 
-MCT_MODEL = {
-    "result": ROOT / "USA/Inflation Model/mct_model/results/python/current_reconstruction_d3000_b3000_t2_s2022_labelled.csv",
-    "pce_prices": ROOT / "USA/Inflation Model/pce_official/monthly_prices.csv",
-    "core_pce_line": "374",
-    "results_workbook": ROOT / "USA/Inflation Model/mct_model/results/python/current_reconstruction_d3000_b3000_t2_s2022.xlsx",
-    "sector_mapping": ROOT / "USA/Inflation Model/mct_model/data/sector_mapping.csv",
-    "default_sector": "Housing excluding gas and electric utilities",
-    "description": "A Bayesian dynamic-factor state-space model extracts persistent inflation from 17 detailed PCE sectors. Twelve-month Core PCE is shown for context but is not a model input; MCT combines the estimated trends of the 14 sectors retained in the core basket.",
-    "sector_trends_description": "Each line is the model-estimated persistent trend for one of the 17 PCE sectors: its common-trend contribution plus its sector-specific trend. Dashed lines identify the three food and energy sectors estimated by the model but excluded when the final MCT aggregate is formed.",
-    "target": 2.0,
+MCT_MODELS = {
+    "AU": {
+        "result": ROOT / "AU/Inflation Model/mct_model_core/results/python/latest_labelled.csv",
+        "filtered": ROOT / "AU/Inflation Model/mct_model_core/results/python/latest_filtered_labelled.csv",
+        "context": ROOT / "AU/Inflation Model/mct_model_core/results/python/latest_context.csv",
+        "sector_trends": ROOT / "AU/Inflation Model/mct_model_core/results/python/latest_sector_trends.csv",
+        "sector_mapping": ROOT / "AU/Inflation Model/mct_model_core/data/sector_mapping.csv",
+        "default_sector": "Housing excluding household energy",
+        "official_label": "Observed core CPI ex food and energy, year ended",
+        "description": "An independent quarterly MCT implementation extracts persistent inflation from twelve ABS national sectors. Food and energy receive zero aggregate weight; energy is split from housing and transport using fixed 2025 weights.",
+        "sector_trends_description": "Persistent quarterly sector trends. Dashed series are estimated by the model but excluded from the food-and-energy-excluded aggregate.",
+        "target": 2.0,
+        "target_upper": 3.0,
+        "target_label": "RBA 2–3% target band",
+    },
+    "JP": {
+        "result": ROOT / "JP/Inflation Model/mct_model/results/python/latest_labelled.csv",
+        "filtered": ROOT / "JP/Inflation Model/mct_model/results/python/latest_filtered_labelled.csv",
+        "context": ROOT / "JP/Inflation Model/mct_model/results/python/latest_context.csv",
+        "sector_trends": ROOT / "JP/Inflation Model/mct_model/results/python/latest_sector_trends.csv",
+        "sector_mapping": ROOT / "JP/Inflation Model/mct_model/data/sector_mapping.csv",
+        "default_sector": "Housing",
+        "official_label": "Official CPI ex fresh food, year ended",
+        "description": "An independent monthly MCT implementation extracts persistent inflation from eleven Japanese CPI sectors. Fresh food is estimated but receives zero aggregate weight, matching the Japanese core definition.",
+        "sector_trends_description": "Persistent monthly sector trends. Fresh food is dashed because it is estimated by the model but excluded from the aggregate.",
+        "target": 2.0,
+        "target_label": "2% inflation target",
+    },
+    "KR": {
+        "result": ROOT / "KR/Inflation Model/mct_model/results/python/latest_labelled.csv",
+        "filtered": ROOT / "KR/Inflation Model/mct_model/results/python/latest_filtered_labelled.csv",
+        "context": ROOT / "KR/Inflation Model/mct_model/results/python/latest_context.csv",
+        "sector_trends": ROOT / "KR/Inflation Model/mct_model/results/python/latest_sector_trends.csv",
+        "sector_mapping": ROOT / "KR/Inflation Model/mct_model/data/sector_mapping.csv",
+        "default_sector": "Housing, water, electricity and other fuels",
+        "official_label": "Official CPI ex food and energy, year ended",
+        "description": "An independent monthly MCT implementation uses twelve Korean CPI divisions. Food receives zero aggregate weight. Because energy is embedded in housing and transport at this aggregation level, this is explicitly a core proxy; the official ex-food-and-energy rate is shown for context.",
+        "sector_trends_description": "Persistent monthly division trends. Food is dashed because it is excluded from the aggregate; energy remains embedded in housing and transport.",
+        "target": 2.0,
+        "target_label": "2% inflation target",
+    },
+    "USA": {
+        "result": ROOT / "USA/Inflation Model/mct_model/results/python/current_reconstruction_d3000_b3000_t2_s2022_labelled.csv",
+        "pce_prices": ROOT / "USA/Inflation Model/pce_official/monthly_prices.csv",
+        "core_pce_line": "374",
+        "results_workbook": ROOT / "USA/Inflation Model/mct_model/results/python/current_reconstruction_d3000_b3000_t2_s2022.xlsx",
+        "sector_mapping": ROOT / "USA/Inflation Model/mct_model/data/sector_mapping.csv",
+        "default_sector": "Housing excluding gas and electric utilities",
+        "official_label": "Core PCE, 12-month",
+        "description": "A Bayesian dynamic-factor state-space model extracts persistent inflation from 17 detailed PCE sectors. Twelve-month Core PCE is shown for context but is not a model input; MCT combines the estimated trends of the 14 sectors retained in the core basket.",
+        "sector_trends_description": "Each line is the model-estimated persistent trend for one of the 17 PCE sectors. Dashed lines identify food and energy sectors excluded from the aggregate.",
+        "target": 2.0,
+        "target_label": "2% PCE inflation target",
+    },
+    "AU_HEADLINE": {
+        "result": ROOT / "AU/Inflation Model/mct_model_headline/results/python/latest_labelled.csv",
+        "filtered": ROOT / "AU/Inflation Model/mct_model_headline/results/python/latest_filtered_labelled.csv",
+        "context": ROOT / "AU/Inflation Model/mct_model_headline/results/python/latest_context.csv",
+        "sector_trends": ROOT / "AU/Inflation Model/mct_model_headline/results/python/latest_sector_trends.csv",
+        "sector_mapping": ROOT / "AU/Inflation Model/mct_model_headline/data/sector_mapping.csv",
+        "default_sector": "Housing",
+        "official_label": "Observed headline CPI, year ended",
+        "description": "A separate headline MCT implementation extends the quarterly sample to 1972. Six long-history CPI groups plus a residual sector exactly reconstruct headline CPI under fixed 2025 weights.",
+        "sector_trends_description": "Persistent trends for the six long-history CPI groups and the residual other-goods-and-services sector used in the headline aggregate.",
+        "target": 2.0,
+        "target_upper": 3.0,
+        "target_label": "RBA 2–3% target band",
+    },
 }
 
 MASTER_WORK = {

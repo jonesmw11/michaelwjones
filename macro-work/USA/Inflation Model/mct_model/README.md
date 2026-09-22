@@ -6,7 +6,7 @@
 
 The default estimator now runs entirely in Python, using **statsmodels** for Gaussian state simulation smoothing and Kalman filtering, **NumPy/SciPy** for the Bayesian updates and linear algebra, and **pandas/XlsxWriter/Matplotlib** for data and reporting. `mct_python.py` translates the published NY Fed monthly model configuration; it is not the simpler off-the-shelf `DynamicFactor` model. It retains time-varying loadings, common and sector trends, stochastic volatility, MA(3) noise and outlier mixtures. The model-specific Gibbs schedule and matrix assembly are custom code; the general numerical algorithms use packages.
 
-The active output in `results/python` is the completed current-data reconstruction using 3,000 burn-in iterations, 3,000 retained draws and thinning of 2. Its MAT, labelled CSV, Excel workbook, chart, JSON report and status JSON are the final result set. Short smoke-test outputs and run logs are retained separately under `Archive/Python_Results/current_reconstruction_smoke_tests/`. A completed run is not by itself proof of MCMC convergence or a successful numerical replication. The earlier Octave production job was stopped when the Python implementation was requested. Its files are retained as reference material.
+The active output in `results/python` is the completed current-data reconstruction using 3,000 burn-in iterations, 3,000 retained draws and thinning of 2. Its MAT, labelled CSV, Excel workbook, chart, JSON report and status JSON are the final result set. New full runs also save filtered estimates to a `_filtered_labelled.csv` file and a `Filtered MCT` workbook sheet, then export a separate `_filtered.png` chart that overlays the smoothed median for comparison. Short smoke-test outputs and run logs are retained separately under `Archive/Python_Results/current_reconstruction_smoke_tests/`. A completed run is not by itself proof of MCMC convergence or a successful numerical replication. The earlier Octave production job was stopped when the Python implementation was requested. Its files are retained as reference material.
 
 ## Sources and reproducibility
 
@@ -32,7 +32,9 @@ The aggregate for each posterior draw is
 
 `MCT_t = sum_i coreWeight_it * trend_it`.
 
-The reported estimate is the posterior median of that aggregate, with the 1/6 and 5/6 quantiles as the central 66.7% interval. Sector contribution medians need not add exactly to the aggregate median: medians are not additive. This is a smoothed estimate of underlying inflation, not automatically an out-of-sample forecast; historical estimates can change with new data.
+The original reported estimate is the posterior median of that aggregate, with the 1/6 and 5/6 quantiles as the central 66.7% interval. Sector contribution medians need not add exactly to the aggregate median: medians are not additive. This is a smoothed estimate of underlying inflation, not automatically an out-of-sample forecast; historical estimates can change with new data.
+
+The separately saved filtered estimate runs the one-sided Kalman filter for each retained posterior parameter draw. The state for month t uses observations only through month t, while the time-varying loadings, volatilities and other parameters are still full-sample posterior draws. It is therefore a filtered-state comparison with the smoother, not a vintage-data real-time backtest.
 
 ## Inputs and weights
 

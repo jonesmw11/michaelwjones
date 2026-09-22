@@ -1,0 +1,16 @@
+{
+  "country": "South Korea",
+  "target": "Core CPI proxy; official CPI excluding food and energy shown for context",
+  "status": "Exploratory sampling settings; not a production estimate",
+  "draws": 2,
+  "burn_in": 2,
+  "thinning": 1,
+  "elapsed_seconds": 4.067195499956142,
+  "first_date": "1985-02-01",
+  "latest_date": "2026-08-01",
+  "latest_mct_median": 3.4668346637147316,
+  "latest_filtered_mct_median": 2.593208194397503,
+  "latest_official_core_yoy": 3.367600141793692,
+  "limitation": "Division-level proxy: food is excluded exactly, but energy remains embedded within housing and transport because a current detailed component panel is not stored locally.",
+  "convergence": "Not established by a single chain; inspect independent seeds before substantive use."
+}

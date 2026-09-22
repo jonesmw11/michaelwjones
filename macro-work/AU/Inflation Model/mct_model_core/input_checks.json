@@ -1,0 +1,12 @@
+{
+  "country": "Australia",
+  "target": "CPI excluding food and energy",
+  "frequency": "Quarterly",
+  "first_period": "2005Q3",
+  "last_period": "2026Q2",
+  "observations": 84,
+  "sectors": 12,
+  "core_sectors": 10,
+  "complete_matrix": true,
+  "weights_sum_to_one": true
+}

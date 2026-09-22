@@ -1,0 +1,11 @@
+{
+  "country": "Japan",
+  "target": "CPI excluding fresh food",
+  "first_period": "1970-02",
+  "last_period": "2026-08",
+  "observations": 679,
+  "sectors": 11,
+  "core_sectors": 10,
+  "complete_matrix": true,
+  "weights_sum_to_one": true
+}

@@ -204,6 +204,11 @@ class MCT:
         self.priors = priors or Priors()
         p, n, T = self.priors, self.n, self.T
         self.rng = np.random.default_rng(seed)
+        # Keep filtered-state sampling off the Gibbs-chain random stream so the
+        # diagnostic does not alter the established smoothed MCT results.
+        self.filtered_rng = np.random.default_rng(
+            np.random.SeedSequence([seed, 0x46494C54])
+        )
         self.alpha_tau = np.tile(self.y.std(axis=0, ddof=1)/16, (T,1))
         self.alpha_eps = self.alpha_tau.copy()
         self.sigma_dtau_c = np.ones(T)
@@ -264,11 +269,11 @@ class MCT:
         return block_diag(*[np.r_[1.,theta][None,:] for theta in self.theta])
 
     # -------------------------------------------------------------------------
-    # DRAW THE MAIN TREND AND TRANSITORY STATE BLOCK
-    # Conditions on current loadings, volatilities, outlier scales, and MA
-    # coefficients, then draws the entire common and sector-specific state history.
+    # CONFIGURE THE MAIN TREND AND TRANSITORY STATE BLOCK
+    # Installs the observation and disturbance matrices implied by the current
+    # loadings, volatilities, outlier scales, and MA coefficients.
     # -------------------------------------------------------------------------
-    def refresh_states(self, initial=False):
+    def configure_main_states(self, initial=False):
         n,T = self.n,self.T
         design = np.zeros((n,self.nstates,T+1))
         design[:,0,1:] = self.alpha_tau.T
@@ -281,11 +286,43 @@ class MCT:
         # statsmodels Q[t] drives the transition from state t to t+1.
         covariance = diagonal_path(np.vstack([sigmas,sigmas[-1]])**2)
         self.states.configure(design,covariance,1e-6*np.eye(n))
+
+    # -------------------------------------------------------------------------
+    # DRAW THE MAIN TREND AND TRANSITORY STATE BLOCK
+    # Draws the entire common and sector-specific state history from the
+    # simulation smoother after configuring the current Gibbs conditional.
+    # -------------------------------------------------------------------------
+    def refresh_states(self, initial=False):
+        n = self.n
+        self.configure_main_states(initial=initial)
         self.state = self.states.draw(self.rng)
         self.tau_c = self.state[1:,0]
         self.tau_i = self.state[1:,1:n+1]
         self.eps_c = self.state[1:,self.ec]
         self.eps_i = self.state[1:,self.ei]
+
+    # -------------------------------------------------------------------------
+    # DRAW THE ONE-SIDED AGGREGATE TREND
+    # Runs the ordinary Kalman filter under the current posterior parameter draw
+    # and samples each month's aggregate trend from its filtered marginal. Month
+    # t therefore uses observations only through t rather than the full sample.
+    # -------------------------------------------------------------------------
+    def draw_filtered_mct(self, weights):
+        self.configure_main_states()
+        filtered = self.states.model.filter()
+        means = filtered.filtered_state[:,1:].T
+        covariances = np.moveaxis(filtered.filtered_state_cov[:,:,1:], -1, 0)
+        aggregate_design = np.column_stack([
+            np.sum(weights*self.alpha_tau, axis=1),
+            weights,
+            np.zeros((self.T, self.nstates-self.n-1)),
+        ])
+        aggregate_mean = np.einsum('ti,ti->t', aggregate_design, means)
+        aggregate_variance = np.einsum(
+            'ti,tij,tj->t', aggregate_design, covariances, aggregate_design
+        )
+        aggregate_sd = np.sqrt(np.maximum(aggregate_variance, 0.0))
+        return self.filtered_rng.normal(aggregate_mean, aggregate_sd)
 
     # -------------------------------------------------------------------------
     # PERFORM ONE SYSTEMATIC BLOCKED-GIBBS SWEEP
@@ -351,6 +388,7 @@ class MCT:
         start = time.perf_counter()
         common = np.empty((self.T,draws))
         specific = np.empty_like(common)
+        filtered = np.empty_like(common)
         sector = np.empty((self.T,self.n,draws))
         for iteration in range(-burn,draws+1):
             for _ in range(thin):
@@ -360,11 +398,13 @@ class MCT:
                 sector[:,:,iteration-1] = trend_c+self.tau_i
                 common[:,iteration-1] = np.sum(weights*trend_c,axis=1)
                 specific[:,iteration-1] = np.sum(weights*self.tau_i,axis=1)
+                filtered[:,iteration-1] = self.draw_filtered_mct(weights)
             if callback and ((iteration+burn)%10==0 or iteration==draws):
                 callback(iteration+burn+1,burn+draws+1,time.perf_counter()-start)
         total = common+specific
         # MATLAB quantile uses the type-5 (Hazen) convention.
         quantiles = lambda x: np.quantile(x,[1/6,.5,5/6],axis=1,method='hazen').T
-        return {'MCT':quantiles(total),'MCT_common':quantiles(common),'MCT_specific':quantiles(specific),
+        return {'MCT':quantiles(total),'MCT_filtered':quantiles(filtered),
+                'MCT_common':quantiles(common),'MCT_specific':quantiles(specific),
                 'sector_trend':np.median(sector,axis=2),'sector_contribution':np.median(weights[:,:,None]*sector,axis=2),
                 'mct_draws':total,'elapsed_seconds':time.perf_counter()-start}

@@ -54,6 +54,14 @@ def prepare_export(path, result):
     dates = pd.to_datetime(np.asarray(result['month_codes'], dtype=int).astype(str), format='%Y%m')
     frame = pd.DataFrame(result['MCT'], index=dates, columns=['lower_16.67pct', 'MCT_median', 'upper_83.33pct'])
     frame.index.name = 'Date'
+    filtered_frame = None
+    if 'MCT_filtered' in result:
+        filtered_frame = pd.DataFrame(
+            result['MCT_filtered'],
+            index=dates,
+            columns=['lower_16.67pct', 'MCT_median', 'upper_83.33pct'],
+        )
+        filtered_frame.index.name = 'Date'
     reference = pd.read_csv(ROOT / 'data/reference_202310.csv', index_col=0, parse_dates=True)
     comparison = frame.join(reference.add_prefix('NYFed_Oct2023_'))
     comparison['difference_pp'] = comparison.MCT_median-comparison.NYFed_Oct2023_median
@@ -64,6 +72,12 @@ def prepare_export(path, result):
     np.testing.assert_allclose(weights.sum(axis=1), 1, atol=1e-12)
     assert np.isfinite(frame.to_numpy()).all()
     assert (frame.iloc[:,0] <= frame.iloc[:,1]).all() and (frame.iloc[:,1] <= frame.iloc[:,2]).all()
+    if filtered_frame is not None:
+        assert np.isfinite(filtered_frame.to_numpy()).all()
+        assert (
+            (filtered_frame.iloc[:,0] <= filtered_frame.iloc[:,1]).all()
+            and (filtered_frame.iloc[:,1] <= filtered_frame.iloc[:,2]).all()
+        )
     diagnostics = {
         'engine': str(result.get('engine', 'MATLAB / Octave upstream estimator')),
         'status': 'Full official sampling settings; convergence not established by a single chain',
@@ -71,6 +85,10 @@ def prepare_export(path, result):
         'burn_in': int(settings['n_burn']), 'thinning': int(settings['n_thin']),
         'elapsed_seconds': float(result['elapsed_seconds']),
         'latest_date': str(dates[-1].date()), 'latest_median': float(frame.MCT_median.iloc[-1]),
+        'latest_filtered_median': (
+            float(filtered_frame.MCT_median.iloc[-1])
+            if filtered_frame is not None else None
+        ),
         'reference_comparison': 'Same October 2023 input vintage' if vintage.startswith('replication') else 'Different vintages and reconstructed housing input: differences are not pure replication error',
         'reference_rmse_pp': float(np.sqrt(np.nanmean(comparison.difference_pp**2))),
         'reference_mean_absolute_error_pp': float(np.nanmean(abs(comparison.difference_pp))),
@@ -81,6 +99,7 @@ def prepare_export(path, result):
         'result': result,
         'dates': dates,
         'frame': frame,
+        'filtered_frame': filtered_frame,
         'reference': reference,
         'comparison': comparison,
         'inputs': inputs,
@@ -102,6 +121,10 @@ def export_json(report):
 def export_csv(report):
     path = report['path']
     report['frame'].to_csv(path.with_name(path.stem + '_labelled.csv'))
+    if report['filtered_frame'] is not None:
+        report['filtered_frame'].to_csv(
+            path.with_name(path.stem + '_filtered_labelled.csv')
+        )
 
 
 def export_excel(report):
@@ -114,6 +137,8 @@ def export_excel(report):
     with pd.ExcelWriter(path.with_suffix('.xlsx'), engine='xlsxwriter', datetime_format='yyyy-mm') as writer:
         pd.DataFrame(list(diagnostics.items()), columns=['Field','Value']).to_excel(writer, sheet_name='Read me', index=False)
         report['frame'].to_excel(writer, sheet_name='Estimated MCT')
+        if report['filtered_frame'] is not None:
+            report['filtered_frame'].to_excel(writer, sheet_name='Filtered MCT')
         report['comparison'].to_excel(writer, sheet_name='NY Fed comparison')
         report['weights'].to_excel(writer, sheet_name='Core weights sum to 1')
         pd.DataFrame(inputs['y'], index=dates, columns=labels).to_excel(writer, sheet_name='Sector inflation inputs')
@@ -130,14 +155,40 @@ def export_chart(report):
     dates = report['dates']
     frame = report['frame']
     fig, ax = plt.subplots(figsize=(12,5))
-    ax.plot(dates, frame.MCT_median, label='Local estimate')
+    ax.plot(dates, frame.MCT_median, label='Smoothed estimate')
     ax.fill_between(dates, frame.iloc[:,0], frame.iloc[:,2], alpha=.2, label='Central 66.7% posterior interval')
     ax.plot(report['reference'].index, report['reference']['median'], lw=1, label='NY Fed: October 2023 vintage')
     ax.axhline(2, color='#B5651D', lw=1.3, ls=':', label='2% PCE inflation target')
-    ax.set(title=f"MCT: {report['vintage']}", ylabel='Annualized inflation, percent')
+    ax.set(title=f"MCT (smoothed): {report['vintage']}", ylabel='Annualized inflation, percent')
     ax.legend()
     fig.tight_layout()
     fig.savefig(report['path'].with_suffix('.png'), dpi=160)
+    plt.close(fig)
+
+
+def export_filtered_chart(report):
+    filtered = report['filtered_frame']
+    if filtered is None:
+        print('Filtered MCT is absent from this legacy result; filtered chart skipped.')
+        return
+    dates = report['dates']
+    smoothed = report['frame']
+    fig, ax = plt.subplots(figsize=(12,5))
+    ax.plot(dates, filtered.MCT_median, color='#0B6E4F', lw=2.2,
+            label='Filtered estimate')
+    ax.fill_between(dates, filtered.iloc[:,0], filtered.iloc[:,2],
+                    color='#5BAE95', alpha=.25,
+                    label='Filtered central 66.7% posterior interval')
+    ax.plot(dates, smoothed.MCT_median, color='#6B7280', lw=1.3, ls='--',
+            label='Smoothed estimate')
+    ax.axhline(2, color='#B5651D', lw=1.3, ls=':',
+               label='2% PCE inflation target')
+    ax.set(title=f"MCT (filtered vs smoothed): {report['vintage']}",
+           ylabel='Annualized inflation, percent')
+    ax.legend()
+    fig.tight_layout()
+    destination = report['path'].with_name(report['path'].stem + '_filtered.png')
+    fig.savefig(destination, dpi=160)
     plt.close(fig)
 
 
@@ -150,6 +201,7 @@ def export(path):
     export_csv(report)
     export_excel(report)
     export_chart(report)
+    export_filtered_chart(report)
     print(json.dumps(report['diagnostics'], indent=2))
 
 

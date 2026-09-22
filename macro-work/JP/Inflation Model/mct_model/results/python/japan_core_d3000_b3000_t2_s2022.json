@@ -1,0 +1,16 @@
+{
+  "country": "Japan",
+  "target": "CPI excluding fresh food",
+  "status": "Production sampling settings",
+  "draws": 3000,
+  "burn_in": 3000,
+  "thinning": 2,
+  "elapsed_seconds": 7030.763001099986,
+  "first_date": "1970-02-01",
+  "latest_date": "2026-08-01",
+  "latest_mct_median": 1.423978405863163,
+  "latest_filtered_mct_median": 1.3990327815776382,
+  "latest_official_core_yoy": 1.6949152542372836,
+  "limitation": "Uses fixed 2025 official weights across the historical sample.",
+  "convergence": "Not established by a single chain; inspect independent seeds before substantive use."
+}

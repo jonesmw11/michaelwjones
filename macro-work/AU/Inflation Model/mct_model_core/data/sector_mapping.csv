@@ -1,0 +1,13 @@
+name,included_in_core,fixed_2025_weight
+Food and non-alcoholic beverages,False,0.174
+Alcohol and tobacco,True,0.0650999999999999
+Clothing and footwear,True,0.0317
+Housing excluding household energy,True,0.18512326203208562
+"Furnishings, household equipment and services",True,0.079
+Health,True,0.0670999999999999
+Transport excluding automotive fuel,True,0.0806702090592335
+Communication,True,0.0212
+Recreation and culture,True,0.1309
+Education,True,0.0465
+Insurance and financial services,True,0.0557
+Energy,False,0.0630065289086809

@@ -1,0 +1,13 @@
+{
+  "country": "Australia",
+  "target": "Headline CPI",
+  "frequency": "Quarterly",
+  "first_period": "1972Q4",
+  "last_period": "2026Q2",
+  "observations": 215,
+  "sectors": 7,
+  "headline_reconstruction": "PASS",
+  "complete_matrix": true,
+  "weights_sum_to_one": true,
+  "limitation": "Uses fixed 2025 weights historically. The residual sector is constructed to reproduce the official headline index exactly under the fixed-weight geometric aggregation."
+}

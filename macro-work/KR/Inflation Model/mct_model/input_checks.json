@@ -1,0 +1,12 @@
+{
+  "country": "South Korea",
+  "target": "Core CPI proxy with official ex-food-and-energy comparison",
+  "first_period": "1985-02",
+  "last_period": "2026-08",
+  "observations": 499,
+  "sectors": 12,
+  "core_sectors": 11,
+  "complete_matrix": true,
+  "weights_sum_to_one": true,
+  "limitation": "Division-level proxy: food is excluded exactly, but energy remains embedded within housing and transport because a current detailed component panel is not stored locally."
+}

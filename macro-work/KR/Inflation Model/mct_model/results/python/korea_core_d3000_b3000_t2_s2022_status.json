@@ -1,0 +1,13 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-21T16:30:53.911726+00:00",
+  "draws": 3000,
+  "burn": 3000,
+  "thin": 2,
+  "seed": 2022,
+  "iteration": 6001,
+  "total": 6001,
+  "elapsed_seconds": 6107.107162500033,
+  "finished_utc": "2026-09-21T18:12:45.093394+00:00",
+  "result": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\macro-work\\KR\\Inflation Model\\mct_model\\results\\python\\korea_core_d3000_b3000_t2_s2022.mat"
+}

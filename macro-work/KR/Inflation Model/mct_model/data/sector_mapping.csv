@@ -1,0 +1,13 @@
+name,included_in_core,published_2022_weight
+Food and non-alcoholic beverages,False,0.142
+Alcoholic beverages and tobacco,True,0.0158
+Clothing and footwear,True,0.0496
+"Housing, water, electricity and other fuels",True,0.1716
+"Furnishings, household equipment and routine household maintenance",True,0.0456
+Health,True,0.084
+Transport,True,0.1105999999999999
+Communication,True,0.0466
+Recreation and culture,True,0.0629
+Education,True,0.0739
+Restaurants and hotels,True,0.1447
+Miscellaneous goods and services,True,0.0527

@@ -93,6 +93,68 @@ def build_mct_chart():
     plt.close(fig)
 
 
+# %% US MCT filtered chart
+# Build the one-sided estimate separately and retain the smoother as a comparator.
+def build_mct_filtered_chart():
+    model = ROOT / "USA/Inflation Model/mct_model"
+    filtered_path = (
+        model
+        / "results/python/current_reconstruction_d3000_b3000_t2_s2022_filtered_labelled.csv"
+    )
+    if not filtered_path.is_file():
+        return False
+    smoothed = pd.read_csv(
+        model / "results/python/current_reconstruction_d3000_b3000_t2_s2022_labelled.csv",
+        index_col=0,
+        parse_dates=True,
+    )
+    filtered = pd.read_csv(filtered_path, index_col=0, parse_dates=True)
+
+    fig, ax = style.figure(title="United States: Filtered Multivariate Core Trend (MCT)")
+    ax.fill_between(
+        filtered.index,
+        filtered["lower_16.67pct"],
+        filtered["upper_83.33pct"],
+        color=style.ACCENT,
+        alpha=0.14,
+    )
+    ax.plot(filtered.index, filtered["MCT_median"], **style.line(0))
+    ax.plot(
+        smoothed.index,
+        smoothed["MCT_median"],
+        color=style.GREY,
+        lw=1.6,
+        ls="--",
+    )
+    ax.axhline(2, color=style.DESERT, lw=1.3, ls=":")
+    ax.annotate(
+        "2% PCE inflation target", xy=(filtered.index[0], 2),
+        xytext=(8, 7), textcoords="offset points",
+        color=style.DESERT, fontsize=11, ha="left",
+    )
+    style.label(
+        ax, filtered.index[-1], filtered["MCT_median"].iloc[-1],
+        "Filtered estimate", 0, dx=10, dy=10, ha="left",
+    )
+    fig.text(
+        0.01, 0.01,
+        "Shading: filtered central 66.7% posterior interval  |  Grey dashed line: smoothed estimate",
+        color=style.NOTE, fontsize=11,
+    )
+    style.finish(
+        fig, ax, ylabel="Annualized inflation, per cent",
+        yfmt="{x:,.1f}", year_step=10,
+    )
+    low, high = ax.get_xlim()
+    ax.set_xlim(low, high + 0.08 * (high - low))
+    fig.savefig(
+        OUTPUT / "USA - MCT Core Inflation - Filtered.png",
+        dpi=200, facecolor="white", bbox_inches="tight",
+    )
+    plt.close(fig)
+    return True
+
+
 # %% Gallery build
 # Synchronize the latest saved charts and then create the styled US MCT chart.
 def main():
@@ -103,7 +165,8 @@ def main():
     for source, name in CHARTS.items():
         copy2(source, OUTPUT / name)
     build_mct_chart()
-    print(f"Saved {len(CHARTS) + 1} current model charts to {OUTPUT}")
+    filtered_built = build_mct_filtered_chart()
+    print(f"Saved {len(CHARTS) + 1 + int(filtered_built)} current model charts to {OUTPUT}")
 
 
 if __name__ == "__main__":

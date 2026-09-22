@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "runs": {
+    "JP": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\macro-work\\JP\\Inflation Model\\mct_model\\results\\python\\japan_core_d3000_b3000_t2_s2022.mat",
+    "KR": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\macro-work\\KR\\Inflation Model\\mct_model\\results\\python\\korea_core_d3000_b3000_t2_s2022.mat",
+    "AU": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\macro-work\\AU\\Inflation Model\\mct_model_core\\results\\python\\australia_core_d3000_b3000_t2_s2022.mat",
+    "AU_HEADLINE": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\macro-work\\AU\\Inflation Model\\mct_model_headline\\results\\python\\australia_headline_d3000_b3000_t2_s2022.mat"
+  },
+  "dashboard": "C:\\Users\\micha\\Desktop\\Stats Research\\michaelwjones\\results_dashboard.html"
+}

@@ -1,0 +1,12 @@
+code,name,included_in_core,raw_2025_weight
+0157,Fresh food,False,134252762
+0172,Food excluding fresh food,True,841550403
+0045,Housing,True,773321148
+0054,"Fuel, light and water charges",True,247346867
+0060,Furniture and household utensils,True,131897186
+0082,Clothes and footwear,True,105807048
+0107,Medical care,True,165090296
+0111,Transportation and communication,True,511544532
+0118,Education,True,110104238
+0122,Culture and recreation,True,320898162
+0145,Miscellaneous,True,201944448

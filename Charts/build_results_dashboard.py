@@ -97,16 +97,36 @@ def inflation_figure(spec):
     return finish_figure(fig, "Per cent, year ended", zero_line=True)
 
 
-# %% MCT chart
-def load_core_pce():
-    prices = pd.read_csv(config.MCT_MODEL["pce_prices"], index_col="Period", parse_dates=True)
-    core_price = prices[config.MCT_MODEL["core_pce_line"]]
+# =============================================================================
+# %% MCT charts
+def load_mct_context(spec):
+    if "context" in spec:
+        context = pd.read_csv(spec["context"], index_col=0, parse_dates=True)
+        if "observed_core_yoy" in context and context["observed_core_yoy"].notna().any():
+            return context["observed_core_yoy"].dropna()
+        official = context["official_core_yoy"].dropna()
+        if official.empty:
+            official = context["headline_yoy"].dropna()
+        return official
+    prices = pd.read_csv(spec["pce_prices"], index_col="Period", parse_dates=True)
+    core_price = prices[spec["core_pce_line"]]
     return 100 * (core_price / core_price.shift(12) - 1)
 
 
-def mct_figure():
-    result = pd.read_csv(config.MCT_MODEL["result"], index_col=0, parse_dates=True)
-    core_pce = load_core_pce()
+def mct_figure(country, state):
+    spec = config.MCT_MODELS[country]
+    smoothed = pd.read_csv(spec["result"], index_col=0, parse_dates=True)
+    if state == "filtered":
+        if "filtered" not in spec or not spec["filtered"].exists():
+            raise ValueError(f"Filtered MCT output is unavailable for {country}")
+        result = pd.read_csv(spec["filtered"], index_col=0, parse_dates=True)
+        state_label = "Filtered"
+    elif state == "smoothed":
+        result = smoothed
+        state_label = "Smoothed"
+    else:
+        raise ValueError(f"Unknown MCT state: {state}")
+    official = load_mct_context(spec)
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=result.index, y=result["upper_83.33pct"], mode="lines",
@@ -115,36 +135,44 @@ def mct_figure():
     fig.add_trace(go.Scatter(
         x=result.index, y=result["lower_16.67pct"], mode="lines",
         line=dict(width=0), fill="tonexty", fillcolor="rgba(11,110,79,0.15)",
-        name="Central 66.7% interval", hoverinfo="skip",
+        name=f"{state_label} central 66.7% interval", hoverinfo="skip",
     ))
     fig.add_trace(go.Scatter(
         x=result.index, y=result["MCT_median"], mode="lines",
-        name="MCT estimate", line=dict(color=config.COLORS["green"], width=2.8),
-        hovertemplate="MCT: %{y:.2f}%<extra></extra>",
+        name=f"{state_label} MCT",
+        line=dict(color=config.COLORS["green"], width=2.8),
+        hovertemplate=f"{state_label} MCT: %{{y:.2f}}%<extra></extra>",
     ))
     fig.add_trace(go.Scatter(
-        x=core_pce.index, y=core_pce, mode="lines",
-        name="Core PCE, 12-month",
+        x=official.index, y=official, mode="lines",
+        name=spec["official_label"],
         line=dict(color=config.COLORS["grey"], width=1.5),
-        hovertemplate="Core PCE: %{y:.2f}%<extra></extra>",
+        hovertemplate="Official/context: %{y:.2f}%<extra></extra>",
     ))
+    if "target_upper" in spec:
+        fig.add_hrect(
+            y0=spec["target"], y1=spec["target_upper"],
+            fillcolor=config.COLORS["orange"], opacity=0.09,
+            line_width=0, layer="below",
+        )
+        fig.add_hline(y=spec["target_upper"], line_color=config.COLORS["orange"], line_dash="dot", line_width=1.3)
     fig.add_hline(
-        y=config.MCT_MODEL["target"],
+        y=spec["target"],
         line_color=config.COLORS["orange"], line_dash="dot", line_width=1.5,
-        annotation_text="2% PCE inflation target",
+        annotation_text=spec["target_label"],
         annotation_position="top left",
     )
     return finish_figure(fig, "Annualized inflation, per cent")
 
 
-def mct_sector_trends_figure():
-    sector_trends = pd.read_excel(
-        config.MCT_MODEL["results_workbook"],
-        sheet_name="Sector trend medians",
-        index_col=0,
-    )
+def mct_sector_trends_figure(country):
+    spec = config.MCT_MODELS[country]
+    if "sector_trends" in spec:
+        sector_trends = pd.read_csv(spec["sector_trends"], index_col=0)
+    else:
+        sector_trends = pd.read_excel(spec["results_workbook"], sheet_name="Sector trend medians", index_col=0)
     sector_trends.index = pd.to_datetime(sector_trends.index)
-    mapping = pd.read_csv(config.MCT_MODEL["sector_mapping"])
+    mapping = pd.read_csv(spec["sector_mapping"])
     included_in_core = mapping.set_index("name")["included_in_core"].to_dict()
     fig = go.Figure()
     for number, sector in enumerate(sector_trends.columns):
@@ -155,7 +183,7 @@ def mct_sector_trends_figure():
             y=sector_trends[sector],
             mode="lines",
             name=label,
-            visible=True if sector == config.MCT_MODEL["default_sector"] else "legendonly",
+            visible=True if sector == spec["default_sector"] else "legendonly",
             line=dict(
                 color=qualitative.Alphabet[number],
                 width=1.8,
@@ -164,11 +192,18 @@ def mct_sector_trends_figure():
             hovertemplate=f"{sector} trend: %{{y:.2f}}%<extra></extra>",
         ))
     fig.add_hline(
-        y=config.MCT_MODEL["target"],
+        y=spec["target"],
         line_color=config.COLORS["orange"], line_dash="dot", line_width=1.5,
-        annotation_text="2% PCE inflation target",
+        annotation_text=spec["target_label"],
         annotation_position="top left",
     )
+    if "target_upper" in spec:
+        fig.add_hrect(
+            y0=spec["target"], y1=spec["target_upper"],
+            fillcolor=config.COLORS["orange"], opacity=0.09,
+            line_width=0, layer="below",
+        )
+        fig.add_hline(y=spec["target_upper"], line_color=config.COLORS["orange"], line_dash="dot", line_width=1.3)
     fig = finish_figure(fig, "Persistent annualized inflation, per cent")
     fig.update_layout(
         height=760,
@@ -457,10 +492,10 @@ def masters_section_html(include_plotlyjs):
         )
 
     section = (
-        '<section class="country-panel" id="country-masters-panel" role="tabpanel" '
-        'aria-labelledby="country-masters-tab">'
+        '<section class="family-panel" id="family-masters-panel" role="tabpanel" '
+        'aria-labelledby="family-masters-tab">'
         '<h2>Master’s dissertation: Option pricing</h2>'
-        '<p class="country-summary">Key results from the KOSPI 200 option-pricing analysis, '
+        '<p class="family-summary">Key results from the KOSPI 200 option-pricing analysis, '
         'from the Black–Scholes benchmark through stochastic volatility and stochastic time.</p>'
         '<div class="model-tabs" role="tablist" aria-label="Master’s dissertation sections">'
         f'{"".join(tab_buttons)}</div>{"".join(tab_panels)}</section>'
@@ -485,101 +520,138 @@ def chart_html(title, description, figure, include_plotlyjs):
     )
 
 
-def build_page():
-    sections = []
-    include_plotlyjs = True
-    for country in config.COUNTRY_ORDER:
-        country_info = config.COUNTRIES[country]
-        model_blocks = {"inflation": [], "unobservables": [], "mct": []}
-
-        for model in config.INFLATION_MODELS[country]:
-            model_blocks["inflation"].append(chart_html(
-                model["title"], model["description"], inflation_figure(model),
-                include_plotlyjs,
-            ))
-            include_plotlyjs = False
-
-        if country == "USA":
-            model_blocks["mct"].append(chart_html(
-                "United States: Multivariate Core Trend",
-                config.MCT_MODEL["description"], mct_figure(), include_plotlyjs,
-            ))
-            include_plotlyjs = False
-            model_blocks["mct"].append(chart_html(
-                "United States: Persistent trends by PCE sector",
-                config.MCT_MODEL["sector_trends_description"],
-                mct_sector_trends_figure(), include_plotlyjs,
-            ))
-
-        if country in config.SMOG_MODELS:
-            smog = config.SMOG_MODELS[country]
-            for title, figure in smog_figures(country):
-                model_blocks["unobservables"].append(
-                    chart_html(title, smog["description"], figure, include_plotlyjs)
-                )
-                include_plotlyjs = False
-
-        labels = {
-            "inflation": "Inflation",
-            "unobservables": "Unobservables",
-            "mct": "MCT",
-        }
-        initial_category = next(
-            category for category in labels if model_blocks[category]
+def country_tabs_section(slug, title, summary, country_blocks):
+    tab_buttons = []
+    tab_panels = []
+    for number, (country, blocks) in enumerate(country_blocks.items()):
+        active = number == 0
+        country_name = config.COUNTRIES[country]["name"]
+        tab_id = f"{slug}-{country.lower()}-tab"
+        panel_id = f"{slug}-{country.lower()}-panel"
+        tab_buttons.append(
+            f'<button class="country-tab{" active" if active else ""}" '
+            f'id="{tab_id}" type="button" role="tab" '
+            f'aria-controls="{panel_id}" aria-selected="{str(active).lower()}">'
+            f'{escape(country_name)}</button>'
         )
-        model_tabs = []
-        model_panels = []
-        for category, label in labels.items():
-            tab_id = f"{country.lower()}-{category}-tab"
-            panel_id = f"{country.lower()}-{category}-panel"
-            active = category == initial_category
-            model_tabs.append(
-                f'<button class="model-tab{" active" if active else ""}" '
-                f'id="{tab_id}" type="button" role="tab" '
-                f'aria-controls="{panel_id}" aria-selected="{str(active).lower()}">'
-                f'{label}</button>'
-            )
-            if model_blocks[category]:
-                content = "".join(model_blocks[category])
-            else:
-                content = (
-                    f'<p class="empty-state">No {escape(label)} model is currently '
-                    f'included for {escape(country_info["name"])}.</p>'
-                )
-            model_panels.append(
-                f'<div class="model-panel" id="{panel_id}" role="tabpanel" '
-                f'aria-labelledby="{tab_id}"{"" if active else " hidden"}>'
-                f'{content}</div>'
-            )
-
-        sections.append(
-            f'<section class="country-panel" id="country-{country.lower()}-panel" '
-            f'role="tabpanel" aria-labelledby="country-{country.lower()}-tab"'
-            ' hidden>'
-            f'<h2>{escape(country_info["name"])}</h2>'
-            f'<p class="country-summary">{escape(country_info["summary"])}</p>'
-            f'<div class="model-tabs" role="tablist" '
-            f'aria-label="{escape(country_info["name"])} model sections">'
-            f'{"".join(model_tabs)}</div>'
-            f'{"".join(model_panels)}'
-            '</section>'
+        tab_panels.append(
+            f'<div class="country-panel" id="{panel_id}" role="tabpanel" '
+            f'aria-labelledby="{tab_id}"{"" if active else " hidden"}>'
+            f'<h3 class="country-heading">{escape(country_name)}</h3>'
+            f'{"".join(blocks)}</div>'
         )
-
-    masters_section, include_plotlyjs = masters_section_html(include_plotlyjs)
-    sections.append(masters_section)
-
-    nav = (
-        '<button class="country-tab active" id="country-masters-tab" type="button" role="tab" '
-        'aria-controls="country-masters-panel" aria-selected="true" data-country="masters">'
-        'Master’s Work</button>'
+    return (
+        f'<section class="family-panel" id="family-{slug}-panel" role="tabpanel" '
+        f'aria-labelledby="family-{slug}-tab" hidden>'
+        f'<h2>{escape(title)}</h2>'
+        f'<p class="family-summary">{escape(summary)}</p>'
+        f'<div class="country-tabs" role="tablist" aria-label="{escape(title)} countries">'
+        f'{"".join(tab_buttons)}</div>{"".join(tab_panels)}</section>'
     )
-    nav += "".join(
-        '<button class="country-tab" '
-        f'id="country-{country.lower()}-tab" type="button" role="tab" '
-        f'aria-controls="country-{country.lower()}-panel" '
-        f'aria-selected="false" data-country="{country.lower()}">'
-        f'{escape(config.COUNTRIES[country]["name"])}</button>'
-        for country in config.COUNTRY_ORDER
+
+
+def build_page():
+    masters_section, include_plotlyjs = masters_section_html(True)
+    sections = [masters_section]
+
+    mct_blocks = {}
+    for country in config.COUNTRY_ORDER:
+        if country not in config.MCT_MODELS:
+            continue
+        country_name = config.COUNTRIES[country]["name"]
+        spec = config.MCT_MODELS[country]
+        blocks = []
+        if "filtered" in spec and spec["filtered"].exists():
+            blocks.append(chart_html(
+                f"{country_name}: Filtered core MCT",
+                spec["description"], mct_figure(country, "filtered"), include_plotlyjs,
+            ))
+            include_plotlyjs = False
+        blocks.append(chart_html(
+            f"{country_name}: Smoothed core MCT",
+            spec["description"], mct_figure(country, "smoothed"), include_plotlyjs,
+        ))
+        include_plotlyjs = False
+        blocks.append(chart_html(
+            f"{country_name}: Persistent sector trends",
+            spec["sector_trends_description"],
+            mct_sector_trends_figure(country), include_plotlyjs,
+        ))
+        if country == "AU" and "AU_HEADLINE" in config.MCT_MODELS:
+            headline = config.MCT_MODELS["AU_HEADLINE"]
+            blocks.append(chart_html(
+                "Australia: Filtered headline MCT",
+                headline["description"],
+                mct_figure("AU_HEADLINE", "filtered"), include_plotlyjs,
+            ))
+            blocks.append(chart_html(
+                "Australia: Smoothed headline MCT",
+                headline["description"],
+                mct_figure("AU_HEADLINE", "smoothed"), include_plotlyjs,
+            ))
+            blocks.append(chart_html(
+                "Australia: Persistent headline-sector trends",
+                headline["sector_trends_description"],
+                mct_sector_trends_figure("AU_HEADLINE"), include_plotlyjs,
+            ))
+        mct_blocks[country] = blocks
+    sections.append(country_tabs_section(
+        "mct",
+        "MCT modelling",
+        "Multivariate Core Trend models estimate persistent inflation using detailed price sectors. Each country tab contains filtered and smoothed aggregate estimates where available, posterior uncertainty, observed inflation context and persistent sector trends.",
+        mct_blocks,
+    ))
+
+    smog_blocks = {}
+    for country in config.COUNTRY_ORDER:
+        if country not in config.SMOG_MODELS:
+            continue
+        spec = config.SMOG_MODELS[country]
+        blocks = []
+        for title, figure in smog_figures(country):
+            blocks.append(chart_html(title, spec["description"], figure, include_plotlyjs))
+            include_plotlyjs = False
+        smog_blocks[country] = blocks
+    sections.append(country_tabs_section(
+        "smog",
+        "SMOG state-space modelling",
+        "SMOG stands for Small Multivariate Output Gap. These state-space models combine economic relationships and signal equations to estimate potential output, the output gap and the NAIRU.",
+        smog_blocks,
+    ))
+
+    var_blocks = {}
+    for country in config.COUNTRY_ORDER:
+        models = config.INFLATION_MODELS[country]
+        if not models:
+            continue
+        blocks = []
+        for model in models:
+            blocks.append(chart_html(
+                model["title"], model["description"],
+                inflation_figure(model), include_plotlyjs,
+            ))
+            include_plotlyjs = False
+        var_blocks[country] = blocks
+    sections.append(country_tabs_section(
+        "var",
+        "Inflation VAR modelling",
+        "Vector autoregression models project inflation jointly with domestic and external drivers. Country tabs separate the quarterly Australian system from the monthly Japanese and South Korean systems.",
+        var_blocks,
+    ))
+
+    family_tabs = [
+        ("masters", "Master’s Work"),
+        ("mct", "MCT Modelling"),
+        ("smog", "SMOG State Space"),
+        ("var", "Inflation VAR"),
+    ]
+    nav = "".join(
+        f'<button class="family-tab{" active" if number == 0 else ""}" '
+        f'id="family-{slug}-tab" type="button" role="tab" '
+        f'aria-controls="family-{slug}-panel" '
+        f'aria-selected="{str(number == 0).lower()}" data-family="{slug}">'
+        f'{escape(label)}</button>'
+        for number, (slug, label) in enumerate(family_tabs)
     )
     return f'''<!doctype html>
 <html lang="en">
@@ -595,14 +667,20 @@ html {{ scroll-behavior:smooth; }}
 body {{ margin:0; color:var(--ink); background:white; font-family:"Gill Sans MT","Gill Sans",Arial,sans-serif; }}
 header {{ max-width:1180px; margin:0 auto; padding:42px 28px 24px; }}
 h1 {{ margin:0 0 10px; font-size:34px; font-weight:500; }}
-header p, .country-summary, .chart-block p {{ color:var(--note); line-height:1.55; }}
-.country-tabs {{ position:sticky; top:0; z-index:10; display:flex; gap:8px; flex-wrap:wrap; padding:12px max(28px, calc((100vw - 1180px)/2 + 28px)); background:rgba(255,255,255,.96); border-bottom:1px solid var(--line); }}
-.country-tab, .model-tab {{ appearance:none; color:var(--note); background:transparent; border:0; font:inherit; font-weight:500; cursor:pointer; }}
-.country-tab {{ padding:8px 13px; border-radius:4px; }}
-.country-tab:hover, .country-tab.active {{ color:var(--green); background:var(--soft); }}
+header p, .family-summary, .chart-block p {{ color:var(--note); line-height:1.55; }}
+.family-tabs {{ position:sticky; top:0; z-index:10; display:flex; gap:8px; flex-wrap:wrap; padding:12px max(28px, calc((100vw - 1180px)/2 + 28px)); background:rgba(255,255,255,.96); border-bottom:1px solid var(--line); }}
+.family-tab, .country-tab, .model-tab {{ appearance:none; color:var(--note); background:transparent; border:0; font:inherit; font-weight:500; cursor:pointer; }}
+.family-tab {{ padding:8px 13px; border-radius:4px; }}
+.family-tab:hover, .family-tab.active {{ color:var(--green); background:var(--soft); }}
 main {{ max-width:1180px; margin:0 auto; padding:0 28px 60px; }}
-.country-panel {{ padding-top:34px; }}
+.family-panel {{ padding-top:34px; }}
 h2 {{ margin:0 0 8px; font-size:28px; font-weight:500; border-bottom:2px solid var(--green); padding-bottom:8px; }}
+.family-summary {{ max-width:960px; }}
+.country-tabs {{ display:flex; gap:22px; flex-wrap:wrap; margin-top:22px; border-bottom:1px solid var(--line); }}
+.country-tab {{ padding:9px 2px 8px; border-bottom:3px solid transparent; }}
+.country-tab:hover, .country-tab.active {{ color:var(--green); border-bottom-color:var(--green); }}
+.country-panel {{ padding-top:24px; }}
+.country-heading {{ margin:0 0 8px; font-size:22px; font-weight:500; }}
 .model-tabs {{ display:flex; gap:24px; flex-wrap:wrap; margin-top:22px; border-bottom:1px solid var(--line); }}
 .model-tab {{ padding:9px 2px 8px; border-bottom:3px solid transparent; }}
 .model-tab:hover, .model-tab.active {{ color:var(--green); border-bottom-color:var(--green); }}
@@ -642,15 +720,15 @@ h3 {{ margin:0 0 6px; font-size:21px; font-weight:500; }}
 .table-sort:hover {{ color:var(--green); }}
 .table-note {{ color:var(--note); font-size:13px; }}
 footer {{ max-width:1180px; margin:0 auto; padding:0 28px 40px; color:var(--note); }}
-@media (max-width:640px) {{ header, main, footer {{ padding-left:16px; padding-right:16px; }} .country-tabs {{ padding-left:12px; }} h1 {{ font-size:28px; }} .method-step {{ grid-template-columns:1fr; }} .all-models-controls span {{ margin-left:0; }} }}
+@media (max-width:640px) {{ header, main, footer {{ padding-left:16px; padding-right:16px; }} .family-tabs {{ padding-left:12px; }} h1 {{ font-size:28px; }} .method-step {{ grid-template-columns:1fr; }} .all-models-controls span {{ margin-left:0; }} }}
 </style>
 </head>
 <body>
 <header>
 <h1>Research results</h1>
-<p>Explore the macroeconomic models by country or open Master’s Work for the principal option-pricing results. Interactive charts support hovering, zooming and series selection.</p>
+<p>Explore the research by modelling framework, then select a country within each macroeconomic model family. Interactive charts support hovering, zooming and series selection.</p>
 </header>
-<nav class="country-tabs" role="tablist" aria-label="Research sections">{nav}</nav>
+<nav class="family-tabs" role="tablist" aria-label="Modelling frameworks">{nav}</nav>
 <main>{''.join(sections)}</main>
 <footer>Built from the latest saved model outputs and dissertation results. The page does not rerun estimation.</footer>
 <script>
@@ -662,20 +740,31 @@ function resizeVisibleCharts() {{
   }});
 }}
 
-function activateCountry(tab, updateHash = true) {{
-  document.querySelectorAll('.country-tab').forEach(button => {{
+function activateFamily(tab, updateHash = true) {{
+  document.querySelectorAll('.family-tab').forEach(button => {{
     const selected = button === tab;
     button.classList.toggle('active', selected);
     button.setAttribute('aria-selected', selected);
     document.getElementById(button.getAttribute('aria-controls')).hidden = !selected;
   }});
-  if (updateHash) history.replaceState(null, '', `#${{tab.dataset.country}}`);
+  if (updateHash) history.replaceState(null, '', `#${{tab.dataset.family}}`);
+  resizeVisibleCharts();
+}}
+
+function activateCountry(tab) {{
+  const familyPanel = tab.closest('.family-panel');
+  familyPanel.querySelectorAll('.country-tab').forEach(button => {{
+    const selected = button === tab;
+    button.classList.toggle('active', selected);
+    button.setAttribute('aria-selected', selected);
+    document.getElementById(button.getAttribute('aria-controls')).hidden = !selected;
+  }});
   resizeVisibleCharts();
 }}
 
 function activateModel(tab) {{
-  const countryPanel = tab.closest('.country-panel');
-  countryPanel.querySelectorAll('.model-tab').forEach(button => {{
+  const familyPanel = tab.closest('.family-panel');
+  familyPanel.querySelectorAll('.model-tab').forEach(button => {{
     const selected = button === tab;
     button.classList.toggle('active', selected);
     button.setAttribute('aria-selected', selected);
@@ -700,11 +789,12 @@ function addTabKeys(selector, activate) {{
   }});
 }}
 
+addTabKeys('.family-tab', activateFamily);
 addTabKeys('.country-tab', activateCountry);
 addTabKeys('.model-tab', activateModel);
-const requestedCountry = window.location.hash.slice(1).toLowerCase();
-const requestedTab = document.querySelector(`.country-tab[data-country="${{requestedCountry}}"]`);
-if (requestedTab) activateCountry(requestedTab, false);
+const requestedFamily = window.location.hash.slice(1).toLowerCase();
+const requestedTab = document.querySelector(`.family-tab[data-family="${{requestedFamily}}"]`);
+if (requestedTab) activateFamily(requestedTab, false);
 
 const modelTable = document.getElementById('all-models-table');
 const modelSearch = document.getElementById('model-table-search');
