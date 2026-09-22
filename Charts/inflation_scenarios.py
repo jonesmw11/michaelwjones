@@ -103,6 +103,8 @@ def scenario_payload(country, spec):
         for driver, metadata in DRAWABLE_DRIVERS.items():
             if driver not in frame:
                 continue
+            if country == "JP" and driver == "expectations":
+                metadata = dict(metadata, label="Tankan expectations", unit="Per cent, 1 year ahead")
             driver_history = drivers[driver].loc[:frame.index[-1]].dropna().iloc[-60:]
             index = frame.columns.get_loc(driver)
             drawable[driver] = dict(metadata, index=index, baseline=baseline[:, index].tolist(),
@@ -126,6 +128,15 @@ def scenario_payload(country, spec):
 def scenario_html(country, spec, figure, include_plotlyjs):
     models = scenario_payload(country, spec)
     key = spec["path"].stem
+    if country == "AU":
+        figure.add_hrect(y0=2, y1=3, fillcolor="#0B6E4F", opacity=0.10,
+                         line_width=0, layer="below",
+                         annotation_text="2–3% target", annotation_position="top left",
+                         annotation_font=dict(size=10, color="#0B6E4F"))
+    elif country in {"JP", "KR"}:
+        figure.add_hline(y=2, line_color="#0B6E4F", line_dash="dot", line_width=1.4,
+                         annotation_text="2% CPI target", annotation_position="top left",
+                         annotation_font=dict(size=10, color="#0B6E4F"))
     figure.update_xaxes(range=[str(pd.Timestamp(models[0]["lastDate"]) - pd.DateOffset(years=3)), models[0]["dates"][-1]],
                         rangeselector=dict(visible=False))
     figure.update_layout(height=420, margin=dict(l=55, r=18, t=70, b=40),
@@ -146,8 +157,9 @@ def scenario_html(country, spec, figure, include_plotlyjs):
             f'<label>{escape(driver["label"])} <input data-role="price" type="number" step="0.01" required></label>'
             '<button type="button" data-role="apply">Apply value</button></div></details></section>'
         )
-    availability = ('<p class="scenario-method">Japan’s VAR includes unemployment but no inflation-expectations input.</p>'
-                    if "expectations" not in models[0]["drivers"] else "")
+    availability = ('<p class="scenario-method">Tankan: general-price expectations one year ahead, all enterprises and industries. '
+                    'Quarterly readings carry forward from the following month. The estimation sample starts in 2014.</p>'
+                    if country == "JP" else "")
     return (
         f'<article class="chart-block oil-scenario" id="{key}" data-country="{country}">'
         f'<h3>{escape(spec["title"])}</h3><p>{escape(spec["description"])}</p>'

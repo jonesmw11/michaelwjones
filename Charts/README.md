@@ -6,7 +6,7 @@ The [Current Model Charts](Current%20Model%20Charts) folder is the central stati
 
 ## Driver scenarios
 
-Under **Inflation VAR**, the right column shows all driver mini charts together: oil, unemployment and inflation expectations for Australia and Korea; oil and unemployment for Japan, whose existing VAR has no expectations input. Draw across any shaded future area to combine paths while keeping the others visible. Orange scenario lines connect to the last green observation. Every measure for the country updates immediately, including Japan's national/Tokyo charts and Korea's CPI/PPI charts. Arrow keys adjust a focused point by $1 for oil or 0.1 percentage points for the other drivers. Expand **Exact values** below a mini chart for numeric controls. **Reset path** removes just that driver's assumptions; **Reset country forecasts** clears all drivers. Reloading clears edits. Labour inputs are unemployment rates, not vacancy-to-unemployment ratios.
+Under **Inflation VAR**, the right column shows oil, unemployment and inflation expectations together for every country. Japan uses Tankan one-year-ahead general-price expectations for all enterprises and industries, held forward from the month following each quarterly survey; its estimation sample starts in May 2014. Draw across any shaded future area to combine paths while keeping the others visible. Orange scenario lines connect to the last green observation. Every measure for the country updates immediately, including Japan's national/Tokyo charts and Korea's CPI/PPI charts. Arrow keys adjust a focused point by $1 for oil or 0.1 percentage points for the other drivers. Expand **Exact values** below a mini chart for numeric controls. **Reset path** removes just that driver's assumptions; **Reset country forecasts** clears all drivers. Reloading clears edits. Labour inputs are unemployment rates, not vacancy-to-unemployment ratios.
 
 Australia uses quarterly observations; Japan and Korea use monthly observations. Oil stays in USD-per-barrel levels; unemployment and expectations stay in percentage levels. The editor displays the first measure's paths. Each active driver is imposed at the drawn values on edited dates and its own model baseline on undrawn dates. Drivers with no edits remain endogenous and respond to the combined scenario; their displayed scenario paths reflect those responses. The same dated assumptions apply to every measure for the country. Coefficients remain fixed, with effects entering through lags. These are mechanical scenarios, not structurally identified causal shocks or probability forecasts.
 
@@ -15,6 +15,8 @@ Australia uses quarterly observations; Japan and Korea use monthly observations.
 The Tokyo export now ends observed CPI at the common VAR sample cutoff before chaining forecasts. This fixes the previously duplicated July 2026 row caused by Tokyo CPI being available ahead of the other drivers; estimation and coefficients are unchanged.
 
 ## Australia
+
+In the MCT dashboard, Australia's inflation-type dropdown switches all three charts between core and headline. South Korea is temporarily hidden from MCT only; its files and VAR/SMOG panels are retained. The US filtered chart uses the `_filtered_labelled.csv` export once the full estimation finishes.
 
 ![AU inflation forecast](Current%20Model%20Charts/AU%20-%20Inflation%20Forecast.png)
 

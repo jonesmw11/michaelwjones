@@ -61,7 +61,7 @@ INFLATION_MODELS = {
             "path": ROOT / "JP/Inflation Model/results/jp_cpi_inflation_forecast.csv",
             "frequency": "M",
             "forecast_steps": 36,
-            "description": "A monthly VAR forecasts four national CPI measures using unemployment, oil, import prices and Stage 2 pipeline prices.",
+            "description": "A monthly VAR forecasts four national CPI measures using unemployment, Tankan inflation expectations, oil, import prices and Stage 2 pipeline prices.",
             "series": {
                 "headline_yoy": "Headline",
                 "ex_fresh_food_yoy": "Ex fresh food",
@@ -160,6 +160,7 @@ MCT_MODELS = {
     },
     "USA": {
         "result": ROOT / "USA/Inflation Model/mct_model/results/python/current_reconstruction_d3000_b3000_t2_s2022_labelled.csv",
+        "filtered": ROOT / "USA/Inflation Model/mct_model/results/python/current_reconstruction_d3000_b3000_t2_s2022_filtered_labelled.csv",
         "pce_prices": ROOT / "USA/Inflation Model/pce_official/monthly_prices.csv",
         "core_pce_line": "374",
         "results_workbook": ROOT / "USA/Inflation Model/mct_model/results/python/current_reconstruction_d3000_b3000_t2_s2022.xlsx",

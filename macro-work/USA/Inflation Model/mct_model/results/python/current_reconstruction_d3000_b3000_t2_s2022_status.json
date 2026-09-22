@@ -1,17 +1,17 @@
 {
-  "pid": 36236,
+  "pid": 3524,
   "status": "running",
   "vintage": "current_reconstruction",
   "seed": 2022,
   "engine": "Python / statsmodels simulation smoother / NumPy-SciPy sampling",
-  "started_utc": "2026-09-21T16:22:42.464043+00:00",
+  "started_utc": "2026-09-22T15:24:54.499591+00:00",
   "versions": {
     "python": "3.14.6",
     "numpy": "2.5.1",
     "scipy": "1.18.0",
     "statsmodels": "0.14.6"
   },
-  "iteration": 4821,
+  "iteration": 141,
   "total": 6001,
-  "elapsed_seconds": 11918.997079400055
+  "elapsed_seconds": 292.3236643000273
 }

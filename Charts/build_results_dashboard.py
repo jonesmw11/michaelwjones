@@ -557,7 +557,7 @@ def build_page():
 
     mct_blocks = {}
     for country in config.COUNTRY_ORDER:
-        if country not in config.MCT_MODELS:
+        if country not in config.MCT_MODELS or country == "KR":
             continue
         country_name = config.COUNTRIES[country]["name"]
         spec = config.MCT_MODELS[country]
@@ -568,6 +568,9 @@ def build_page():
                 spec["description"], mct_figure(country, "filtered"), include_plotlyjs,
             ))
             include_plotlyjs = False
+        elif country == "USA":
+            blocks.append('<article class="chart-block"><h3>United States: Filtered core MCT</h3>'
+                          '<p>The filtered estimate is being computed. The smoothed estimate remains available below.</p></article>')
         blocks.append(chart_html(
             f"{country_name}: Smoothed core MCT",
             spec["description"], mct_figure(country, "smoothed"), include_plotlyjs,
@@ -579,6 +582,11 @@ def build_page():
             mct_sector_trends_figure(country), include_plotlyjs,
         ))
         if country == "AU" and "AU_HEADLINE" in config.MCT_MODELS:
+            blocks = ['<label class="mct-type-control" for="au-mct-type">Inflation type '
+                      '<select id="au-mct-type"><option value="core">Core</option>'
+                      '<option value="headline">Headline</option></select></label>'
+                      '<div data-mct-type="core">' + ''.join(blocks) + '</div>',
+                      '<div data-mct-type="headline" hidden>']
             headline = config.MCT_MODELS["AU_HEADLINE"]
             blocks.append(chart_html(
                 "Australia: Filtered headline MCT",
@@ -595,6 +603,7 @@ def build_page():
                 headline["sector_trends_description"],
                 mct_sector_trends_figure("AU_HEADLINE"), include_plotlyjs,
             ))
+            blocks.append('</div>')
         mct_blocks[country] = blocks
     sections.append(country_tabs_section(
         "mct",
@@ -827,6 +836,15 @@ function addTabKeys(selector, activate) {{
 addTabKeys('.family-tab', activateFamily);
 addTabKeys('.country-tab', activateCountry);
 addTabKeys('.model-tab', activateModel);
+const inflationType = document.getElementById('au-mct-type');
+if (inflationType) {{
+  inflationType.addEventListener('change', () => {{
+    document.querySelectorAll('[data-mct-type]').forEach(panel => {{
+      panel.hidden = panel.dataset.mctType !== inflationType.value;
+    }});
+    resizeVisibleCharts();
+  }});
+}}
 const requestedFamily = window.location.hash.slice(1).toLowerCase();
 const requestedTab = document.querySelector(`.family-tab[data-family="${{requestedFamily}}"]`);
 if (requestedTab) activateFamily(requestedTab, false);

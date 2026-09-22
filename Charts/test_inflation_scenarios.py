@@ -82,7 +82,7 @@ class OilScenarioTests(unittest.TestCase):
                 models = scenario_payload(country, spec)
                 available = models[0]["drivers"]
                 self.assertIn("unemployment", available)
-                self.assertEqual("expectations" in available, country != "JP")
+                self.assertIn("expectations", available)
                 for names in [["unemployment"], *([["expectations"]] if "expectations" in available else []), list(available)]:
                     edits = {name: [[models[0]["dates"][2], {"oil": 60, "unemployment": 7, "expectations": -0.5}[name]]]
                              for name in names}

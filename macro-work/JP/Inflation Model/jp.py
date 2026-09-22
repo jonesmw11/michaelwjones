@@ -1,26 +1,10 @@
-"""Japan inflation forecast - VAR models for national CPI and Tokyo CPI.
-
-Data: `Data Inputs.xlsx`, sheet "JN" (monthly: national and Tokyo CPI
-measures, unemployment, oil, import prices, Stage 2).
-
-Model
------
-Monthly VARs, all variables endogenous:
-
-    y_t = [ CPI inflation (% m/m)
-            unemployment rate (%)
-            oil price level (USD per barrel)
-            import-price inflation (% m/m)
-            Stage 2 pipeline-price inflation (% m/m) ]
-
-statsmodels VAR with the lag order chosen by AIC; forecasts from the fitted
-model's dynamic recursion.
-
-National measures: headline, ex fresh food, ex fresh food & energy,
-ex food & energy. Tokyo measures: headline, ex fresh food,
-ex fresh food & energy (Tokyo prints roughly a month ahead of the national
-release, which is why the desk tracks it separately).
-"""
+# Japan inflation forecasts: national and Tokyo CPI monthly VARs.
+# Data Inputs.xlsx, JN: CPI, unemployment, Tankan expectations, oil,
+# import prices and Stage 2. Expectations and unemployment are percentage
+# levels; oil is USD per barrel; CPI, import prices and Stage 2 use m/m changes.
+# Tankan is held forward from the month after each quarter, starting April
+# 2014. See TANKAN.md for source and timing. Lags are selected by AIC.
+# =============================================================================
 # %% Imports and data access
 # Load pandas and the local workbook and VAR helpers.
 import pandas as pd
@@ -45,6 +29,7 @@ TOKYO = {
 
 DRIVERS = {
     "unemployment": ("JN", "Unemployment"),
+    "expectations": ("JN", "Tankan inflation expectations"),
     "oil": ("JN", "WTI spot USD"),
     "import_prices": ("JN", "JP ImPI"),
     "stage2": ("JN", "Stage2"),
@@ -62,7 +47,7 @@ def _run_group(measures, filename, verbose):
     for label, column in measures.items():
         cpi = series("JN", "M", column, name="cpi").loc[pd.Period(START, freq="M"):]
         frame = pd.concat([cpi, drivers], axis=1).dropna()
-        # CPI and other price indices -> inflation rates; oil and unemployment stay in levels
+        # CPI and other price indices -> inflation rates; oil, unemployment and expectations stay in levels
         frame = pct_change(frame, ["cpi", "import_prices", "stage2"]).dropna()
 
         res = fit_var(frame, maxlags=12, ic="aic")
