@@ -38,7 +38,7 @@ class OilScenarioTests(unittest.TestCase):
         results = json.loads(output.stdout)
         for i, model in enumerate(models):
             rates = np.array(results["changed"][i]["rates"])
-            oil = model["oilLast"] * np.cumprod(1 + rates[:, model["oilIndex"]] / 100)
+            oil = rates[:, model["oilIndex"]]
             np.testing.assert_allclose(oil[2:4], [60, 55], atol=1e-9)
             np.testing.assert_allclose(results["reset"][i]["yoy"], model["baselineYoy"], atol=1e-9)
             self.assertGreater(np.max(np.abs(np.array(results["changed"][i]["yoy"]) - model["baselineYoy"])), 1e-5)
@@ -55,12 +55,10 @@ class OilScenarioTests(unittest.TestCase):
                         path[2:8] *= 1.25
                         changed = browser_projection(model, path.tolist())
                         rows = np.array(model["seed"])
-                        previous = model["oilLast"]
                         reference = []
                         for price in path:
                             row = forecast(rows, np.array(model["coefficients"]), np.array(model["intercept"]), 1)[0]
-                            row[model["oilIndex"]] = 100 * (price / previous - 1)
-                            previous = price
+                            row[model["oilIndex"]] = price
                             rows = np.vstack([rows, row])
                             reference.append(row)
                         np.testing.assert_allclose(changed["rates"], reference, atol=1e-9)

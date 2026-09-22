@@ -13,7 +13,7 @@ so the VAR projects them jointly.
             unemployment rate (%)
             inflation expectations (%)
             import-price inflation (% q/q)
-            oil price inflation (% q/q)
+            oil price level (USD per barrel)
             Stage 2 pipeline-price inflation (% q/q) ]
 """
 
@@ -78,9 +78,10 @@ for label, column in MEASURES.items():
     # put CPI next to the drivers and keep only quarters where all exist
     frame = pd.concat([cpi, drivers], axis=1).dropna()
 
-    # convert index levels to % change; leave unemployment/expectations alone
-    for col in ["cpi", "import_prices", "oil", "stage2"]:
+    # Convert CPI and other price indices to changes; keep oil, unemployment and expectations in levels.
+    for col in ["cpi", "import_prices",  "stage2"]:
         frame[col] = 100.0 * frame[col].pct_change()
+
     frame = frame.dropna()                 # first row lost to differencing
     frames[label] = frame
 

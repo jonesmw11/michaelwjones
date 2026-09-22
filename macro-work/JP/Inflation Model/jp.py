@@ -9,7 +9,7 @@ Monthly VARs, all variables endogenous:
 
     y_t = [ CPI inflation (% m/m)
             unemployment rate (%)
-            oil price inflation (% m/m)
+            oil price level (USD per barrel)
             import-price inflation (% m/m)
             Stage 2 pipeline-price inflation (% m/m) ]
 
@@ -62,8 +62,8 @@ def _run_group(measures, filename, verbose):
     for label, column in measures.items():
         cpi = series("JN", "M", column, name="cpi").loc[pd.Period(START, freq="M"):]
         frame = pd.concat([cpi, drivers], axis=1).dropna()
-        # price indices -> inflation rates; unemployment stays in levels
-        frame = pct_change(frame, ["cpi", "oil", "import_prices", "stage2"]).dropna()
+        # CPI and other price indices -> inflation rates; oil and unemployment stay in levels
+        frame = pct_change(frame, ["cpi", "import_prices", "stage2"]).dropna()
 
         res = fit_var(frame, maxlags=12, ic="aic")
         mid, _lo, _hi = forecast(res, STEPS)

@@ -9,7 +9,7 @@ Monthly VARs, all variables endogenous:
 
   CPI models   y_t = [ CPI inflation (% m/m)
                        inflation expectations (%)
-                       oil price inflation (% m/m)
+                       oil price level (USD per barrel)
                        import-price inflation (% m/m)
                        unemployment rate (%) ]
 
@@ -52,7 +52,7 @@ def _run_group(measures, filename, verbose):
     for label, column in measures.items():
         target = series("KR", "M", column, name="cpi").loc[pd.Period(START, freq="M"):]
         frame = pd.concat([target, drivers], axis=1).dropna()
-        frame = pct_change(frame, ["cpi", "oil", "import_prices"]).dropna()
+        frame = pct_change(frame, ["cpi", "import_prices"]).dropna()
 
         # expectations start in 2002, so the sample is a little shorter than
         # the other monthly models; 12 candidate lags still fit comfortably

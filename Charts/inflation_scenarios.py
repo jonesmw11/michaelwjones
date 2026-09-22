@@ -40,7 +40,7 @@ def country_inputs(country):
         targets = {name: quarterly[column].dropna().loc["2001Q1":].rename("cpi")
                    for name, column in {"headline": "Headline - Index", "trimmed_mean": "Trimmed mean index",
                                         "ex_food_energy": "Ex food & energy Index s.a"}.items()}
-        return drivers, targets, ["cpi", "import_prices", "oil", "stage2"], 6
+        return drivers, targets, ["cpi", "import_prices", "stage2"], 6
     previous = {name: sys.modules.get(name) for name in ("data", "varmodel")}
     try:
         sys.modules["data"] = data
@@ -56,7 +56,7 @@ def country_inputs(country):
     drivers = data.build_frame(model.DRIVERS, freq="M", start=model.START)
     targets = {name: data.series("JN" if country == "JP" else "KR", "M", column, name="cpi").loc[model.START:]
                for name, column in measures.items()}
-    changes = ["cpi", "oil", "import_prices"] + (["stage2"] if country == "JP" else [])
+    changes = ["cpi", "import_prices"] + (["stage2"] if country == "JP" else [])
     return drivers, targets, changes, 12
 
 
@@ -90,7 +90,7 @@ def scenario_payload(country, spec):
                                    err_msg=f"Refresh saved {country} {name} forecasts before building scenarios")
         oil = drivers["oil"].loc[:frame.index[-1]].dropna()
         oil_index = frame.columns.get_loc("oil")
-        oil_path = oil.iloc[-1] * np.cumprod(1 + baseline[:, oil_index] / 100)
+        oil_path = baseline[:, oil_index]
         if not np.isfinite(oil_path).all() or (oil_path <= 0).any():
             raise ValueError(f"Non-positive baseline oil path: {country} {name}")
         models.append(dict(
@@ -135,8 +135,8 @@ def scenario_html(country, spec, figure, include_plotlyjs):
         '<button type="button" data-role="reset">Reset country forecasts</button></div>'
         '<p data-role="status" role="status" aria-live="polite"></p>'
         '</section></div>'
-        '<p class="scenario-method">Coefficients stay fixed. The selected oil level is converted to period growth '
-        'and imposed each period; inflation and the other drivers evolve recursively. Because this VAR uses lagged '
+        '<p class="scenario-method">Coefficients stay fixed. Oil stays in price levels '
+        'and the drawn price is imposed each period; inflation and the other drivers evolve recursively. Because this VAR uses lagged '
         'drivers, changing oil first affects inflation in a later period. This is a mechanical scenario, not an identified '
         'causal oil shock. Edited prices apply to every measure for this country, including companion charts. '
         'Unedited dates retain each model’s original oil forecast. Reset restores all original forecasts.</p>'

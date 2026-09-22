@@ -4,7 +4,6 @@ function projectOilScenario(model, oilPath) {
   const rows = model.seed.map(row => row.slice());
   const levels = model.cpiHistory.slice();
   const rates = [];
-  let previousOil = model.oilLast;
   const yoy = oilPath.map(price => {
     if (!Number.isFinite(price) || price <= 0) throw new Error('Enter a positive oil price.');
     const next = model.intercept.slice();
@@ -12,8 +11,7 @@ function projectOilScenario(model, oilPath) {
       const previous = rows[rows.length - lag - 1];
       matrix.forEach((equation, i) => equation.forEach((weight, j) => { next[i] += weight * previous[j]; }));
     });
-    next[model.oilIndex] = 100 * (price / previousOil - 1);
-    previousOil = price;
+    next[model.oilIndex] = price;
     if (!next.every(Number.isFinite) || next[0] <= -100) throw new Error('This path produces invalid inflation levels. Try a smaller change.');
     rows.push(next);
     rates.push(next);
