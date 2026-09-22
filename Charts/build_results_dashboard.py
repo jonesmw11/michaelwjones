@@ -10,6 +10,7 @@ from plotly.colors import qualitative
 import plotly.io as pio
 
 import results_dashboard_config as config
+from inflation_scenarios import scenario_html
 
 sys.path.insert(0, str(config.MASTER_WORK["root"]))
 from dashboard_charts import all_model_metrics, build_master_figures
@@ -626,8 +627,8 @@ def build_page():
             continue
         blocks = []
         for model in models:
-            blocks.append(chart_html(
-                model["title"], model["description"],
+            blocks.append(scenario_html(
+                country, model,
                 inflation_figure(model), include_plotlyjs,
             ))
             include_plotlyjs = False
@@ -687,6 +688,13 @@ h2 {{ margin:0 0 8px; font-size:28px; font-weight:500; border-bottom:2px solid v
 .model-panel {{ padding-top:1px; }}
 .empty-state {{ margin:30px 0; color:var(--note); }}
 .chart-block {{ margin:26px 0 46px; }}
+.scenario-editor {{ padding:20px; background:var(--soft); border:1px solid var(--line); border-radius:5px; }}
+.scenario-controls {{ display:flex; gap:12px; flex-wrap:wrap; align-items:end; margin:18px 0; }}
+.scenario-controls label {{ display:grid; gap:6px; font-size:14px; }}
+.scenario-controls input, .scenario-controls select, .scenario-controls button {{ padding:9px; font:inherit; border:1px solid #BBB; border-radius:4px; background:white; }}
+.scenario-controls input {{ width:160px; }}
+.scenario-controls button {{ cursor:pointer; color:var(--green); }}
+.scenario-method {{ font-size:13px; margin-top:12px !important; }}
 h3 {{ margin:0 0 6px; font-size:21px; font-weight:500; }}
 .chart-block p {{ margin:0 0 8px; max-width:900px; }}
 .plotly-graph-div {{ width:100% !important; }}
@@ -825,6 +833,7 @@ if (modelTable && modelSearch) {{
 }}
 resizeVisibleCharts();
 </script>
+<script>{(config.PORTFOLIO_ROOT / 'Charts/inflation_scenarios.js').read_text(encoding='utf-8')}</script>
 </body>
 </html>'''
 

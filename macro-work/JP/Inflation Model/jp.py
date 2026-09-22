@@ -67,7 +67,8 @@ def _run_group(measures, filename, verbose):
 
         res = fit_var(frame, maxlags=12, ic="aic")
         mid, _lo, _hi = forecast(res, STEPS)
-        results[label] = report(cpi.loc[frame.index[0]:], mid["cpi"], label)
+        # Chain from the common VAR cutoff; Tokyo can have a newer CPI release.
+        results[label] = report(cpi.loc[frame.index[0]:frame.index[-1]], mid["cpi"], label)
 
         if verbose:
             out = results[label]

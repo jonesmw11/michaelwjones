@@ -2,7 +2,17 @@
 
 Open the [interactive research-results dashboard](../results_dashboard.html) to review the macroeconomic models and selected master’s dissertation results. The dashboard is organised first by modelling framework—MCT, SMOG state space and inflation VAR—with country tabs inside each model family. `results_dashboard_config.py` contains the section order, descriptions, data paths and chart-series definitions; `build_results_dashboard.py` creates the page at the top level of `michaelwjones`.
 
-The [Current Model Charts](Current%20Model%20Charts) folder is the central static gallery for the latest saved outputs. From the repository root, run `py -3.14 Charts/build_model_summary.py` and `py -3.14 Charts/build_results_dashboard.py` to refresh both presentations without rerunning any model. Run `py -3.14 macro-work/run_all_var_models.py` to re-estimate the AU, JP and KR VAR forecasts first and then refresh both automatically.
+The [Current Model Charts](Current%20Model%20Charts) folder is the central static gallery for the latest saved outputs. From the repository root, run `py -3.14 Charts/build_model_summary.py` to refresh the static gallery and `py -3.14 Charts/build_results_dashboard.py` to rebuild the dashboard. The dashboard builder refits the existing VAR specifications to export scenario coefficients and checks that their baseline forecasts match the saved results; it does not overwrite those results. Run `py -3.14 macro-work/run_all_var_models.py` to update the AU, JP and KR forecasts first and then refresh both presentations automatically.
+
+## Oil scenarios
+
+Under **Inflation VAR**, select a country and inflation measure. Click an orange future oil point, enter a positive USD-per-barrel price and press **Apply price** (or Enter). The red line on the inflation chart updates, with the baseline still visible. The period dropdown provides a keyboard alternative. **Reset this path** restores the selected measure's baseline. Edits are temporary and are cleared when the page reloads.
+
+Australia uses quarterly oil averages; Japan and Korea use monthly prices. Each measure has its own VAR and oil baseline. Coefficients remain fixed. The browser converts the imposed oil levels into percentage changes and recursively forecasts inflation and the other drivers, holding future oil at the edited path. Effects therefore enter through lags, with no same-period inflation response. These mechanical scenarios are not structurally identified causal shocks or probability forecasts.
+
+`inflation_scenarios.py` exports the fitted coefficients and initial state into the HTML; `inflation_scenarios.js` runs the editor entirely in the browser. No backend is needed. Run `python Charts/test_inflation_scenarios.py` from the repository root (Python model dependencies and Node.js required) to check all 13 measures against statsmodels, including baseline identity, changed oil paths, lag timing and year-on-year reconstruction.
+
+The Tokyo export now ends observed CPI at the common VAR sample cutoff before chaining forecasts. This fixes the previously duplicated July 2026 row caused by Tokyo CPI being available ahead of the other drivers; estimation and coefficients are unchanged.
 
 ## Australia
 
