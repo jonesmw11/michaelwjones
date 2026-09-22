@@ -693,6 +693,8 @@ main:has(#family-var-panel:not([hidden])) {{ max-width:1600px; }}
 .scenario-columns > section {{ min-width:0; padding:12px; border:1px solid var(--line); border-radius:5px; }}
 .scenario-columns h4 {{ margin:4px 0 6px; font-size:19px; font-weight:500; }}
 .scenario-editor {{ background:var(--soft); }}
+.scenario-driver-label {{ display:flex; align-items:center; gap:10px; margin:8px 0; font-size:14px; }}
+.scenario-driver-label select {{ font:inherit; padding:7px; border:1px solid #BBB; border-radius:4px; background:white; max-width:100%; }}
 @media (max-width:800px) {{ .scenario-columns {{ grid-template-columns:minmax(0,1fr); }} }}
 .scenario-controls {{ display:flex; gap:12px; flex-wrap:wrap; align-items:end; margin:18px 0; }}
 .scenario-controls label {{ display:grid; gap:6px; font-size:14px; }}

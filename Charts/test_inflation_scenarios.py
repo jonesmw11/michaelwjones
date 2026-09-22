@@ -32,7 +32,7 @@ class OilScenarioTests(unittest.TestCase):
     def test_shared_edits_update_every_measure_and_reset(self):
         models = scenario_payload("AU", config.INFLATION_MODELS["AU"][0])
         edits = [[models[0]["dates"][2], 60], [models[0]["dates"][3], 55]]
-        script = "const fs=require('fs'); const {projectCountryScenario}=require('./inflation_scenarios.js'); const x=JSON.parse(fs.readFileSync(0,'utf8')); console.log(JSON.stringify({changed:projectCountryScenario(x.models,new Map(x.edits)),reset:projectCountryScenario(x.models,new Map())}));"
+        script = "const fs=require('fs'); const {projectCountryScenario}=require('./inflation_scenarios.js'); const x=JSON.parse(fs.readFileSync(0,'utf8')); console.log(JSON.stringify({changed:projectCountryScenario(x.models,new Map([['oil',new Map(x.edits)]])),reset:projectCountryScenario(x.models,new Map())}));"
         output = subprocess.run(["node", "-e", script], input=json.dumps(dict(models=models, edits=edits)),
                                 capture_output=True, text=True, check=True, cwd=Path(__file__).parent)
         results = json.loads(output.stdout)
@@ -69,10 +69,40 @@ class OilScenarioTests(unittest.TestCase):
                         np.testing.assert_allclose(changed["yoy"], 100 * (levels[year:] / levels[:-year] - 1), atol=1e-9)
 
     def test_zero_lag_and_invalid_price(self):
-        model = dict(seed=[[1, 2]], coefficients=[], intercept=[1, 2], cpiHistory=[100], year=1, oilLast=50, oilIndex=1)
+        model = dict(seed=[[1, 2]], coefficients=[], intercept=[1, 2], cpiHistory=[100], year=1,
+                     dates=["2026-01-01", "2026-02-01"], drivers={"oil": dict(index=1, minimum=0.01, maximum=None)})
         np.testing.assert_allclose(browser_projection(model, [50, 60])["yoy"], [1, 1])
         with self.assertRaises(subprocess.CalledProcessError):
             browser_projection(model, [0])
+
+    def test_combined_driver_paths_against_statsmodels(self):
+        script = "const fs=require('fs'); const {projectCountryScenario}=require('./inflation_scenarios.js'); const x=JSON.parse(fs.readFileSync(0,'utf8')); const edits=new Map(Object.entries(x.edits).map(([name,values])=>[name,new Map(values)])); console.log(JSON.stringify(projectCountryScenario(x.models,edits)));"
+        for country, specs in config.INFLATION_MODELS.items():
+            for spec in specs:
+                models = scenario_payload(country, spec)
+                available = models[0]["drivers"]
+                self.assertIn("unemployment", available)
+                self.assertEqual("expectations" in available, country != "JP")
+                for names in [["unemployment"], *([["expectations"]] if "expectations" in available else []), list(available)]:
+                    edits = {name: [[models[0]["dates"][2], {"oil": 60, "unemployment": 7, "expectations": -0.5}[name]]]
+                             for name in names}
+                    output = subprocess.run(["node", "-e", script], input=json.dumps(dict(models=models, edits=edits)),
+                                            capture_output=True, text=True, check=True, cwd=Path(__file__).parent)
+                    results = json.loads(output.stdout)
+                    for model, result in zip(models, results):
+                        with self.subTest(country=country, measure=model["label"], drivers=names):
+                            rows = np.array(model["seed"])
+                            reference = []
+                            for h, date in enumerate(model["dates"]):
+                                row = forecast(rows, np.array(model["coefficients"]), np.array(model["intercept"]), 1)[0]
+                                for name in names:
+                                    driver = model["drivers"][name]
+                                    row[driver["index"]] = dict(edits[name]).get(date, driver["baseline"][h])
+                                reference.append(row)
+                                rows = np.vstack([rows, row])
+                            np.testing.assert_allclose(result["rates"], reference, atol=1e-9)
+                            np.testing.assert_allclose(result["yoy"][:3], model["baselineYoy"][:3], atol=1e-9)
+                            self.assertGreater(np.max(np.abs(np.array(result["yoy"]) - model["baselineYoy"])), 1e-5)
 
 
 # =============================================================================

@@ -14,6 +14,12 @@ from statsmodels.tsa.api import VAR
 
 import results_dashboard_config as config
 
+DRAWABLE_DRIVERS = {
+    "oil": dict(label="Oil price", unit="USD per barrel", minimum=0.01, maximum=None, keyStep=1),
+    "unemployment": dict(label="Unemployment rate", unit="Per cent", minimum=0, maximum=100, keyStep=0.1),
+    "expectations": dict(label="Inflation expectations", unit="Per cent", minimum=None, maximum=None, keyStep=0.1),
+}
+
 
 # =============================================================================
 #%% Reuse the country workbook readers and monthly model specifications
@@ -93,6 +99,15 @@ def scenario_payload(country, spec):
         oil_path = baseline[:, oil_index]
         if not np.isfinite(oil_path).all() or (oil_path <= 0).any():
             raise ValueError(f"Non-positive baseline oil path: {country} {name}")
+        drawable = {}
+        for driver, metadata in DRAWABLE_DRIVERS.items():
+            if driver not in frame:
+                continue
+            driver_history = drivers[driver].loc[:frame.index[-1]].dropna().iloc[-60:]
+            index = frame.columns.get_loc(driver)
+            drawable[driver] = dict(metadata, index=index, baseline=baseline[:, index].tolist(),
+                                    dates=driver_history.index.to_timestamp().strftime("%Y-%m-%d").tolist(),
+                                    history=driver_history.tolist(), last=float(driver_history.iloc[-1]))
         models.append(dict(
             label=label, dates=dates.to_timestamp().strftime("%Y-%m-%d").tolist(), periods=dates.astype(str).tolist(),
             coefficients=fit.coefs.tolist(), intercept=fit.intercept.tolist(),
@@ -101,7 +116,7 @@ def scenario_payload(country, spec):
             cpiHistory=history.iloc[-year:].tolist(), year=year, baselineYoy=yoy.loc[dates].tolist(),
             oilDates=oil.iloc[-60:].index.to_timestamp().strftime("%Y-%m-%d").tolist(),
             oilHistory=oil.iloc[-60:].tolist(), lastDate=str(frame.index[-1].to_timestamp().date()),
-            lastYoy=float(yoy.loc[frame.index[-1]]), lastPeriod=str(frame.index[-1]), lag=fit.k_ar,
+            lastYoy=float(yoy.loc[frame.index[-1]]), lastPeriod=str(frame.index[-1]), lag=fit.k_ar, drivers=drawable,
         ))
     return models
 
@@ -118,27 +133,32 @@ def scenario_html(country, spec, figure, include_plotlyjs):
     chart = pio.to_html(figure, full_html=False, include_plotlyjs=include_plotlyjs,
                         div_id=f"{key}-inflation", config={"responsive": True, "displaylogo": False})
     unit = "quarter" if spec["frequency"] == "Q" else "month"
+    driver_options = "".join(f'<option value="{name}">{escape(driver["label"])}</option>'
+                             for name, driver in models[0]["drivers"].items())
+    availability = ('<p class="scenario-method">Japan’s VAR includes unemployment but no inflation-expectations input.</p>'
+                    if "expectations" not in models[0]["drivers"] else "")
     return (
         f'<article class="chart-block oil-scenario" id="{key}" data-country="{country}">'
         f'<h3>{escape(spec["title"])}</h3><p>{escape(spec["description"])}</p>'
         '<div class="scenario-columns"><section class="scenario-forecast"><h4>Inflation forecast</h4>'
-        f'{chart}</section><section class="scenario-editor"><h4>Draw an oil-price path</h4>'
+        f'{chart}</section><section class="scenario-editor"><h4>Draw driver paths</h4>'
+        f'<label class="scenario-driver-label">Draw <select data-role="driver">{driver_options}</select></label>'
         f'<div class="oil-drag-container"><div id="{key}-oil" class="plotly-graph-div"></div>'
         '<div class="oil-drag-handles"></div></div>'
-        f'<p>Press and draw across the shaded future area to sketch your oil path. You can start anywhere, '
-        f'lift and draw another section. Your stroke sets each {unit} it crosses. '
+        f'<p>Choose a driver, then draw across the shaded future area. Switch drivers to combine your paths. '
+        f'Each stroke sets the {unit}s it crosses. '
         'All inflation forecasts for this country update as you draw.</p>'
         '<div class="scenario-controls">'
         '<label>Forecast period <select data-role="period"></select></label>'
-        '<label>Oil price (USD per barrel) <input data-role="price" type="number" min="0.01" step="0.01"></label>'
-        '<button type="button" data-role="apply">Apply price</button>'
+        '<label><span data-role="value-label">Oil price (USD per barrel)</span> <input data-role="price" type="number" min="0.01" step="0.01"></label>'
+        '<button type="button" data-role="apply">Apply value</button>'
+        '<button type="button" data-role="reset-driver">Reset this driver</button>'
         '<button type="button" data-role="reset">Reset country forecasts</button></div>'
         '<p data-role="status" role="status" aria-live="polite"></p>'
-        '</section></div>'
-        '<p class="scenario-method">Coefficients stay fixed. Oil stays in price levels '
-        'and the drawn price is imposed each period; inflation and the other drivers evolve recursively. Because this VAR uses lagged '
-        'drivers, changing oil first affects inflation in a later period. This is a mechanical scenario, not an identified '
-        'causal oil shock. Edited prices apply to every measure for this country, including companion charts. '
-        'Unedited dates retain each model’s original oil forecast. Reset restores all original forecasts.</p>'
+        f'{availability}</section></div>'
+        '<p class="scenario-method">Coefficients stay fixed. Oil uses price levels; unemployment and expectations use percentages. '
+        'Drawn paths apply together to every measure for this country, including companion charts. For each edited driver, '
+        'undrawn dates retain each model’s original forecast. Other drivers evolve recursively. Effects enter through lags; '
+        'these are mechanical scenarios, not identified causal shocks. Reset restores the original forecasts.</p>'
         f'<script type="application/json" class="scenario-data">{json.dumps(models, allow_nan=False)}</script></article>'
     )
