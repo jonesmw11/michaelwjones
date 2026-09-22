@@ -25,6 +25,10 @@ def browser_projection(model, path):
 # =============================================================================
 #%% Baseline identity, oil intervention timing, and full recursive propagation
 class OilScenarioTests(unittest.TestCase):
+    def test_freehand_stroke_samples_forward_backward_and_vertical(self):
+        script = "const assert=require('node:assert/strict'); const {sampleOilStroke}=require('./inflation_scenarios.js'); const x=[0,10,20,30]; const expected=[[0,50],[1,60],[2,70],[3,80]]; assert.deepEqual(sampleOilStroke(x,{x:0,y:50},{x:30,y:80}),expected); assert.deepEqual(sampleOilStroke(x,{x:30,y:80},{x:0,y:50}),expected); assert.deepEqual(sampleOilStroke(x,{x:10,y:50},{x:10,y:90}),[[1,90]]); assert.deepEqual(sampleOilStroke(x,{x:10,y:60},{x:20,y:70}),[[1,60],[2,70]]);"
+        subprocess.run(["node", "-e", script], check=True, cwd=Path(__file__).parent)
+
     def test_shared_edits_update_every_measure_and_reset(self):
         models = scenario_payload("AU", config.INFLATION_MODELS["AU"][0])
         edits = [[models[0]["dates"][2], 60], [models[0]["dates"][3], 55]]

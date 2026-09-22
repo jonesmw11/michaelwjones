@@ -34,7 +34,21 @@ function projectCountryScenario(models, edits) {
 }
 
 // =============================================================================
-//%% Draggable forecast handles and synchronized inflation charts
+//%% Sample a freehand stroke at forecast dates, including skipped points
+function sampleOilStroke(positions, start, end) {
+  const nearest = x => positions.reduce((best, value, i) =>
+    Math.abs(value - x) < Math.abs(positions[best] - x) ? i : best, 0);
+  const first = nearest(start.x), last = nearest(end.x);
+  const samples = [];
+  for (let i = Math.min(first, last); i <= Math.max(first, last); i++) {
+    const fraction = end.x === start.x ? 1 : Math.max(0, Math.min(1, (positions[i] - start.x) / (end.x - start.x)));
+    samples.push([i, start.y + fraction * (end.y - start.y)]);
+  }
+  return samples;
+}
+
+// =============================================================================
+//%% Freehand oil drawing and synchronized inflation charts
 async function initializeOilScenarios() {
   const countries = new Map();
   const editors = Array.from(document.querySelectorAll('.oil-scenario')).map(root => {
@@ -70,31 +84,17 @@ async function initializeOilScenarios() {
     await Plotly.newPlot(oil, [
       {x: m.oilDates, y: m.oilHistory, name: 'Observed oil', mode: 'lines', line: {color: '#0B6E4F'}},
       {x: [m.lastDate, ...m.dates], y: [m.oilLast, ...m.oilBaseline], name: 'Original oil forecast', mode: 'lines', line: {color: '#9A9A9A', dash: 'dash'}},
-      {x: m.dates, y: path(), name: 'Drag points to edit', mode: 'lines', line: {color: '#B5651D', width: 2.5}},
+      {x: m.dates, y: path(), name: 'Draw your oil path', mode: 'lines', line: {color: '#B5651D', width: 2.5}},
     ], layout, {responsive: true, displaylogo: false, displayModeBar: false});
+    const surface = document.createElement('div');
+    surface.className = 'oil-draw-surface';
+    surface.setAttribute('aria-label', 'Draw an oil price path across future periods');
+    overlay.appendChild(surface);
     const handles = m.dates.map((date, i) => {
       const handle = document.createElement('button');
       handle.type = 'button';
       handle.className = 'oil-handle';
-      handle.setAttribute('aria-label', `Drag oil price for ${m.periods[i]}; arrow keys adjust by one dollar`);
-      handle.addEventListener('pointerdown', event => {
-        if (event.button !== 0) return;
-        event.preventDefault();
-        select(i);
-        handle.setPointerCapture(event.pointerId);
-        handle.dataset.dragging = 'true';
-      });
-      handle.addEventListener('pointermove', event => {
-        if (handle.dataset.dragging !== 'true') return;
-        const axis = oil._fullLayout.yaxis;
-        const value = axis.p2d(event.clientY - oil.getBoundingClientRect().top - axis._offset);
-        change(i, Math.max(0.01, Math.min(axis.range[1], value)));
-      });
-      const finish = () => { delete handle.dataset.dragging; };
-      handle.addEventListener('pointerup', finish);
-      handle.addEventListener('pointercancel', finish);
-      handle.addEventListener('lostpointercapture', finish);
-      handle.addEventListener('click', () => select(i));
+      handle.setAttribute('aria-label', `Oil price for ${m.periods[i]}; arrow keys adjust by one dollar`);
       handle.addEventListener('keydown', event => {
         if (!['ArrowUp', 'ArrowDown'].includes(event.key)) return;
         event.preventDefault();
@@ -106,10 +106,13 @@ async function initializeOilScenarios() {
     });
     function positionHandles() {
       const {xaxis, yaxis} = oil._fullLayout;
+      const left = Math.max(0, xaxis.d2p(m.lastDate));
+      Object.assign(surface.style, {left: `${xaxis._offset + left}px`, top: `${yaxis._offset}px`,
+        width: `${xaxis._length - left}px`, height: `${yaxis._length}px`});
       path().forEach((value, i) => {
         handles[i].style.left = `${xaxis._offset + xaxis.d2p(m.dates[i])}px`;
         handles[i].style.top = `${yaxis._offset + yaxis.d2p(value)}px`;
-        handles[i].title = `${m.periods[i]}: $${value.toFixed(2)} — drag up or down`;
+        handles[i].title = `${m.periods[i]}: $${value.toFixed(2)}`;
       });
     }
     oil.on('plotly_afterplot', positionHandles);
@@ -127,7 +130,7 @@ async function initializeOilScenarios() {
       });
       status.textContent = edits.size
         ? `All forecast lines updated. Largest changes vs original: ${impacts.join('; ')}. Effects start after the model's lag, not in the edited period itself.`
-        : 'Original forecasts. Drag any orange point to update all measures for this country.';
+        : 'Original forecasts. Press anywhere in the shaded forecast area and draw across it to update all measures.';
       select(Number(period.value));
     };
     function updateCountry() {
@@ -146,6 +149,39 @@ async function initializeOilScenarios() {
         status.textContent = error.message;
       }
     }
+    let stroke = null;
+    function pointerPosition(event) {
+      const box = oil.getBoundingClientRect(), {xaxis, yaxis} = oil._fullLayout;
+      return {x: Math.max(0, Math.min(xaxis._length, event.clientX - box.left - xaxis._offset)),
+        y: Math.max(0, Math.min(yaxis._length, event.clientY - box.top - yaxis._offset))};
+    }
+    function draw(event) {
+      if (!stroke || event.pointerId !== stroke.id) return;
+      const end = pointerPosition(event), {xaxis, yaxis} = oil._fullLayout;
+      const samples = sampleOilStroke(m.dates.map(date => xaxis.d2p(date)), stroke.point, end);
+      const previous = new Map(edits);
+      samples.forEach(([i, y]) => edits.set(m.dates[i], Math.max(0.01, yaxis.p2d(y))));
+      try { updateCountry(); }
+      catch (error) {
+        edits.clear(); previous.forEach((value, date) => edits.set(date, value));
+        status.textContent = error.message;
+      }
+      stroke.point = end;
+    }
+    surface.addEventListener('pointerdown', event => {
+      if (event.button !== 0 || stroke) return;
+      event.preventDefault();
+      stroke = {id: event.pointerId, point: pointerPosition(event)};
+      surface.setPointerCapture(event.pointerId);
+      draw(event);
+    });
+    surface.addEventListener('pointermove', draw);
+    surface.addEventListener('pointerup', event => {
+      draw(event);
+      if (stroke && event.pointerId === stroke.id) stroke = null;
+    });
+    surface.addEventListener('pointercancel', () => { stroke = null; });
+    surface.addEventListener('lostpointercapture', () => { stroke = null; });
     period.addEventListener('change', () => select(Number(period.value)));
     function apply() { if (price.reportValidity()) change(Number(period.value), Number(price.value)); }
     find('apply').addEventListener('click', apply);
@@ -158,4 +194,4 @@ async function initializeOilScenarios() {
 }
 
 if (typeof document !== 'undefined') initializeOilScenarios();
-if (typeof module !== 'undefined') module.exports = {projectOilScenario, projectCountryScenario};
+if (typeof module !== 'undefined') module.exports = {projectOilScenario, projectCountryScenario, sampleOilStroke};
