@@ -688,7 +688,12 @@ h2 {{ margin:0 0 8px; font-size:28px; font-weight:500; border-bottom:2px solid v
 .model-panel {{ padding-top:1px; }}
 .empty-state {{ margin:30px 0; color:var(--note); }}
 .chart-block {{ margin:26px 0 46px; }}
-.scenario-editor {{ padding:20px; background:var(--soft); border:1px solid var(--line); border-radius:5px; }}
+main:has(#family-var-panel:not([hidden])) {{ max-width:1600px; }}
+.scenario-columns {{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; align-items:start; margin-top:20px; }}
+.scenario-columns > section {{ min-width:0; padding:12px; border:1px solid var(--line); border-radius:5px; }}
+.scenario-columns h4 {{ margin:4px 0 6px; font-size:19px; font-weight:500; }}
+.scenario-editor {{ background:var(--soft); }}
+@media (max-width:800px) {{ .scenario-columns {{ grid-template-columns:minmax(0,1fr); }} }}
 .scenario-controls {{ display:flex; gap:12px; flex-wrap:wrap; align-items:end; margin:18px 0; }}
 .scenario-controls label {{ display:grid; gap:6px; font-size:14px; }}
 .scenario-controls input, .scenario-controls select, .scenario-controls button {{ padding:9px; font:inherit; border:1px solid #BBB; border-radius:4px; background:white; }}

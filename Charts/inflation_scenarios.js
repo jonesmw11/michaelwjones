@@ -72,10 +72,10 @@ async function initializeOilScenarios() {
       price.value = path()[index].toFixed(2);
     }
     const layout = {
-      height: 340, margin: {l: 65, r: 28, t: 40, b: 40},
+      height: 420, margin: {l: 55, r: 18, t: 70, b: 40},
       font: {family: 'Gill Sans MT, Gill Sans, Arial, sans-serif', color: '#1A1A1A'},
       paper_bgcolor: 'white', plot_bgcolor: 'white', hovermode: 'closest', dragmode: false,
-      legend: {orientation: 'h', y: 1.15},
+      legend: {orientation: 'h', y: 1.03, yanchor: 'bottom', x: 0, xanchor: 'left', font: {size: 11}},
       xaxis: {type: 'date', showgrid: false, fixedrange: true,
         range: [m.oilDates[Math.max(0, m.oilDates.length - m.year * 2)], m.dates[m.dates.length - 1]]},
       yaxis: {title: {text: 'USD per barrel'}, gridcolor: '#EFEFEF', fixedrange: true,

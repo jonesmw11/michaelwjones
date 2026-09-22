@@ -111,14 +111,20 @@ def scenario_payload(country, spec):
 def scenario_html(country, spec, figure, include_plotlyjs):
     models = scenario_payload(country, spec)
     key = spec["path"].stem
-    figure.update_xaxes(range=[str(pd.Timestamp(models[0]["lastDate"]) - pd.DateOffset(years=3)), models[0]["dates"][-1]])
+    figure.update_xaxes(range=[str(pd.Timestamp(models[0]["lastDate"]) - pd.DateOffset(years=3)), models[0]["dates"][-1]],
+                        rangeselector=dict(visible=False))
+    figure.update_layout(height=420, margin=dict(l=55, r=18, t=70, b=40),
+                         legend=dict(font=dict(size=11), x=0, xanchor="left", y=1.03))
     chart = pio.to_html(figure, full_html=False, include_plotlyjs=include_plotlyjs,
                         div_id=f"{key}-inflation", config={"responsive": True, "displaylogo": False})
     unit = "quarter" if spec["frequency"] == "Q" else "month"
     return (
         f'<article class="chart-block oil-scenario" id="{key}" data-country="{country}">'
-        f'<h3>{escape(spec["title"])}</h3><p>{escape(spec["description"])}</p>{chart}'
-        '<div class="scenario-editor"><h3>Explore an oil-price path</h3>'
+        f'<h3>{escape(spec["title"])}</h3><p>{escape(spec["description"])}</p>'
+        '<div class="scenario-columns"><section class="scenario-forecast"><h4>Inflation forecast</h4>'
+        f'{chart}</section><section class="scenario-editor"><h4>Draw an oil-price path</h4>'
+        f'<div class="oil-drag-container"><div id="{key}-oil" class="plotly-graph-div"></div>'
+        '<div class="oil-drag-handles"></div></div>'
         f'<p>Press and draw across the shaded future area to sketch your oil path. You can start anywhere, '
         f'lift and draw another section. Your stroke sets each {unit} it crosses. '
         'All inflation forecasts for this country update as you draw.</p>'
@@ -128,12 +134,11 @@ def scenario_html(country, spec, figure, include_plotlyjs):
         '<button type="button" data-role="apply">Apply price</button>'
         '<button type="button" data-role="reset">Reset country forecasts</button></div>'
         '<p data-role="status" role="status" aria-live="polite"></p>'
-        f'<div class="oil-drag-container"><div id="{key}-oil" class="plotly-graph-div"></div>'
-        '<div class="oil-drag-handles"></div></div>'
+        '</section></div>'
         '<p class="scenario-method">Coefficients stay fixed. The selected oil level is converted to period growth '
         'and imposed each period; inflation and the other drivers evolve recursively. Because this VAR uses lagged '
         'drivers, changing oil first affects inflation in a later period. This is a mechanical scenario, not an identified '
         'causal oil shock. Edited prices apply to every measure for this country, including companion charts. '
-        'Unedited dates retain each model’s original oil forecast. Reset restores all original forecasts.</p></div>'
+        'Unedited dates retain each model’s original oil forecast. Reset restores all original forecasts.</p>'
         f'<script type="application/json" class="scenario-data">{json.dumps(models, allow_nan=False)}</script></article>'
     )
